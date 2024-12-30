@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">ReadOut</string>
+
+    <string name="home">Home</string>
+    <string name="audiobooks">AudioBooks</string>
+    <string name="open_library">OpenLibrary</string>
+    <string name="setting">Setting</string>
+
+    <string name="theme">Theme</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <string name="clear_data">Clear all data</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="delete">Delete</string>
+    <string name="clear_data_title">Confirm Deletion</string>
+    <string name="clear_data_warning">Are you sure you want to delete all saved data? This action cannot be undone, and you will permanently lose all saved information.</string>
+
+    <string name="dark_mode">Dark Mode</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="system_default">System Default</string>
+    <string name="choose_a_theme">Choose a theme</string>
+
+    <string name="search">Search</string>
+    <string name="search_result">Search Result</string>
+    <string name="no_search_result">No Results Found</string>
+    <string name="retry">Retry</string>
+    <string name="go_back">Go Back</string>
+    <string name="right_arrow">Right Arrow</string>
+
+    <string name="search_radios">Search Radios</string>
+    <string name="trending_radios">Trending Radios</string>">
+    <string name="verified">Verified</string>">
+    <string name="latest_radios">Latest Radios</string>">
+    <string name="no_radios_found">"No Radios Found!"</string>
+    <string name="online_radio_stations">Online Radio Stations</string>
+    <string name="radio_cover_background">Radio Cover Background</string>
+    <string name="radio_cover">Radio Cover</string>
+    <string name="info">Info</string>
+    <string name="verified_title">verified-title</string>
+    <string name="verified_list">verified-list</string>
+    <string name="latest_title">latest-title</string>
+    <string name="circular-progress-indicator">circular-progress-indicator</string>
+    <string name="recently_updated">Recently Updated</string>
+    <string name="radio_disclaimer">Radio are coming from Radio Browser api</string>
+
+    <string name="audiobooks_not_found">Audiobooks could not be found</string>
+    <string name="science_fiction">Science Fiction</string>
+    <string name="action_adventure">Action and Adventure</string>
+    <string name="educational">Educational</string>
+
+    <string name="view_more">View More</string>
+
+    <string name="error_disk_full">Oops, it seems like your disk is full.</string>
+    <string name="error_unknown">Oops, something went wrong.</string>
+    <string name="error_request_timeout">The request timed out.</string>
+    <string name="error_no_internet">Couldn't reach server, please check your internet connection.</string>
+    <string name="error_too_many_requests">Your quota seems to be exceeded.</string>
+    <string name="error_serialization">Couldn't parse data.</string>
+    <string name="invalid_image">Invalid image</string>
+
+    <string name="radio_details">Radio Details</string>
+    <string name="country">Country</string>
+    <string name="state">State</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="language">Language</string>
+    <string name="homepage">Homepage</string>
+    <string name="unknown">Unknown</string>
+    <string name="map_location">Map Location</string>
+
+</resources>
