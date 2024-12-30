@@ -5,9 +5,12 @@ import androidx.compose.material3.Text
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import org.tawhid.readout.core.setting.SettingScreenRoot
+import org.tawhid.readout.core.setting.SettingViewModel
 
 
 fun NavGraphBuilder.navGraphBuilder(
+    settingViewModel: SettingViewModel,
     rootNavController: NavController,
     innerPadding: PaddingValues
 ) {
@@ -24,7 +27,13 @@ fun NavGraphBuilder.navGraphBuilder(
     }
 
     composable<Route.Setting> {
-        Text(text = "Setting")
+        SettingScreenRoot(
+            viewModel = settingViewModel,
+            innerPadding = innerPadding,
+            onBackClick = {
+                rootNavController.popBackStack()
+            }
+        )
     }
 
 }

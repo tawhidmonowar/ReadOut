@@ -22,12 +22,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.navigation.components.CompactNavigationBar
 import org.tawhid.readout.app.navigation.components.ExpandedNavigationBar
 import org.tawhid.readout.app.navigation.components.MediumNavigationBar
 import org.tawhid.readout.app.navigation.components.NavigationItem
 import org.tawhid.readout.app.navigation.components.navigationItemsLists
 import org.tawhid.readout.app.navigation.components.settingNavigationItems
+import org.tawhid.readout.core.setting.SettingViewModel
 import org.tawhid.readout.core.theme.expandedNavigationBarWidth
 import org.tawhid.readout.core.theme.mediumNavigationBarWidth
 import org.tawhid.readout.core.utils.WindowSize
@@ -35,7 +37,9 @@ import org.tawhid.readout.core.utils.calculateWindowSize
 
 
 @Composable
-fun NavigationScreenRoot() {
+fun NavigationScreenRoot(
+    settingViewModel: SettingViewModel = koinViewModel()
+) {
 
     val windowSize = calculateWindowSize()
     val isExpandedScreen by remember(windowSize) { derivedStateOf { windowSize == WindowSize.Expanded } }
@@ -73,6 +77,7 @@ fun NavigationScreenRoot() {
     }
 
     NavigationScreen(
+        settingViewModel = settingViewModel,
         rootNavController = rootNavController,
         currentRoute = currentRoute,
         navigationItems = navigationItems,
@@ -85,6 +90,7 @@ fun NavigationScreenRoot() {
 
 @Composable
 private fun NavigationScreen(
+    settingViewModel: SettingViewModel,
     modifier: Modifier = Modifier,
     rootNavController: NavHostController,
     currentRoute: Route?,
@@ -131,6 +137,7 @@ private fun NavigationScreen(
                 startDestination = Route.Home,
             ) {
                 navGraphBuilder(
+                    settingViewModel = settingViewModel,
                     rootNavController = rootNavController,
                     innerPadding = contentPadding
                 )

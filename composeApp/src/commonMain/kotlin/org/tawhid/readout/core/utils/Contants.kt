@@ -21,3 +21,5 @@ enum class Theme(val title: StringResource) {
     LIGHT_MODE(Res.string.light_mode),
     DARK_MODE(Res.string.dark_mode)
 }
+
+const val DATA_STORE_FILE_NAME = "setting.preferences_pb"

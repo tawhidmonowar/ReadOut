@@ -8,6 +8,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import org.jetbrains.compose.resources.stringResource
 import org.tawhid.readout.app.App
+import org.tawhid.readout.core.di.initKoin
 import org.tawhid.readout.core.theme.defaultWindowHeight
 import org.tawhid.readout.core.theme.defaultWindowWidth
 import org.tawhid.readout.core.theme.minWindowHeight
@@ -17,6 +18,7 @@ import readout.composeapp.generated.resources.app_name
 import java.awt.Dimension
 
 fun main() {
+    initKoin()
     application {
         Window(
             onCloseRequest = ::exitApplication,
