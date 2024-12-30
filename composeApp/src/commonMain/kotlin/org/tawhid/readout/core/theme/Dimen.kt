@@ -8,7 +8,7 @@ const val minWindowWidth = 400
 const val minWindowHeight = 400
 
 val expandedNavigationBarWidth = 200.dp
-val mediumNavigationBarWidth = 80.dp
+val mediumNavigationBarWidth = 100.dp
 
 val expandedFeedWidth = 300.dp
 val mediumFeedWidth = 300.dp

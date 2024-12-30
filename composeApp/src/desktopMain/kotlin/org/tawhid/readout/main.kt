@@ -16,7 +16,7 @@ import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.app_name
 import java.awt.Dimension
 
-fun main() = application {
+fun main() {
     application {
         Window(
             onCloseRequest = ::exitApplication,
