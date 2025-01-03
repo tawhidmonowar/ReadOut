@@ -10,9 +10,9 @@ const val minWindowHeight = 400
 val expandedNavigationBarWidth = 200.dp
 val mediumNavigationBarWidth = 100.dp
 
-val expandedFeedWidth = 300.dp
-val mediumFeedWidth = 300.dp
-val compactFeedWidth = 120.dp
+val expandedFeedWidth = 150.dp
+val mediumFeedWidth = 140.dp
+val compactFeedWidth = 125.dp
 
 val expandedScreenPadding = 50.dp
 val mediumScreenPadding = 20.dp
@@ -26,3 +26,9 @@ val small = 8.dp
 val medium = 16.dp
 val large = 24.dp
 val extraLarge = 32.dp
+
+const val bookCoverAspectRatio = 0.66f
+val horizontalGridMaxHeight = 450.dp
+val horizontalGridMaxWidth = 125.dp
+
+val maxWidthIn = 1000.dp

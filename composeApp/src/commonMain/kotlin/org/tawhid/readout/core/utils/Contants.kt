@@ -16,6 +16,12 @@ sealed class WindowSize {
     data object Expanded : WindowSize()
 }
 
+data class WindowSizes(
+    val isExpandedScreen: Boolean,
+    val isMediumScreen: Boolean,
+    val isCompactScreen: Boolean
+)
+
 enum class Theme(val title: StringResource) {
     SYSTEM_DEFAULT(Res.string.system_default),
     LIGHT_MODE(Res.string.light_mode),
@@ -23,3 +29,14 @@ enum class Theme(val title: StringResource) {
 }
 
 const val DATA_STORE_FILE_NAME = "setting.preferences_pb"
+
+val openLibrary_book_subject = listOf(
+    "Arts",
+    "Science Fiction",
+    "Biographies",
+    "Children",
+    "History",
+    "Medicine",
+    "Religion",
+    "Science"
+)

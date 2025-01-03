@@ -15,3 +15,5 @@ val shimmerColors = listOf(
 
 val DarkColorScheme = darkColorScheme()
 val LightColorScheme = lightColorScheme()
+
+val SandYellow = Color(0xFFFFBD64)
