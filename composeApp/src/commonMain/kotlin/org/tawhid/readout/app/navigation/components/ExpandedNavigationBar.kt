@@ -39,7 +39,10 @@ fun ExpandedNavigationBar(
             header = { Spacer(modifier = Modifier.height(thin)) }
         ) {
             items.forEach { navigationItem ->
-                val isSelected = navigationItem.route == currentRoute
+                val isSelected = when (navigationItem.route) {
+                    Route.OpenLibraryGraph -> currentRoute in listOf(Route.OpenLibraryGraph, Route.OpenLibraryDetail())
+                    else -> navigationItem.route == currentRoute
+                }
                 if (navigationItem == items.last()) {
                     Spacer(modifier = Modifier.height(thin))
                     HorizontalDivider(

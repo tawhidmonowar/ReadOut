@@ -10,8 +10,19 @@ sealed interface Route {
     data object Home : Route
 
     @Serializable
+    data object AudioBooks : Route
+
+    @Serializable
+    data object Summarize : Route
+
+
+    @Serializable
+    data object OpenLibraryGraph : Route
+
+    @Serializable
     data object OpenLibrary : Route
 
     @Serializable
-    data object AudioBooks : Route
+    data class OpenLibraryDetail(val id: String? = null) : Route
+
 }

@@ -24,7 +24,10 @@ fun CompactNavigationBar(
         modifier = Modifier.fillMaxWidth(),
     ) {
         items.forEach { navigationItem ->
-            val isSelected = navigationItem.route == currentRoute
+            val isSelected = when (navigationItem.route) {
+                Route.OpenLibraryGraph -> currentRoute in listOf(Route.OpenLibraryGraph, Route.OpenLibraryDetail())
+                else -> navigationItem.route == currentRoute
+            }
             val tabScale = animateFloatAsState(targetValue = if (isSelected) 1.1f else 1f)
             NavigationBarItem(
                 modifier = Modifier.scale(tabScale.value),

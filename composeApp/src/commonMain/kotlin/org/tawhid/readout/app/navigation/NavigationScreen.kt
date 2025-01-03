@@ -10,13 +10,11 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,27 +26,30 @@ import org.tawhid.readout.app.navigation.components.ExpandedNavigationBar
 import org.tawhid.readout.app.navigation.components.MediumNavigationBar
 import org.tawhid.readout.app.navigation.components.NavigationItem
 import org.tawhid.readout.app.navigation.components.navigationItemsLists
-import org.tawhid.readout.app.navigation.components.settingNavigationItems
+import org.tawhid.readout.app.navigation.components.settingNavigationItem
+import org.tawhid.readout.app.navigation.components.summarizeNavigationItem
 import org.tawhid.readout.core.setting.SettingViewModel
 import org.tawhid.readout.core.theme.expandedNavigationBarWidth
 import org.tawhid.readout.core.theme.mediumNavigationBarWidth
 import org.tawhid.readout.core.utils.WindowSize
+import org.tawhid.readout.core.utils.WindowSizes
 import org.tawhid.readout.core.utils.calculateWindowSize
-
 
 @Composable
 fun NavigationScreenRoot(
     settingViewModel: SettingViewModel = koinViewModel()
 ) {
-
-    val windowSize = calculateWindowSize()
-    val isExpandedScreen by remember(windowSize) { derivedStateOf { windowSize == WindowSize.Expanded } }
-    val isMediumScreen by remember(windowSize) { derivedStateOf { windowSize == WindowSize.Medium } }
-    val isCompactScreen by remember(windowSize) { derivedStateOf { windowSize == WindowSize.Compact } }
+    val calculateWindowSize = calculateWindowSize()
+    val isExpandedScreen by remember(calculateWindowSize) { derivedStateOf { calculateWindowSize == WindowSize.Expanded } }
+    val isMediumScreen by remember(calculateWindowSize) { derivedStateOf { calculateWindowSize == WindowSize.Medium } }
+    val isCompactScreen by remember(calculateWindowSize) { derivedStateOf { calculateWindowSize == WindowSize.Compact } }
+    val windowSize = WindowSizes(isExpandedScreen, isMediumScreen, isCompactScreen)
 
     val navigationItems = if (isExpandedScreen || isMediumScreen) {
-        navigationItemsLists + settingNavigationItems
-    } else { navigationItemsLists }
+        navigationItemsLists + summarizeNavigationItem + settingNavigationItem
+    } else {
+        navigationItemsLists
+    }
 
     val rootNavController = rememberNavController()
     val rootNavBackStackEntry by rootNavController.currentBackStackEntryAsState()
@@ -60,25 +61,27 @@ fun NavigationScreenRoot(
     }
 
     val currentRoute = getCurrentRoute(currentRoutePath)
-    val navigationBarsVisibleRoutes = remember {
+    val navigationBarsVisibleRoutes by derivedStateOf {
         mutableListOf(
             Route.Home,
-            Route.OpenLibrary,
             Route.AudioBooks,
+            Route.OpenLibraryGraph,
         ).apply {
             if (!isCompactScreen) {
                 add(Route.Setting)
+                add(Route.Summarize)
             }
         }
     }
 
-    val isNavigationBarsVisible by remember(currentRoute) {
+    val isNavigationBarsVisible by remember(currentRoute, navigationBarsVisibleRoutes) {
         derivedStateOf { currentRoute in navigationBarsVisibleRoutes }
     }
 
     NavigationScreen(
-        settingViewModel = settingViewModel,
         rootNavController = rootNavController,
+        settingViewModel = settingViewModel,
+        windowSize = windowSize,
         currentRoute = currentRoute,
         navigationItems = navigationItems,
         isNavigationBarsVisible = isNavigationBarsVisible,
@@ -90,9 +93,10 @@ fun NavigationScreenRoot(
 
 @Composable
 private fun NavigationScreen(
-    settingViewModel: SettingViewModel,
     modifier: Modifier = Modifier,
     rootNavController: NavHostController,
+    settingViewModel: SettingViewModel,
+    windowSize: WindowSizes,
     currentRoute: Route?,
     navigationItems: List<NavigationItem>,
     isNavigationBarsVisible: Boolean,
@@ -137,8 +141,9 @@ private fun NavigationScreen(
                 startDestination = Route.Home,
             ) {
                 navGraphBuilder(
-                    settingViewModel = settingViewModel,
                     rootNavController = rootNavController,
+                    settingViewModel = settingViewModel,
+                    windowSize = windowSize,
                     innerPadding = contentPadding
                 )
             }
@@ -178,15 +183,6 @@ private fun NavigationScreen(
                     }
                 )
             }
-
-            AnimatedVisibility(
-                visible = isNavigationBarsVisible,
-                enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }),
-                modifier = Modifier.align(Alignment.BottomCenter).padding(innerPadding)
-            ) {
-
-            }
         }
     }
 }
@@ -195,9 +191,11 @@ private fun NavigationScreen(
 private fun getCurrentRoute(currentRouteString: String): Route? {
     return when (currentRouteString) {
         Route.Home::class.qualifiedName -> Route.Home
-        Route.OpenLibrary::class.qualifiedName -> Route.OpenLibrary
+        Route.OpenLibrary::class.qualifiedName -> Route.OpenLibraryGraph
         Route.AudioBooks::class.qualifiedName -> Route.AudioBooks
         Route.Setting::class.qualifiedName -> Route.Setting
+        Route.Summarize::class.qualifiedName -> Route.Summarize
+        Route.OpenLibraryDetail()::class.qualifiedName -> Route.OpenLibraryDetail()
         else -> null
     }
 }
