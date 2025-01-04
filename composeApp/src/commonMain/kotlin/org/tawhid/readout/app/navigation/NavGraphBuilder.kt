@@ -91,6 +91,8 @@ fun NavGraphBuilder.navGraphBuilder(
             }
             BookDetailScreenRoot(
                 viewModel = bookDetailViewModel,
+                innerPadding = innerPadding,
+                windowSize = windowSize,
                 onBackClick = {
                     rootNavController.navigateUp()
                 }

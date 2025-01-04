@@ -70,6 +70,7 @@ fun NavigationScreenRoot(
             if (!isCompactScreen) {
                 add(Route.Setting)
                 add(Route.Summarize)
+                add(Route.OpenLibraryDetail())
             }
         }
     }
