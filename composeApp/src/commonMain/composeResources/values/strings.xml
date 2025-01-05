@@ -17,6 +17,20 @@
     <string name="browse">Browse</string>
     <string name="select_subject">Select Subject</string>
 
+    <string name="book_details">Book Details</string>
+    <string name="book_cover">Book Cover</string>
+    <string name="summary">Summary</string>
+    <string name="book_summary">Book Summary</string>
+    <string name="play">Play</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="share">Share</string>
+    <string name="summary_generated_with_ai">Summary Generated with AI</string>
+    <string name="about_book">About Book</string>
+    <string name="description">Description</string>
+    <string name="description_unavailable">Description Unavailable</string>
+
+
+
 
 
 

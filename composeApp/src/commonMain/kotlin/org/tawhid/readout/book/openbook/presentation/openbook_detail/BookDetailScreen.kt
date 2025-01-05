@@ -9,40 +9,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -57,20 +40,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -78,27 +59,30 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.components.BlurredImageBackground
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.components.BookChip
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.components.ChipSize
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.components.TitledContent
-import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeAction
-import org.tawhid.readout.core.setting.SettingAction
-import org.tawhid.readout.core.theme.SandYellow
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedScreenPadding
+import org.tawhid.readout.core.theme.extraSmall
+import org.tawhid.readout.core.theme.large
+import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumScreenPadding
+import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.ui.animation.PulseAnimation
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
+import readout.composeapp.generated.resources.about_book
+import readout.composeapp.generated.resources.book_cover
 import readout.composeapp.generated.resources.book_cover_error_img
+import readout.composeapp.generated.resources.book_details
+import readout.composeapp.generated.resources.book_summary
+import readout.composeapp.generated.resources.bookmark
+import readout.composeapp.generated.resources.description_unavailable
 import readout.composeapp.generated.resources.go_back
-import readout.composeapp.generated.resources.info
-import readout.composeapp.generated.resources.open_library
-import readout.composeapp.generated.resources.search
-import readout.composeapp.generated.resources.setting
-import kotlin.math.round
+import readout.composeapp.generated.resources.ic_bookmark_outlined
+import readout.composeapp.generated.resources.play
+import readout.composeapp.generated.resources.share
+import readout.composeapp.generated.resources.summary
+import readout.composeapp.generated.resources.summary_generated_with_ai
 
 @Composable
 fun BookDetailScreenRoot(
@@ -122,7 +106,7 @@ fun BookDetailScreenRoot(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BookDetailScreen(
     state: BookDetailState,
@@ -130,10 +114,7 @@ private fun BookDetailScreen(
     windowSize: WindowSizes,
     onAction: (BookDetailAction) -> Unit
 ) {
-
-    var imageLoadResult by remember {
-        mutableStateOf<Result<Painter>?>(null)
-    }
+    var imageLoadResult by remember { mutableStateOf<Result<Painter>?>(null) }
     val painter = rememberAsyncImagePainter(
         model = state.book?.imgUrl,
         onSuccess = {
@@ -143,9 +124,6 @@ private fun BookDetailScreen(
             } else {
                 Result.failure(Exception("Invalid image dimensions"))
             }
-        },
-        onError = {
-            // it.result.throwable.printStackTrace()
         }
     )
 
@@ -169,6 +147,15 @@ private fun BookDetailScreen(
         bottom = bottomPadding
     )
 
+    val scrollState = rememberScrollState()
+    val scrollToBottom = remember { mutableStateOf(false) }
+    LaunchedEffect(scrollToBottom.value) {
+        if (scrollToBottom.value) {
+            scrollState.animateScrollTo(scrollState.maxValue)
+            scrollToBottom.value = false
+        }
+    }
+
     Surface(modifier = Modifier.padding(animatedPadding)) {
         Scaffold(
             modifier = Modifier
@@ -178,7 +165,7 @@ private fun BookDetailScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Detail Book",
+                            text = stringResource(Res.string.book_details),
                             style = MaterialTheme.typography.titleLarge
                         )
                     },
@@ -192,16 +179,6 @@ private fun BookDetailScreen(
                             )
                         }
                     },
-                    actions = {
-                        IconButton(onClick = {
-
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Share,
-                                contentDescription = "Share",
-                            )
-                        }
-                    },
                     scrollBehavior = scrollBehavior
                 )
             }
@@ -210,21 +187,21 @@ private fun BookDetailScreen(
             val animatedStartPadding by animateDpAsState(
                 targetValue = if (windowSize.isExpandedScreen) expandedScreenPadding
                 else if (windowSize.isMediumScreen) mediumScreenPadding
-                else compactScreenPadding,
+                else compactScreenPadding + small,
                 animationSpec = tween(durationMillis = 300)
             )
 
             val animatedEndPadding by animateDpAsState(
                 targetValue = if (windowSize.isExpandedScreen) expandedScreenPadding
                 else if (windowSize.isMediumScreen) mediumScreenPadding
-                else compactScreenPadding,
+                else compactScreenPadding + small,
                 animationSpec = tween(durationMillis = 300)
             )
 
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
                     .padding(
                         start = animatedStartPadding,
                         top = innerPadding.calculateTopPadding(),
@@ -233,194 +210,311 @@ private fun BookDetailScreen(
                     )
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 20.dp)
-                            .clip(Shapes.medium)
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                            .padding(20.dp)
-                    ) {
-                        // Book cover
-                        Box(
+
+
+                    if (windowSize.isCompactScreen) {
+                        Column(
                             modifier = Modifier
-                                .height(300.dp)
-                                .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
-                            contentAlignment = Alignment.TopEnd
+                                .fillMaxWidth()
+                                .padding(vertical = small)
+                                .clip(Shapes.medium)
+                                .padding(large),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            ElevatedCard(
-                                modifier = Modifier.fillMaxSize(),
-                                shape = RoundedCornerShape(8.dp),
-                                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+                            Box(
+                                modifier = Modifier
+                                    .height(250.dp)
+                                    .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
+                                contentAlignment = Alignment.TopCenter
                             ) {
-                                AnimatedContent(targetState = imageLoadResult) { result ->
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(Color.White)
-                                            .padding(5.dp)
-                                            .clip(Shapes.extraSmall)
-                                        ,
-                                        contentAlignment = Alignment.Center
+                                ElevatedCard(
+                                    modifier = Modifier.fillMaxSize(),
+                                    shape = Shapes.small,
+                                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = small)
+                                ) {
+                                    AnimatedContent(targetState = imageLoadResult) { result ->
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.White)
+                                                .padding(extraSmall)
+                                                .clip(Shapes.extraSmall),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            when (result) {
+                                                null -> PulseAnimation(modifier = Modifier.size(100.dp))
+                                                else -> Image(
+                                                    painter = if (result.isSuccess) painter else {
+                                                        painterResource(Res.drawable.book_cover_error_img)
+                                                    },
+                                                    contentDescription = stringResource(Res.string.book_cover),
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            state.book?.let { book ->
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Spacer(modifier = Modifier.height(large))
+                                    Text(
+                                        text = book.title,
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        modifier = Modifier.padding(bottom = small)
+                                    )
+                                    Text(
+                                        text = "By ${book.authors.joinToString()}",
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Spacer(modifier = Modifier.height(medium))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center
                                     ) {
-                                        when (result) {
-                                            null -> PulseAnimation(modifier = Modifier.size(100.dp))
-                                            else -> Image(
-                                                painter = if (result.isSuccess) painter else {
-                                                    painterResource(Res.drawable.book_cover_error_img)
+
+                                        if (state.isSummaryAvailable) {
+                                            Button(
+                                                onClick = {
+                                                    scrollToBottom.value = true
                                                 },
-                                                contentDescription = "Book cover",
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
+                                                content = {
+                                                    Text(text = stringResource(Res.string.summary))
+                                                }
+                                            )
+
+                                            Spacer(modifier = Modifier.width(extraSmall))
+
+                                            Button(
+                                                onClick = {
+                                                    scrollToBottom.value = true
+                                                },
+                                                content = {
+                                                    Text(text = stringResource(Res.string.play))
+                                                }
+                                            )
+                                        } else {
+                                            Button(
+                                                onClick = {
+                                                    scrollToBottom.value = true
+                                                },
+                                                content = {
+                                                    Text(text = stringResource(Res.string.summary))
+                                                }
+                                            )
+                                        }
+
+                                        Spacer(modifier = Modifier.width(extraSmall))
+
+                                        IconButton(
+                                            onClick = { }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
+                                                contentDescription = stringResource(Res.string.bookmark),
+                                            )
+                                        }
+                                        IconButton(
+                                            onClick = { }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Share,
+                                                contentDescription = stringResource(Res.string.share),
                                             )
                                         }
                                     }
                                 }
                             }
                         }
-
-                        // Book details
-                        state.book?.let { book ->
-                            Column(
+                    } else {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = medium)
+                                .clip(Shapes.medium)
+                                .background(MaterialTheme.colorScheme.surfaceContainer)
+                                .padding(large)
+                        ) {
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding( start = 20.dp),
-                                verticalArrangement = Arrangement.Center
+                                    .height(250.dp)
+                                    .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
+                                contentAlignment = Alignment.TopEnd
                             ) {
-                                Text(
-                                    text = book.title,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                Text(
-                                    text = "Authors: ${book.authors.joinToString()}",
-                                    style = MaterialTheme.typography.titleMedium
-                                )
+                                ElevatedCard(
+                                    modifier = Modifier.fillMaxSize(),
+                                    shape = Shapes.small,
+                                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = small)
+                                ) {
+                                    AnimatedContent(targetState = imageLoadResult) { result ->
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.White)
+                                                .padding(extraSmall)
+                                                .clip(Shapes.extraSmall),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            when (result) {
+                                                null -> PulseAnimation(modifier = Modifier.size(100.dp))
+                                                else -> Image(
+                                                    painter = if (result.isSuccess) painter else {
+                                                        painterResource(Res.drawable.book_cover_error_img)
+                                                    },
+                                                    contentDescription = stringResource(Res.string.book_cover),
+                                                    modifier = Modifier.fillMaxSize(),
+                                                    contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            state.book?.let { book ->
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = large),
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Spacer(modifier = Modifier.height(medium))
+                                    Text(
+                                        text = book.title,
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        modifier = Modifier.padding(bottom = small)
+                                    )
+                                    Text(
+                                        text = "By ${book.authors.joinToString()}",
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Spacer(modifier = Modifier.height(medium))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Start
+                                    ) {
+
+                                        if (state.isSummaryAvailable) {
+                                            Button(
+                                                onClick = {
+                                                    scrollToBottom.value = true
+                                                },
+                                                content = {
+                                                    Text(text = stringResource(Res.string.summary))
+                                                }
+                                            )
+
+                                            Spacer(modifier = Modifier.width(extraSmall))
+
+                                            Button(
+                                                onClick = {
+                                                    scrollToBottom.value = true
+                                                },
+                                                content = {
+                                                    Text(text = stringResource(Res.string.play))
+                                                }
+                                            )
+                                        } else {
+                                            Button(
+                                                onClick = {
+                                                    scrollToBottom.value = true
+                                                },
+                                                content = {
+                                                    Text(text = stringResource(Res.string.summary))
+                                                }
+                                            )
+                                        }
+
+                                        Spacer(modifier = Modifier.width(extraSmall))
+
+                                        IconButton(
+                                            onClick = { }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
+                                                contentDescription = stringResource(Res.string.bookmark),
+                                            )
+                                        }
+                                        IconButton(
+                                            onClick = { }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Share,
+                                                contentDescription = stringResource(Res.string.share),
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
+                    }
+
+                    Text(
+                        text = stringResource(Res.string.about_book),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .fillMaxWidth()
+                            .padding(
+                                top = large,
+                                bottom = small
+                            )
+                    )
+
+                    if (state.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(medium),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        (if (state.book?.description.isNullOrBlank()) {
+                            stringResource(Res.string.description_unavailable)
+                        } else {
+                            state.book?.description
+                        })?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Justify,
+                            )
+                            Spacer(modifier = Modifier.height(medium))
+                        }
+                    }
+
+
+                    Text(
+                        text = stringResource(Res.string.book_summary),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .fillMaxWidth()
+                            .padding(top = large)
+                    )
+                    Text(
+                        text = stringResource(Res.string.summary_generated_with_ai),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(medium),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
             }
         }
     }
-
-
-    /*
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.Black
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "1:16 AM",
-                        color = Color.Black,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "0.1 KB/s",
-                        color = Color.Black,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Book cover and info
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.book_cover_error_img), // Replace with your drawable resource
-                    contentDescription = "Book Cover",
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "20 min • 7 chapters",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Anatomy of Desire",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Five Secrets to Create Connection and Cultivate Passion",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Dr. Emily Jamea",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Bottom actions
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                IconButton(onClick = { *//* TODO: Bookmark *//* }) {
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = "Bookmark",
-                    tint = Color.Black
-                )
-            }
-            IconButton(onClick = { *//* TODO: Share *//* }) {
-                Icon(
-                    imageVector = Icons.Default.Share,
-                    contentDescription = "Share",
-                    tint = Color.Black
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .background(Color(0xFF4CAF50), RoundedCornerShape(8.dp))
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Read",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Play",
-                    tint = Color.Black
-                )
-            }
-        }
-    }*/
-
 }
