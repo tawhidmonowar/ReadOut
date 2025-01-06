@@ -1,4 +1,4 @@
-package org.tawhid.readout.core.setting
+package org.tawhid.readout.app.setting
 
 sealed interface SettingAction {
     data object OnBackClick : SettingAction

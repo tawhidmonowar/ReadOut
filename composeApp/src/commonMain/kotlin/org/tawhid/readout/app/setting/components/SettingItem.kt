@@ -1,4 +1,4 @@
-package org.tawhid.readout.core.setting.components
+package org.tawhid.readout.app.setting.components
 
 
 import androidx.compose.foundation.clickable

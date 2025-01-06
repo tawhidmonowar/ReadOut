@@ -28,7 +28,7 @@ import org.tawhid.readout.app.navigation.components.NavigationItem
 import org.tawhid.readout.app.navigation.components.navigationItemsLists
 import org.tawhid.readout.app.navigation.components.settingNavigationItem
 import org.tawhid.readout.app.navigation.components.summarizeNavigationItem
-import org.tawhid.readout.core.setting.SettingViewModel
+import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.core.theme.expandedNavigationBarWidth
 import org.tawhid.readout.core.theme.mediumNavigationBarWidth
 import org.tawhid.readout.core.utils.WindowSize

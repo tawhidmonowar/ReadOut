@@ -7,7 +7,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.navigation.NavigationScreenRoot
-import org.tawhid.readout.core.setting.SettingViewModel
+import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.core.theme.ReadOutTheme
 import org.tawhid.readout.core.utils.Theme
 

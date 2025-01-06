@@ -14,7 +14,7 @@ import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
 import org.tawhid.readout.core.data.network.HttpClientFactory
-import org.tawhid.readout.core.setting.SettingViewModel
+import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.core.utils.AppPreferences
 
 expect val platformModule: Module

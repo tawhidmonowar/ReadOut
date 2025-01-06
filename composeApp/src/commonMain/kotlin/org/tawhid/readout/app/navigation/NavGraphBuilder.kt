@@ -24,8 +24,8 @@ import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailS
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScreenRoot
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
-import org.tawhid.readout.core.setting.SettingScreenRoot
-import org.tawhid.readout.core.setting.SettingViewModel
+import org.tawhid.readout.app.setting.SettingScreenRoot
+import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.core.utils.WindowSizes
 
 fun NavGraphBuilder.navGraphBuilder(

@@ -1,4 +1,4 @@
-package org.tawhid.readout.core.setting
+package org.tawhid.readout.app.setting
 
 import org.tawhid.readout.core.utils.Theme
 

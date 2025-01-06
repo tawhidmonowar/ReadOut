@@ -1,4 +1,4 @@
-package org.tawhid.readout.core.setting
+package org.tawhid.readout.app.setting
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.core.setting.components.ClearDataDialog
-import org.tawhid.readout.core.setting.components.SettingItem
-import org.tawhid.readout.core.setting.components.ThemeSelectionDialog
+import org.tawhid.readout.app.setting.components.ClearDataDialog
+import org.tawhid.readout.app.setting.components.SettingItem
+import org.tawhid.readout.app.setting.components.ThemeSelectionDialog
 import org.tawhid.readout.core.utils.Theme
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.clear_data
