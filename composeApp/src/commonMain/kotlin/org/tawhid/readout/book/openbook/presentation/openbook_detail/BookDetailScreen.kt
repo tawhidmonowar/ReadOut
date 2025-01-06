@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -68,6 +69,7 @@ import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.ui.animation.PulseAnimation
+import org.tawhid.readout.core.utils.OPEN_LIBRARY_BASE_URL
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.about_book
@@ -76,9 +78,11 @@ import readout.composeapp.generated.resources.book_cover_error_img
 import readout.composeapp.generated.resources.book_details
 import readout.composeapp.generated.resources.book_summary
 import readout.composeapp.generated.resources.bookmark
+import readout.composeapp.generated.resources.browse
 import readout.composeapp.generated.resources.description_unavailable
 import readout.composeapp.generated.resources.go_back
 import readout.composeapp.generated.resources.ic_bookmark_outlined
+import readout.composeapp.generated.resources.ic_browse
 import readout.composeapp.generated.resources.play
 import readout.composeapp.generated.resources.share
 import readout.composeapp.generated.resources.summary
@@ -114,19 +118,6 @@ private fun BookDetailScreen(
     windowSize: WindowSizes,
     onAction: (BookDetailAction) -> Unit
 ) {
-    var imageLoadResult by remember { mutableStateOf<Result<Painter>?>(null) }
-    val painter = rememberAsyncImagePainter(
-        model = state.book?.imgUrl,
-        onSuccess = {
-            val size = it.painter.intrinsicSize
-            imageLoadResult = if (size.width > 1 && size.height > 1) {
-                Result.success(it.painter)
-            } else {
-                Result.failure(Exception("Invalid image dimensions"))
-            }
-        }
-    )
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val startPadding by animateDpAsState(
         targetValue = innerPadding.calculateStartPadding(
@@ -149,6 +140,9 @@ private fun BookDetailScreen(
 
     val scrollState = rememberScrollState()
     val scrollToBottom = remember { mutableStateOf(false) }
+
+    val urlHandler = LocalUriHandler.current
+
     LaunchedEffect(scrollToBottom.value) {
         if (scrollToBottom.value) {
             scrollState.animateScrollTo(scrollState.maxValue)
@@ -210,8 +204,6 @@ private fun BookDetailScreen(
                     )
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-
-
                     if (windowSize.isCompactScreen) {
                         Column(
                             modifier = Modifier
@@ -221,42 +213,7 @@ private fun BookDetailScreen(
                                 .padding(large),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .height(250.dp)
-                                    .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
-                                contentAlignment = Alignment.TopCenter
-                            ) {
-                                ElevatedCard(
-                                    modifier = Modifier.fillMaxSize(),
-                                    shape = Shapes.small,
-                                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = small)
-                                ) {
-                                    AnimatedContent(targetState = imageLoadResult) { result ->
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .background(Color.White)
-                                                .padding(extraSmall)
-                                                .clip(Shapes.extraSmall),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            when (result) {
-                                                null -> PulseAnimation(modifier = Modifier.size(100.dp))
-                                                else -> Image(
-                                                    painter = if (result.isSuccess) painter else {
-                                                        painterResource(Res.drawable.book_cover_error_img)
-                                                    },
-                                                    contentDescription = stringResource(Res.string.book_cover),
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
+                            state.book?.let { BookCoverImage(imgUrl = it.imgUrl) }
                             state.book?.let { book ->
                                 Column(
                                     modifier = Modifier.fillMaxWidth(),
@@ -321,11 +278,13 @@ private fun BookDetailScreen(
                                             )
                                         }
                                         IconButton(
-                                            onClick = { }
+                                            onClick = {
+                                                urlHandler.openUri(OPEN_LIBRARY_BASE_URL+"/works/${book.id}")
+                                            }
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Share,
-                                                contentDescription = stringResource(Res.string.share),
+                                                painter = painterResource(Res.drawable.ic_browse),
+                                                contentDescription = stringResource(Res.string.browse),
                                             )
                                         }
                                     }
@@ -341,41 +300,7 @@ private fun BookDetailScreen(
                                 .background(MaterialTheme.colorScheme.surfaceContainer)
                                 .padding(large)
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .height(250.dp)
-                                    .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
-                                contentAlignment = Alignment.TopEnd
-                            ) {
-                                ElevatedCard(
-                                    modifier = Modifier.fillMaxSize(),
-                                    shape = Shapes.small,
-                                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = small)
-                                ) {
-                                    AnimatedContent(targetState = imageLoadResult) { result ->
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .background(Color.White)
-                                                .padding(extraSmall)
-                                                .clip(Shapes.extraSmall),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            when (result) {
-                                                null -> PulseAnimation(modifier = Modifier.size(100.dp))
-                                                else -> Image(
-                                                    painter = if (result.isSuccess) painter else {
-                                                        painterResource(Res.drawable.book_cover_error_img)
-                                                    },
-                                                    contentDescription = stringResource(Res.string.book_cover),
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            state.book?.let { BookCoverImage(imgUrl = it.imgUrl) }
 
                             state.book?.let { book ->
                                 Column(
@@ -410,7 +335,7 @@ private fun BookDetailScreen(
                                                 }
                                             )
 
-                                            Spacer(modifier = Modifier.width(extraSmall))
+                                            Spacer(modifier = Modifier.width(small))
 
                                             Button(
                                                 onClick = {
@@ -431,22 +356,26 @@ private fun BookDetailScreen(
                                             )
                                         }
 
-                                        Spacer(modifier = Modifier.width(extraSmall))
+                                        Spacer(modifier = Modifier.width(small))
 
                                         IconButton(
                                             onClick = { }
                                         ) {
                                             Icon(
+                                                modifier = Modifier.padding(5.dp),
                                                 painter = painterResource(Res.drawable.ic_bookmark_outlined),
                                                 contentDescription = stringResource(Res.string.bookmark),
                                             )
                                         }
                                         IconButton(
-                                            onClick = { }
+                                            onClick = {
+                                                urlHandler.openUri(OPEN_LIBRARY_BASE_URL+"/works/${book.id}")
+                                            }
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Share,
-                                                contentDescription = stringResource(Res.string.share),
+                                                modifier = Modifier.padding(5.dp),
+                                                painter = painterResource(Res.drawable.ic_browse),
+                                                contentDescription = stringResource(Res.string.browse),
                                             )
                                         }
                                     }
@@ -512,6 +441,61 @@ private fun BookDetailScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookCoverImage(
+    imgUrl: String
+) {
+    var imageLoadResult by remember { mutableStateOf<Result<Painter>?>(null) }
+
+    val painter = rememberAsyncImagePainter(
+        model = imgUrl,
+        onSuccess = {
+            val size = it.painter.intrinsicSize
+            imageLoadResult = if (size.width > 1 && size.height > 1) {
+                Result.success(it.painter)
+            } else {
+                Result.failure(Exception("Invalid image dimensions"))
+            }
+        }
+    )
+
+    Box(
+        modifier = Modifier
+            .height(250.dp)
+            .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        ElevatedCard(
+            modifier = Modifier.fillMaxSize(),
+            shape = Shapes.small,
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = small)
+        ) {
+            AnimatedContent(targetState = imageLoadResult) { result ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .padding(extraSmall)
+                        .clip(Shapes.extraSmall),
+                    contentAlignment = Alignment.Center
+                ) {
+                    when (result) {
+                        null -> PulseAnimation(modifier = Modifier.size(100.dp))
+                        else -> Image(
+                            painter = if (result.isSuccess) painter else {
+                                painterResource(Res.drawable.book_cover_error_img)
+                            },
+                            contentDescription = stringResource(Res.string.book_cover),
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
+                        )
                     }
                 }
             }
