@@ -239,6 +239,7 @@ private fun BookDetailScreen(
                                         if (state.isSummaryAvailable) {
                                             Button(
                                                 onClick = {
+                                                    onAction(BookDetailAction.OnSummaryClick)
                                                     scrollToBottom.value = true
                                                 },
                                                 content = {
@@ -259,7 +260,8 @@ private fun BookDetailScreen(
                                         } else {
                                             Button(
                                                 onClick = {
-                                                    scrollToBottom.value = true
+                                                    onAction(BookDetailAction.OnSummaryClick)
+                                                    //scrollToBottom.value = true
                                                 },
                                                 content = {
                                                     Text(text = stringResource(Res.string.summary))
@@ -329,6 +331,7 @@ private fun BookDetailScreen(
                                             Button(
                                                 onClick = {
                                                     scrollToBottom.value = true
+                                                    onAction(BookDetailAction.OnSummaryClick)
                                                 },
                                                 content = {
                                                     Text(text = stringResource(Res.string.summary))
@@ -348,6 +351,7 @@ private fun BookDetailScreen(
                                         } else {
                                             Button(
                                                 onClick = {
+                                                    onAction(BookDetailAction.OnSummaryClick)
                                                     scrollToBottom.value = true
                                                 },
                                                 content = {
@@ -434,13 +438,23 @@ private fun BookDetailScreen(
                         style = MaterialTheme.typography.bodyMedium
                     )
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(medium),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                    if (state.isSummaryLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(medium),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        state.summary?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Justify,
+                            )
+                        }
                     }
                 }
             }

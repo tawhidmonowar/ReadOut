@@ -50,4 +50,10 @@ class BookRepositoryImpl(
             dto.results.map { it.toBook() }
         }
     }
+
+    override suspend fun getBookSummary(prompt: String): Result<String?, DataError> {
+        return remoteBookDataSource
+            .fetchBookSummary(prompt)
+            .map { it.candidates.first().content.parts.first().text }
+    }
 }

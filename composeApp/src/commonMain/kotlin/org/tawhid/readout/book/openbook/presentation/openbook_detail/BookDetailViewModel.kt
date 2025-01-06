@@ -12,7 +12,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.openbook.domain.BookRepository
+import org.tawhid.readout.core.domain.onError
 import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
+import org.tawhid.readout.core.utils.toUiText
 
 class BookDetailViewModel(
     private val bookRepository: BookRepository,
@@ -45,7 +48,7 @@ class BookDetailViewModel(
             }
 
             is BookDetailAction.OnSummaryClick -> {
-
+                getBookSummary()
             }
 
             else -> Unit
@@ -64,6 +67,32 @@ class BookDetailViewModel(
                             isLoading = false
                         )
                     }
+                }
+            }
+        }
+    }
+
+    private fun getBookSummary() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isSummaryLoading = true
+            )
+        }
+        _state.value.book?.let { book ->
+            bookRepository.getBookSummary(prompt = geminiBookSummaryPrompt(book))
+                .onSuccess { summary ->
+                    _state.update {
+                        it.copy(
+                            summary = summary,
+                            isSummaryLoading = false
+                        )
+                    }
+                }.onError { error ->
+                _state.update {
+                    it.copy(
+                        isSummaryLoading = false,
+                        summaryErrorMsg = error.toUiText()
+                    )
                 }
             }
         }
