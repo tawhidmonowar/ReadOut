@@ -26,6 +26,8 @@ import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScree
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
 import org.tawhid.readout.app.setting.SettingScreenRoot
 import org.tawhid.readout.app.setting.SettingViewModel
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeScreenRoot
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeViewModel
 import org.tawhid.readout.core.utils.WindowSizes
 
 fun NavGraphBuilder.navGraphBuilder(
@@ -39,7 +41,18 @@ fun NavGraphBuilder.navGraphBuilder(
     }
 
     composable<Route.AudioBooks> {
-        Text(text = "Audio Books")
+        val audioBookHomeViewModel = koinViewModel<AudioBookHomeViewModel>()
+        AudioBookHomeScreenRoot(
+            viewModel = audioBookHomeViewModel,
+            windowSize = windowSize,
+            innerPadding = innerPadding,
+            onAudioBookClick = {
+
+            },
+            onSettingClick = {
+                rootNavController.navigate(Route.Setting)
+            }
+        )
     }
 
     composable<Route.Setting> {

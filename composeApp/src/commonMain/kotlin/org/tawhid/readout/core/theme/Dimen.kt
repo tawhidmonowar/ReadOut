@@ -28,6 +28,7 @@ val large = 24.dp
 val extraLarge = 32.dp
 
 const val bookCoverAspectRatio = 0.66f
+const val audioBookCoverAspectRatio = 1f
 val horizontalGridMaxHeight = 450.dp
 val horizontalGridMaxWidth = 125.dp
 

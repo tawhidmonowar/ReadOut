@@ -29,6 +29,24 @@ enum class Theme(val title: StringResource) {
 }
 
 const val DATA_STORE_FILE_NAME = "setting.preferences_pb"
+const val SEARCH_TRIGGER_CHAR = 3
+
+
+
+
+
+val librivox_book_subject = listOf(
+    "Poetry",
+    "Fiction",
+    "Short Stories",
+    "Romance",
+    "Non-fiction",
+    "Dramatic Readings",
+    "Family Life",
+    "Drama",
+    "Comedy",
+    "Religious",
+)
 
 val openLibrary_book_subject = listOf(
     "Arts",
