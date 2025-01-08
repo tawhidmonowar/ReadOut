@@ -10,11 +10,13 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,6 +31,7 @@ import org.tawhid.readout.app.navigation.components.navigationItemsLists
 import org.tawhid.readout.app.navigation.components.settingNavigationItem
 import org.tawhid.readout.app.navigation.components.summarizeNavigationItem
 import org.tawhid.readout.app.setting.SettingViewModel
+import org.tawhid.readout.core.player.presentation.components.PlayingOverlay
 import org.tawhid.readout.core.theme.expandedNavigationBarWidth
 import org.tawhid.readout.core.theme.mediumNavigationBarWidth
 import org.tawhid.readout.core.utils.WindowSize
@@ -80,6 +83,22 @@ fun NavigationScreenRoot(
         derivedStateOf { currentRoute in navigationBarsVisibleRoutes }
     }
 
+    val playingOverlayVisibleRoutes by derivedStateOf {
+        mutableListOf(
+            Route.Home,
+            Route.AudioBookGraph,
+            Route.OpenLibraryGraph,
+            Route.Setting,
+            Route.Summarize,
+            Route.OpenLibraryDetail(),
+            Route.AudioBookDetail()
+        )
+    }
+
+    val isPlayingOverlayVisible by remember(currentRoute, playingOverlayVisibleRoutes) {
+        derivedStateOf { currentRoute in playingOverlayVisibleRoutes }
+    }
+
     NavigationScreen(
         rootNavController = rootNavController,
         settingViewModel = settingViewModel,
@@ -87,6 +106,7 @@ fun NavigationScreenRoot(
         currentRoute = currentRoute,
         navigationItems = navigationItems,
         isNavigationBarsVisible = isNavigationBarsVisible,
+        isPlayingOverlayVisible = isPlayingOverlayVisible,
         isCompactScreen = isCompactScreen,
         isMediumScreen = isMediumScreen,
         isExpandedScreen = isExpandedScreen
@@ -102,6 +122,7 @@ private fun NavigationScreen(
     currentRoute: Route?,
     navigationItems: List<NavigationItem>,
     isNavigationBarsVisible: Boolean,
+    isPlayingOverlayVisible: Boolean,
     isCompactScreen: Boolean,
     isMediumScreen: Boolean,
     isExpandedScreen: Boolean,
@@ -185,6 +206,20 @@ private fun NavigationScreen(
                     }
                 )
             }
+
+            AnimatedVisibility(
+                visible = isPlayingOverlayVisible,
+                enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
+                exit = fadeOut() + slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }),
+                modifier = Modifier.align(Alignment.BottomCenter).padding(innerPadding)
+            ) {
+                PlayingOverlay(
+                    onPlayerClick = {
+
+                    }
+                )
+            }
+
         }
     }
 }

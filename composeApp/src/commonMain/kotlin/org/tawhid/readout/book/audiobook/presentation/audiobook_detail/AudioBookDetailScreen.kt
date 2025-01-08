@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,8 +52,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.components.AudioTrackList
+import org.tawhid.readout.core.player.presentation.PlayerAction
+import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedScreenPadding
@@ -108,6 +112,10 @@ private fun AudioBookDetailScreen(
     windowSize: WindowSizes,
     onAction: (AudioBookDetailAction) -> Unit
 ) {
+
+    val playerViewModel = koinViewModel<PlayerViewModel>()
+    val playerState by playerViewModel.state.collectAsState()
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val startPadding by animateDpAsState(
         targetValue = innerPadding.calculateStartPadding(
@@ -294,7 +302,9 @@ private fun AudioBookDetailScreen(
                         AudioTrackList(
                             audioTracks = it,
                             onPlayClick = {
-
+                                state.audioBookTracks[0].listenUrl?.let { it1 ->
+                                    playerViewModel.onAction(PlayerAction.OnPlayClick(it1))
+                                }?.let {  }
                             }
                         )
                     }
