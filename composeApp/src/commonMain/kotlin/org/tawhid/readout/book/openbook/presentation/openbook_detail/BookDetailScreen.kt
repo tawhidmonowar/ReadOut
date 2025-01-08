@@ -25,7 +25,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -60,6 +59,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedScreenPadding
@@ -69,6 +69,7 @@ import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.ui.animation.PulseAnimation
+import org.tawhid.readout.core.ui.components.BookCoverImage
 import org.tawhid.readout.core.utils.OPEN_LIBRARY_BASE_URL
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
@@ -83,8 +84,9 @@ import readout.composeapp.generated.resources.description_unavailable
 import readout.composeapp.generated.resources.go_back
 import readout.composeapp.generated.resources.ic_bookmark_outlined
 import readout.composeapp.generated.resources.ic_browse
+import readout.composeapp.generated.resources.ic_headphones
+import readout.composeapp.generated.resources.ic_notes
 import readout.composeapp.generated.resources.play
-import readout.composeapp.generated.resources.share
 import readout.composeapp.generated.resources.summary
 import readout.composeapp.generated.resources.summary_generated_with_ai
 
@@ -124,12 +126,14 @@ private fun BookDetailScreen(
             LayoutDirection.Ltr
         )
     )
+
     val topPadding by animateDpAsState(targetValue = innerPadding.calculateTopPadding())
     val endPadding by animateDpAsState(
         targetValue = innerPadding.calculateEndPadding(
             LayoutDirection.Ltr
         )
     )
+
     val bottomPadding by animateDpAsState(targetValue = innerPadding.calculateBottomPadding())
     val animatedPadding = PaddingValues(
         start = startPadding,
@@ -138,10 +142,9 @@ private fun BookDetailScreen(
         bottom = bottomPadding
     )
 
+    val urlHandler = LocalUriHandler.current
     val scrollState = rememberScrollState()
     val scrollToBottom = remember { mutableStateOf(false) }
-
-    val urlHandler = LocalUriHandler.current
 
     LaunchedEffect(scrollToBottom.value) {
         if (scrollToBottom.value) {
@@ -152,9 +155,7 @@ private fun BookDetailScreen(
 
     Surface(modifier = Modifier.padding(animatedPadding)) {
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 TopAppBar(
                     title = {
@@ -170,6 +171,24 @@ private fun BookDetailScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
                                 contentDescription = stringResource(Res.string.go_back),
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            urlHandler.openUri(OPEN_LIBRARY_BASE_URL + "/works/${state.book?.id}")
+                        }) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_browse),
+                                contentDescription = stringResource(Res.string.browse),
+                            )
+                        }
+                        IconButton(onClick = {
+                            onAction(BookDetailAction.OnBackClick)
+                        }) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
+                                contentDescription = stringResource(Res.string.bookmark),
                             )
                         }
                     },
@@ -193,218 +212,42 @@ private fun BookDetailScreen(
             )
 
             BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(
-                        start = animatedStartPadding,
-                        top = innerPadding.calculateTopPadding(),
-                        end = animatedEndPadding,
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
+                modifier = Modifier.fillMaxSize().verticalScroll(scrollState).padding(
+                    start = animatedStartPadding,
+                    top = innerPadding.calculateTopPadding(),
+                    end = animatedEndPadding,
+                    bottom = innerPadding.calculateBottomPadding()
+                )
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    if (windowSize.isCompactScreen) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = small)
-                                .clip(Shapes.medium)
-                                .padding(large),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            state.book?.let { BookCoverImage(imgUrl = it.imgUrl) }
-                            state.book?.let { book ->
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Spacer(modifier = Modifier.height(large))
-                                    Text(
-                                        text = book.title,
-                                        style = MaterialTheme.typography.headlineSmall,
-                                        modifier = Modifier.padding(bottom = small)
-                                    )
-                                    Text(
-                                        text = "By ${book.authors.joinToString()}",
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    Spacer(modifier = Modifier.height(medium))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-
-                                        if (state.isSummaryAvailable) {
-                                            Button(
-                                                onClick = {
-                                                    onAction(BookDetailAction.OnSummaryClick)
-                                                    scrollToBottom.value = true
-                                                },
-                                                content = {
-                                                    Text(text = stringResource(Res.string.summary))
-                                                }
-                                            )
-
-                                            Spacer(modifier = Modifier.width(extraSmall))
-
-                                            Button(
-                                                onClick = {
-                                                    scrollToBottom.value = true
-                                                },
-                                                content = {
-                                                    Text(text = stringResource(Res.string.play))
-                                                }
-                                            )
-                                        } else {
-                                            Button(
-                                                onClick = {
-                                                    onAction(BookDetailAction.OnSummaryClick)
-                                                    //scrollToBottom.value = true
-                                                },
-                                                content = {
-                                                    Text(text = stringResource(Res.string.summary))
-                                                }
-                                            )
-                                        }
-
-                                        Spacer(modifier = Modifier.width(extraSmall))
-
-                                        IconButton(
-                                            onClick = { }
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
-                                                contentDescription = stringResource(Res.string.bookmark),
-                                            )
-                                        }
-                                        IconButton(
-                                            onClick = {
-                                                urlHandler.openUri(OPEN_LIBRARY_BASE_URL+"/works/${book.id}")
-                                            }
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(Res.drawable.ic_browse),
-                                                contentDescription = stringResource(Res.string.browse),
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = medium)
-                                .clip(Shapes.medium)
-                                .background(MaterialTheme.colorScheme.surfaceContainer)
-                                .padding(large)
-                        ) {
-                            state.book?.let { BookCoverImage(imgUrl = it.imgUrl) }
-
-                            state.book?.let { book ->
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(start = large),
-                                    verticalArrangement = Arrangement.Center
-                                ) {
-                                    Spacer(modifier = Modifier.height(medium))
-                                    Text(
-                                        text = book.title,
-                                        style = MaterialTheme.typography.headlineSmall,
-                                        modifier = Modifier.padding(bottom = small)
-                                    )
-                                    Text(
-                                        text = "By ${book.authors.joinToString()}",
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    Spacer(modifier = Modifier.height(medium))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Start
-                                    ) {
-
-                                        if (state.isSummaryAvailable) {
-                                            Button(
-                                                onClick = {
-                                                    scrollToBottom.value = true
-                                                    onAction(BookDetailAction.OnSummaryClick)
-                                                },
-                                                content = {
-                                                    Text(text = stringResource(Res.string.summary))
-                                                }
-                                            )
-
-                                            Spacer(modifier = Modifier.width(small))
-
-                                            Button(
-                                                onClick = {
-                                                    scrollToBottom.value = true
-                                                },
-                                                content = {
-                                                    Text(text = stringResource(Res.string.play))
-                                                }
-                                            )
-                                        } else {
-                                            Button(
-                                                onClick = {
-                                                    onAction(BookDetailAction.OnSummaryClick)
-                                                    scrollToBottom.value = true
-                                                },
-                                                content = {
-                                                    Text(text = stringResource(Res.string.summary))
-                                                }
-                                            )
-                                        }
-
-                                        Spacer(modifier = Modifier.width(small))
-
-                                        IconButton(
-                                            onClick = { }
-                                        ) {
-                                            Icon(
-                                                modifier = Modifier.padding(5.dp),
-                                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
-                                                contentDescription = stringResource(Res.string.bookmark),
-                                            )
-                                        }
-                                        IconButton(
-                                            onClick = {
-                                                urlHandler.openUri(OPEN_LIBRARY_BASE_URL+"/works/${book.id}")
-                                            }
-                                        ) {
-                                            Icon(
-                                                modifier = Modifier.padding(5.dp),
-                                                painter = painterResource(Res.drawable.ic_browse),
-                                                contentDescription = stringResource(Res.string.browse),
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                    state.book?.let { book ->
+                        if (windowSize.isCompactScreen) {
+                            BookDetailCompactLayout(
+                                book = book,
+                                isSummaryAvailable = state.isSummaryAvailable,
+                                onAction = onAction
+                            )
+                        } else {
+                            BookDetailExpandedLayout(
+                                book = book,
+                                isSummaryAvailable = state.isSummaryAvailable,
+                                onAction = onAction
+                            )
                         }
                     }
 
                     Text(
                         text = stringResource(Res.string.about_book),
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .align(Alignment.Start)
-                            .fillMaxWidth()
-                            .padding(
-                                top = large,
-                                bottom = small
-                            )
+                        modifier = Modifier.align(Alignment.Start).fillMaxWidth().padding(
+                            top = large,
+                            bottom = small
+                        )
                     )
 
                     if (state.isLoading) {
                         Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(medium),
+                            modifier = Modifier.fillMaxSize().padding(medium),
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
@@ -423,7 +266,6 @@ private fun BookDetailScreen(
                             Spacer(modifier = Modifier.height(medium))
                         }
                     }
-
 
                     Text(
                         text = stringResource(Res.string.book_summary),
@@ -462,56 +304,152 @@ private fun BookDetailScreen(
     }
 }
 
-@Composable
-private fun BookCoverImage(
-    imgUrl: String
-) {
-    var imageLoadResult by remember { mutableStateOf<Result<Painter>?>(null) }
 
-    val painter = rememberAsyncImagePainter(
-        model = imgUrl,
-        onSuccess = {
-            val size = it.painter.intrinsicSize
-            imageLoadResult = if (size.width > 1 && size.height > 1) {
-                Result.success(it.painter)
-            } else {
-                Result.failure(Exception("Invalid image dimensions"))
+@Composable
+private fun BookTitleAndAuthors(
+    title: String,
+    authors: List<String>
+) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.headlineSmall,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(bottom = small)
+    )
+    Text(
+        text = "By ${authors.joinToString()}",
+        style = MaterialTheme.typography.titleMedium
+    )
+}
+
+@Composable
+private fun BookDetailButton(
+    isSummaryAvailable: Boolean,
+    onAction: (BookDetailAction) -> Unit
+) {
+    if (isSummaryAvailable) {
+
+        Button(
+            onClick = {
+                onAction(BookDetailAction.OnSummaryClick)
+            }) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_notes),
+                    contentDescription = "Read Summary",
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "Read Summary")
             }
         }
-    )
+        Spacer(modifier = Modifier.width(small))
+        Button(
+            onClick = {
+                onAction(BookDetailAction.OnSummaryClick)
+            }) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_headphones),
+                    contentDescription = "Listen",
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = "Listen")
+            }
+        }
 
-    Box(
+    } else {
+        Button(
+            onClick = {
+                onAction(BookDetailAction.OnSummaryClick)
+                // scrollToBottom.value = true
+            },
+            content = {
+                Text(text = stringResource(Res.string.summary))
+            }
+        )
+    }
+}
+
+@Composable
+private fun BookDetailCompactLayout(
+    book: Book,
+    isSummaryAvailable: Boolean,
+    onAction: (BookDetailAction) -> Unit
+) {
+    Column(
         modifier = Modifier
-            .height(250.dp)
-            .aspectRatio(2 / 3f, matchHeightConstraintsFirst = true),
-        contentAlignment = Alignment.TopCenter
+            .fillMaxWidth()
+            .padding(vertical = small)
+            .clip(Shapes.medium)
+            .padding(large),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ElevatedCard(
-            modifier = Modifier.fillMaxSize(),
-            shape = Shapes.small,
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = small)
+        BookCoverImage(imgUrl = book.imgUrl)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AnimatedContent(targetState = imageLoadResult) { result ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White)
-                        .padding(extraSmall)
-                        .clip(Shapes.extraSmall),
-                    contentAlignment = Alignment.Center
-                ) {
-                    when (result) {
-                        null -> PulseAnimation(modifier = Modifier.size(100.dp))
-                        else -> Image(
-                            painter = if (result.isSuccess) painter else {
-                                painterResource(Res.drawable.book_cover_error_img)
-                            },
-                            contentDescription = stringResource(Res.string.book_cover),
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
-                        )
-                    }
-                }
+
+            Spacer(modifier = Modifier.height(large))
+            BookTitleAndAuthors(title = book.title, authors = book.authors)
+            Spacer(modifier = Modifier.height(medium))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                BookDetailButton(
+                    isSummaryAvailable = isSummaryAvailable,
+                    onAction = onAction
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookDetailExpandedLayout(
+    book: Book,
+    isSummaryAvailable: Boolean,
+    onAction: (BookDetailAction) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = medium)
+            .clip(Shapes.medium)
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(large)
+    ) {
+
+        BookCoverImage(imgUrl = book.imgUrl)
+
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(start = large),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(medium))
+
+            BookTitleAndAuthors(
+                title = book.title,
+                authors = book.authors
+            )
+
+            Spacer(modifier = Modifier.height(medium))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                BookDetailButton(
+                    isSummaryAvailable = isSummaryAvailable,
+                    onAction = onAction
+                )
             }
         }
     }
