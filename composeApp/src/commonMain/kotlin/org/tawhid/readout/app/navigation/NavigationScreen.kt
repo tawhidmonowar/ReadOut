@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -113,6 +116,7 @@ fun NavigationScreenRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NavigationScreen(
     modifier: Modifier = Modifier,
@@ -207,6 +211,8 @@ private fun NavigationScreen(
                 )
             }
 
+            val scaffoldState = rememberBottomSheetScaffoldState()
+
             AnimatedVisibility(
                 visible = isPlayingOverlayVisible,
                 enter = fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight }),
@@ -223,6 +229,7 @@ private fun NavigationScreen(
         }
     }
 }
+
 
 @Composable
 private fun getCurrentRoute(currentRouteString: String): Route? {

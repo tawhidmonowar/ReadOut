@@ -30,15 +30,14 @@ import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerState
 import org.tawhid.readout.core.theme.Shapes
 
-
 @Composable
 fun FullWidthView(
     state: PlayerState,
     onAction: (PlayerAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val imgUrl = state.selectedPlayer?.imgUrl
-    val title = state.selectedPlayer?.title
+    val imgUrl = state.selectedPlayerComponent?.imgUrl
+    val title = state.selectedPlayerComponent?.title
 
     Box(
         contentAlignment = Alignment.Center,
@@ -85,14 +84,14 @@ fun FullWidthView(
                         initialDelayMillis = 0,
                         iterations = Int.MAX_VALUE,
                     ),
-                    text = "Now Playing: " + (state.nowPlaying ?: "Unknown!"),
+                    text = "Now Playing: " + (state.selectedPlayerComponent?.description ?: "Unknown!"),
                     maxLines = 1,
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                 )
             }
 
             IconButton(onClick = {
-                onAction(PlayerAction.OnPauseClick)
+                onAction(PlayerAction.OnPauseResumeClick)
             }
             ) {
                 Icon(
@@ -107,7 +106,7 @@ fun FullWidthView(
 
             IconButton(
                 onClick = {
-
+                    onAction(PlayerAction.OnForwardClick)
                 }
             ) {
                 Icon(

@@ -301,10 +301,8 @@ private fun AudioBookDetailScreen(
                     state.audioBookTracks?.let {
                         AudioTrackList(
                             audioTracks = it,
-                            onPlayClick = {
-                                state.audioBookTracks[0].listenUrl?.let { it1 ->
-                                    playerViewModel.onAction(PlayerAction.OnPlayClick(it1))
-                                }?.let {  }
+                            onPlayClick = { allUrls ->
+                                playerViewModel.onAction(PlayerAction.OnPlayAllClick(allUrls))
                             }
                         )
                     }

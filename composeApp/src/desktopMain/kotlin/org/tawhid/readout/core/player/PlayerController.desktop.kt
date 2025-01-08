@@ -1,48 +1,62 @@
 package org.tawhid.readout.core.player
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
+import javafx.util.Duration
 import org.tawhid.readout.core.player.domain.PlayerRepository
-import uk.co.caprica.vlcj.media.Media
-import uk.co.caprica.vlcj.media.MediaEventAdapter
-import uk.co.caprica.vlcj.media.Meta
-import uk.co.caprica.vlcj.player.component.AudioPlayerComponent
 
 actual class PlayerController : PlayerRepository {
 
-    private val player = AudioPlayerComponent()
-    private val options = arrayOf(
-        ":network-caching=1000",
-        ":https-user-agent=Mozilla/5.0"
-    )
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun play(audioUrl: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            player.mediaPlayer().media().startPaused(audioUrl, *options)
-            player.mediaPlayer().media().parsing().parse()
-            withContext(Dispatchers.Main) {
-                player.mediaPlayer().controls().play()
-                player.mediaPlayer().events().addMediaEventListener(object : MediaEventAdapter() {
-                    override fun mediaMetaChanged(media: Media?, metaType: Meta?) {
-                        val nowPlaying =
-                            player.mediaPlayer().media().meta().get(Meta.NOW_PLAYING) ?: "Unknown"
-                        println("Now Playing: $nowPlaying")
-                        val title = player.mediaPlayer().media().meta().get(Meta.TITLE) ?: "Unknown"
-                        val genre = player.mediaPlayer().media().meta().get(Meta.GENRE) ?: "Unknown"
-                    }
-                })
+        mediaPlayer?.stop()
+        val media = Media(audioUrl)
+        mediaPlayer = MediaPlayer(media).apply {
+            play()
+        }
+    }
+
+    override fun playAll(audioUrls: List<String>) {
+        if (audioUrls.isEmpty()) return
+        play(audioUrls.first())
+        var index = 1
+        mediaPlayer?.setOnEndOfMedia {
+            if (index < audioUrls.size) {
+                play(audioUrls[index])
+                index++
             }
         }
     }
 
-    override fun pauseResume() {
-        if (player.mediaPlayer().status().isPlaying) {
-            player.mediaPlayer().controls().pause()
-        } else {
-            player.mediaPlayer().controls().play()
+    override fun forward() {
+        mediaPlayer?.let {
+            val currentTime = it.currentTime.toMillis()
+            val forwardTime = currentTime + 10000.0
+            val duration = it.totalDuration.toMillis()
+            it.seek(Duration.millis(minOf(forwardTime, duration)))
         }
     }
 
+    override fun rewind() {
+        mediaPlayer?.let {
+            val currentTime = it.currentTime.toMillis()
+            val rewindTime = currentTime - 10000.0
+            it.seek(Duration.millis(maxOf(rewindTime, 0.0)))
+        }
+    }
+
+    override fun pauseResume() {
+        mediaPlayer?.let {
+            if (it.status == MediaPlayer.Status.PLAYING) {
+                it.pause()
+            } else if (it.status == MediaPlayer.Status.PAUSED || it.status == MediaPlayer.Status.STOPPED) {
+                it.play()
+            }
+        }
+    }
+
+    fun release() {
+        mediaPlayer?.dispose()
+    }
 }

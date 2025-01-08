@@ -9,6 +9,7 @@ import org.tawhid.readout.core.player.domain.PlayerRepository
 class PlayerViewModel(
     private val repository: PlayerRepository
 ) : ViewModel() {
+
     private val _state = MutableStateFlow(PlayerState())
     val state = _state.asStateFlow()
 
@@ -23,15 +24,32 @@ class PlayerViewModel(
                 repository.play(action.audioUrl)
             }
 
+            is PlayerAction.OnPlayAllClick -> {
+                _state.update {
+                    it.copy(
+                        isPlaying = true
+                    )
+                }
+                repository.playAll(action.audioUrls)
+            }
+
             is PlayerAction.OnSelectPlayer -> {
                 _state.update {
                     it.copy(
-                        selectedPlayer = action.player
+                        selectedPlayerComponent = action.playerComponent
                     )
                 }
             }
 
-            is PlayerAction.OnPauseClick -> {
+            is PlayerAction.OnForwardClick -> {
+                repository.forward()
+            }
+
+            is PlayerAction.OnRewindClick -> {
+                repository.rewind()
+            }
+
+            is PlayerAction.OnPauseResumeClick -> {
                 repository.pauseResume()
             }
 

@@ -32,7 +32,8 @@ fun PlayingOverlay(
                 state = playerState,
                 onAction = { playerAction ->
                     when (playerAction) {
-                        is PlayerAction.OnPauseClick -> playerViewModel.onAction(playerAction)
+                        is PlayerAction.OnPauseResumeClick -> playerViewModel.onAction(playerAction)
+                        is PlayerAction.OnForwardClick -> playerViewModel.onAction(playerAction)
                         is PlayerAction.OnCollapseClick -> playerViewModel.onAction(playerAction)
                         else -> Unit
                     }

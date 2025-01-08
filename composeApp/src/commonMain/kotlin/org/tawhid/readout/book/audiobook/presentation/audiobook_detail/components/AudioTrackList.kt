@@ -19,17 +19,21 @@ import org.tawhid.readout.core.theme.medium
 
 fun LazyListScope.AudioTrackList(
     audioTracks: List<AudioBookTracks>,
-    onPlayClick: (String) -> Unit,
+    onPlayClick: (List<String>) -> Unit,
 ) {
     items(
         items = audioTracks,
         key = { it.id }
     ) { audioTrack ->
 
+        val currentIndex = audioTracks.indexOf(audioTrack)
+
         AudioTrackListItem(
             audioTrack = audioTrack,
-            onPlayClick = { listenUrl ->
-                onPlayClick(listenUrl)
+            onPlayClick = {
+                val urlsFromIndex = audioTracks.drop(currentIndex).mapNotNull { it.listenUrl }
+                onPlayClick(urlsFromIndex)
+                println("All urls $urlsFromIndex")
             },
             modifier = Modifier
                 .widthIn(max = maxWidthIn)
