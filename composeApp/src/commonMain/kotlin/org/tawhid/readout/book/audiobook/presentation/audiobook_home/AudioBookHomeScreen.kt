@@ -210,6 +210,7 @@ private fun AudioBookHomeScreen(
                 }
             }
         ) { innerPadding ->
+
             val columns = when {
                 windowSize.isExpandedScreen -> GridCells.Adaptive(expandedFeedWidth)
                 windowSize.isMediumScreen -> GridCells.Adaptive(mediumFeedWidth)
@@ -274,6 +275,7 @@ private fun AudioBookHomeScreen(
                     count = bookSize,
                     key = { index -> state.searchResult[index].id }
                 ) { index ->
+
                     val book = state.searchResult[index]
 
                     if (index == bookSize - 1 && !state.isEndReached) {

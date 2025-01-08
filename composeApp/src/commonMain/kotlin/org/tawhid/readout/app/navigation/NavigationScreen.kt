@@ -64,13 +64,14 @@ fun NavigationScreenRoot(
     val navigationBarsVisibleRoutes by derivedStateOf {
         mutableListOf(
             Route.Home,
-            Route.AudioBooks,
+            Route.AudioBookGraph,
             Route.OpenLibraryGraph,
         ).apply {
             if (!isCompactScreen) {
                 add(Route.Setting)
                 add(Route.Summarize)
                 add(Route.OpenLibraryDetail())
+                add(Route.AudioBookDetail())
             }
         }
     }
@@ -193,10 +194,11 @@ private fun getCurrentRoute(currentRouteString: String): Route? {
     return when (currentRouteString) {
         Route.Home::class.qualifiedName -> Route.Home
         Route.OpenLibrary::class.qualifiedName -> Route.OpenLibraryGraph
-        Route.AudioBooks::class.qualifiedName -> Route.AudioBooks
+        Route.AudioBook::class.qualifiedName -> Route.AudioBookGraph
         Route.Setting::class.qualifiedName -> Route.Setting
         Route.Summarize::class.qualifiedName -> Route.Summarize
         Route.OpenLibraryDetail()::class.qualifiedName -> Route.OpenLibraryDetail()
+        Route.AudioBookDetail()::class.qualifiedName -> Route.AudioBookDetail()
         else -> null
     }
 }

@@ -41,6 +41,7 @@ fun ExpandedNavigationBar(
             items.forEach { navigationItem ->
                 val isSelected = when (navigationItem.route) {
                     Route.OpenLibraryGraph -> currentRoute in listOf(Route.OpenLibraryGraph, Route.OpenLibraryDetail())
+                    Route.AudioBookGraph -> currentRoute in listOf(Route.AudioBookGraph, Route.AudioBookDetail())
                     else -> navigationItem.route == currentRoute
                 }
                 if (navigationItem == items.last()) {

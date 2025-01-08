@@ -1,7 +1,6 @@
 package org.tawhid.readout.book.audiobook.presentation.audiobook_home.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
@@ -38,8 +37,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -50,7 +47,7 @@ import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.ui.animation.PulseAnimation
 import readout.composeapp.generated.resources.Res
-import readout.composeapp.generated.resources.book_cover_error_img
+import readout.composeapp.generated.resources.audiobook_cover_error_img
 import readout.composeapp.generated.resources.right_arrow
 
 @Composable
@@ -101,26 +98,14 @@ fun AudioBookListItem(
                             }
                     },
                     onError = {
-                        it.result.throwable.printStackTrace()
+                        //it.result.throwable.printStackTrace()
                         imgLoadResult = Result.failure(it.result.throwable)
                     }
                 )
 
-                val painterState by painter.state.collectAsStateWithLifecycle()
-
-                val transition by animateFloatAsState(
-                    targetValue = if (painterState is AsyncImagePainter.State.Success) {
-                        1f
-                    } else {
-                        0f
-                    },
-                    animationSpec = tween(durationMillis = 800)
-                )
-
-
                 when (val result = imgLoadResult) {
                     null -> PulseAnimation(
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(100.dp)
                     )
 
                     else -> {
@@ -131,15 +116,14 @@ fun AudioBookListItem(
                                     matchHeightConstraintsFirst = true
                                 )
                                 .graphicsLayer {
-                                    rotationX = (1f - transition) * 30f
                                     scaleX = scale
                                     scaleY = scale
                                 },
                             painter = if (result.isSuccess) painter else {
-                                painterResource(Res.drawable.book_cover_error_img)
+                                painterResource(Res.drawable.audiobook_cover_error_img)
                             },
                             contentDescription = book.title,
-                            contentScale = if (result.isSuccess) ContentScale.Crop else ContentScale.Fit
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }

@@ -26,6 +26,10 @@ import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScree
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
 import org.tawhid.readout.app.setting.SettingScreenRoot
 import org.tawhid.readout.app.setting.SettingViewModel
+import org.tawhid.readout.book.audiobook.presentation.SharedAudioBookViewModel
+import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailAction
+import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailScreenRoot
+import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeScreenRoot
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeViewModel
 import org.tawhid.readout.core.utils.WindowSizes
@@ -38,21 +42,6 @@ fun NavGraphBuilder.navGraphBuilder(
 ) {
     composable<Route.Home> {
         Text(text = "Home")
-    }
-
-    composable<Route.AudioBooks> {
-        val audioBookHomeViewModel = koinViewModel<AudioBookHomeViewModel>()
-        AudioBookHomeScreenRoot(
-            viewModel = audioBookHomeViewModel,
-            windowSize = windowSize,
-            innerPadding = innerPadding,
-            onAudioBookClick = {
-
-            },
-            onSettingClick = {
-                rootNavController.navigate(Route.Setting)
-            }
-        )
     }
 
     composable<Route.Setting> {
@@ -68,7 +57,6 @@ fun NavGraphBuilder.navGraphBuilder(
     composable<Route.Summarize> {
         Text(text = "Summarize")
     }
-
 
 
     navigation<Route.OpenLibraryGraph>(
@@ -93,6 +81,7 @@ fun NavGraphBuilder.navGraphBuilder(
                 }
             )
         }
+
         composable<Route.OpenLibraryDetail> { it ->
             val bookDetailViewModel = koinViewModel<BookDetailViewModel>()
             val sharedBookViewModel = it.sharedKoinViewModel<SharedBookViewModel>(rootNavController)
@@ -111,6 +100,50 @@ fun NavGraphBuilder.navGraphBuilder(
                 }
             )
         }
+    }
+
+    navigation<Route.AudioBookGraph>(
+        startDestination = Route.AudioBook
+    ) {
+        composable<Route.AudioBook> {
+            val audioBookHomeViewModel = koinViewModel<AudioBookHomeViewModel>()
+            val sharedAudioBookViewModel = it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            LaunchedEffect(true) { sharedAudioBookViewModel.onSelectBook(null) }
+            AudioBookHomeScreenRoot(
+                viewModel = audioBookHomeViewModel,
+                windowSize = windowSize,
+                innerPadding = innerPadding,
+                onAudioBookClick = { book ->
+                    sharedAudioBookViewModel.onSelectBook(book)
+                    rootNavController.navigate(
+                        Route.AudioBookDetail(book.id)
+                    )
+                },
+                onSettingClick = {
+                    rootNavController.navigate(Route.Setting)
+                }
+            )
+        }
+
+        composable<Route.AudioBookDetail> { it ->
+            val audioBookDetailViewModel = koinViewModel<AudioBookDetailViewModel>()
+            val sharedAudioBookViewModel = it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            val selectedBook by sharedAudioBookViewModel.selectedBook.collectAsStateWithLifecycle()
+            LaunchedEffect(selectedBook) {
+                selectedBook?.let {
+                    audioBookDetailViewModel.onAction(AudioBookDetailAction.OnSelectedBookChange(it))
+                }
+            }
+            AudioBookDetailScreenRoot(
+                viewModel = audioBookDetailViewModel,
+                innerPadding = innerPadding,
+                windowSize = windowSize,
+                onBackClick = {
+                    rootNavController.navigateUp()
+                }
+            )
+        }
+
     }
 }
 

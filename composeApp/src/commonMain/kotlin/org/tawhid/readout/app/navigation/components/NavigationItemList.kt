@@ -35,7 +35,7 @@ val navigationItemsLists = listOf(
         unSelectedIcon = Res.drawable.ic_library_music_outlined,
         selectedIcon = Res.drawable.ic_library_music_filled,
         title = Res.string.audiobooks,
-        route = Route.AudioBooks
+        route = Route.AudioBookGraph
     )
 )
 
