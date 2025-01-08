@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.ktor.client.android)
+            implementation(libs.bundles.exoplayer)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -60,6 +61,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.vlcj)
         }
     }
 }
