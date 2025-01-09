@@ -24,6 +24,15 @@ class PlayerViewModel(
                 repository.play(action.audioUrl)
             }
 
+            is PlayerAction.OnPlayAudioBase64Click -> {
+                _state.update {
+                    it.copy(
+                        isPlaying = true
+                    )
+                }
+                repository.playAudioBase64(action.audioBase64)
+            }
+
             is PlayerAction.OnPlayAllClick -> {
                 _state.update {
                     it.copy(

@@ -11,6 +11,10 @@ class PlayerRepositoryImpl(
         playerController.play(audioUrl)
     }
 
+    override fun playAudioBase64(audioBase64: String) {
+        playerController.playAudioBase64(audioBase64)
+    }
+
     override fun playAll(audioUrls: List<String>) {
         playerController.playAll(audioUrls)
     }

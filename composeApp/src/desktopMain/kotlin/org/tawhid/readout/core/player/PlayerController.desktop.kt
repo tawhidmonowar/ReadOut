@@ -4,6 +4,8 @@ import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import javafx.util.Duration
 import org.tawhid.readout.core.player.domain.PlayerRepository
+import java.io.File
+import java.util.Base64
 
 actual class PlayerController : PlayerRepository {
 
@@ -14,6 +16,25 @@ actual class PlayerController : PlayerRepository {
         val media = Media(audioUrl)
         mediaPlayer = MediaPlayer(media).apply {
             play()
+        }
+    }
+
+    override fun playAudioBase64(audioBase64: String) {
+        mediaPlayer?.stop()
+
+        val decodedBytes = Base64.getDecoder().decode(audioBase64)
+        val tempFile = File.createTempFile("audio", ".mp3")
+        tempFile.writeBytes(decodedBytes)
+
+        println("Play Clickkkk")
+
+        val media = Media(tempFile.toURI().toString())
+        mediaPlayer = MediaPlayer(media).apply {
+            play()
+        }
+
+        mediaPlayer?.setOnEndOfMedia {
+            tempFile.delete()
         }
     }
 
