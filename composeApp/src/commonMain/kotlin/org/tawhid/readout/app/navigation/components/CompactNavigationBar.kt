@@ -29,9 +29,7 @@ fun CompactNavigationBar(
                 Route.AudioBookGraph -> currentRoute in listOf(Route.AudioBookGraph, Route.AudioBookDetail())
                 else -> navigationItem.route == currentRoute
             }
-            val tabScale = animateFloatAsState(targetValue = if (isSelected) 1.1f else 1f)
             NavigationBarItem(
-                modifier = Modifier.scale(tabScale.value),
                 selected = isSelected,
                 onClick = { onItemClick(navigationItem) },
                 icon = {

@@ -4,6 +4,8 @@ import org.tawhid.readout.app.navigation.Route
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.audiobooks
 import readout.composeapp.generated.resources.home
+import readout.composeapp.generated.resources.ic_audiobooks_filled
+import readout.composeapp.generated.resources.ic_audiobooks_outlined
 import readout.composeapp.generated.resources.ic_auto_awesome_filled
 import readout.composeapp.generated.resources.ic_auto_awesome_outlined
 import readout.composeapp.generated.resources.ic_home_filled
@@ -32,8 +34,8 @@ val navigationItemsLists = listOf(
         route = Route.OpenLibraryGraph
     ),
     NavigationItem(
-        unSelectedIcon = Res.drawable.ic_library_music_outlined,
-        selectedIcon = Res.drawable.ic_library_music_filled,
+        unSelectedIcon = Res.drawable.ic_audiobooks_outlined,
+        selectedIcon = Res.drawable.ic_audiobooks_filled,
         title = Res.string.audiobooks,
         route = Route.AudioBookGraph
     )
