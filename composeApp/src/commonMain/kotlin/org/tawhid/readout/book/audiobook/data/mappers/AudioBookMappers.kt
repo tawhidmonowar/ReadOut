@@ -3,7 +3,7 @@ package org.tawhid.readout.book.audiobook.data.mappers
 import org.tawhid.readout.book.audiobook.data.dto.AudioBookTrackDto
 import org.tawhid.readout.book.audiobook.data.dto.SearchedAudioBookDto
 import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBookTracks
+import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
 
 fun SearchedAudioBookDto.toAudioBook(): AudioBook {
     return AudioBook(
@@ -22,8 +22,8 @@ fun SearchedAudioBookDto.toAudioBook(): AudioBook {
     )
 }
 
-fun AudioBookTrackDto.toAudioBookTracks(): AudioBookTracks {
-    return AudioBookTracks(
+fun AudioBookTrackDto.toAudioBookTracks(): AudioBookTrack {
+    return AudioBookTrack(
         id = id,
         sectionNumber = sectionNumber,
         title = title,

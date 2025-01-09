@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.openbook.domain.BookRepository
 import org.tawhid.readout.core.domain.onError
@@ -53,6 +52,14 @@ class BookDetailViewModel(
 
             is BookDetailAction.OnSummaryClick -> {
                 getBookSummary()
+            }
+
+            is BookDetailAction.OnSaveClick -> {
+                viewModelScope.launch {
+                    state.value.book?.let { book ->
+                        bookRepository.saveBook(book)
+                    }
+                }
             }
 
             else -> Unit

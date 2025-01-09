@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.tawhid.readout.book.audiobook.domain.AudioBookTracks
+import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.extraSmall
 import org.tawhid.readout.core.theme.medium
@@ -44,7 +44,7 @@ import readout.composeapp.generated.resources.play
 
 @Composable
 fun AudioTrackListItem(
-    audioTrack: AudioBookTracks,
+    audioTrack: AudioBookTrack,
     onPlayClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {

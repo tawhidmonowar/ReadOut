@@ -1,5 +1,6 @@
 package org.tawhid.readout.core.di
 
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -21,6 +22,8 @@ import org.tawhid.readout.book.openbook.domain.BookRepository
 import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
+import org.tawhid.readout.core.data.database.DatabaseFactory
+import org.tawhid.readout.core.data.database.ReadOutDatabase
 import org.tawhid.readout.core.data.network.HttpClientFactory
 import org.tawhid.readout.core.player.data.repository.PlayerRepositoryImpl
 import org.tawhid.readout.core.player.domain.PlayerRepository
@@ -31,8 +34,14 @@ expect val platformModule: Module
 
 val sharedModule = module {
     single { HttpClientFactory.create(OkHttp.create()) }
-    singleOf(::AppPreferences)
+
+    single { get<DatabaseFactory>().create().setDriver(BundledSQLiteDriver()).build() }
+    single { get<ReadOutDatabase>().openBookDao }
+    single { get<ReadOutDatabase>().audioBookDao }
+    single { get<ReadOutDatabase>().summarizeDao }
+
     viewModelOf(::SettingViewModel)
+    singleOf(::AppPreferences)
 
     singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
     single { PlayerViewModel(get()) }

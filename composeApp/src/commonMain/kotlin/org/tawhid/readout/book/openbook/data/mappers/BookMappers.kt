@@ -1,5 +1,6 @@
 package org.tawhid.readout.book.openbook.data.mappers
 
+import org.tawhid.readout.book.openbook.data.database.OpenBookEntity
 import org.tawhid.readout.book.openbook.data.dto.SearchedBookDto
 import org.tawhid.readout.book.openbook.domain.Book
 
@@ -13,7 +14,7 @@ fun SearchedBookDto.toBook(): Book {
         } else {
             "https://covers.openlibrary.org/b/id/${coverAlternativeKey}-L.jpg"
         },
-        authors = authorNames ?: authorNames2ndApproach?: emptyList(),
+        authors = authorNames ?: authorNames2ndApproach ?: emptyList(),
         description = null,
         languages = languages ?: emptyList(),
         firstPublishYear = firstPublishYear.toString(),
@@ -21,5 +22,43 @@ fun SearchedBookDto.toBook(): Book {
         ratingCount = ratingsCount ?: 0,
         numPages = numPagesMedian ?: 0,
         numEditions = numEditions ?: 0
+    )
+}
+
+fun Book.toBookBookEntity(): OpenBookEntity {
+    return OpenBookEntity(
+        id = id,
+        title = title,
+        imgUrl = imgUrl,
+        authors = authors,
+        description = description,
+        languages = languages,
+        firstPublishYear = firstPublishYear,
+        avgRating = avgRating,
+        ratingCount = ratingCount,
+        numPages = numPages,
+        numEditions = numEditions,
+        bookType = null,
+        isSaved = null,
+        isViewed = null,
+        summaryText = null,
+        summaryBase64 = null,
+        timeStamp = System.currentTimeMillis(),
+    )
+}
+
+fun OpenBookEntity.toBook(): Book {
+    return Book(
+        id = id,
+        title = title,
+        imgUrl = imgUrl,
+        authors = authors,
+        description = description,
+        languages = languages,
+        firstPublishYear = firstPublishYear,
+        avgRating = avgRating,
+        ratingCount = ratingCount,
+        numPages = numPages,
+        numEditions = numEditions
     )
 }

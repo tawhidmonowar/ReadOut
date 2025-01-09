@@ -5,7 +5,7 @@ import org.tawhid.readout.book.audiobook.data.mappers.toAudioBookTracks
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
-import org.tawhid.readout.book.audiobook.domain.AudioBookTracks
+import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
 import org.tawhid.readout.core.domain.DataError
 import org.tawhid.readout.core.domain.Result
 import org.tawhid.readout.core.domain.map
@@ -30,7 +30,7 @@ class AudioBookRepositoryImpl(
         }
     }
 
-    override suspend fun getAudioBookTracks(audioBookId: String): Result<List<AudioBookTracks>, DataError.Remote> {
+    override suspend fun getAudioBookTracks(audioBookId: String): Result<List<AudioBookTrack>, DataError.Remote> {
         return remoteAudioBookDataSource.fetchAudioBookTracks(audioBookId).map { dto ->
             dto.audioBookTracks.map {
                 it.toAudioBookTracks()

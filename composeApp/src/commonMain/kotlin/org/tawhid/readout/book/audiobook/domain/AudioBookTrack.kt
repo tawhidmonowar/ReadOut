@@ -1,6 +1,6 @@
 package org.tawhid.readout.book.audiobook.domain
 
-data class AudioBookTracks(
+data class AudioBookTrack(
     val id: String,
     val sectionNumber: String?,
     val title: String?,

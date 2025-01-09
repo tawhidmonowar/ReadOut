@@ -190,7 +190,7 @@ private fun BookDetailScreen(
                             )
                         }
                         IconButton(onClick = {
-                            onAction(BookDetailAction.OnBackClick)
+                            onAction(BookDetailAction.OnSaveClick)
                         }) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_bookmark_outlined),

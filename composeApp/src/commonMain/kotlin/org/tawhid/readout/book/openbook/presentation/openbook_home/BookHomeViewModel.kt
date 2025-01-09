@@ -37,6 +37,7 @@ class BookHomeViewModel(
                 observeSearchQuery()
                 getTrendingBooks()
             }
+            observeSavedBooks()
             getBrowseBooks("english")
             println()
         }
@@ -82,6 +83,22 @@ class BookHomeViewModel(
 
             else -> Unit
         }
+    }
+
+    private fun observeSavedBooks() {
+        observeSaveJob?.cancel()
+        observeSaveJob = bookRepository.getSavedBooks()
+            .map { savedBooks ->
+                savedBooks.reversed()
+            }
+            .onEach { savedBooks ->
+                _state.update {
+                    it.copy(
+                        savedBooks = savedBooks
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     @OptIn(FlowPreview::class)

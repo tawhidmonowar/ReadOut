@@ -252,7 +252,7 @@ private fun BookHomeScreen(
                         ShimmerEffect.BookHorizontalGridItemShimmerEffect()
                     } else {
                         BookHorizontalGridList(
-                            books = state.trendingBooks,
+                            books = state.savedBooks,
                             onAction = { onAction((it)) }
                         )
                     }

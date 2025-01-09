@@ -1,7 +1,7 @@
 package org.tawhid.readout.book.audiobook.presentation.audiobook_detail
 
 import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBookTracks
+import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
 import org.tawhid.readout.core.utils.UiText
 
 data class AudioBookDetailState(
@@ -12,7 +12,7 @@ data class AudioBookDetailState(
 
     val audioBookTracksErrorMsg: UiText? = null,
     val isAudioBookTracksLoading: Boolean = false,
-    val audioBookTracks: List<AudioBookTracks>? = null,
+    val audioBookTracks: List<AudioBookTrack>? = null,
 
     val isSummaryLoading: Boolean = false,
     val isSummaryAvailable: Boolean = true,
