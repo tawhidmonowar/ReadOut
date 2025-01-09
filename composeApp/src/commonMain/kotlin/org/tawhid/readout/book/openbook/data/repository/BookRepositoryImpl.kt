@@ -56,4 +56,10 @@ class BookRepositoryImpl(
             .fetchBookSummary(prompt)
             .map { it.candidates.first().content.parts.first().text }
     }
+
+    override suspend fun getSummaryAudio(summary: String): Result<String?, DataError> {
+        return remoteBookDataSource.fetchBookSummaryAudio(summary).map {
+            it.audioContent
+        }
+    }
 }

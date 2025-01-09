@@ -5,13 +5,18 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import io.ktor.client.request.setBody
 import org.tawhid.readout.BuildKonfig
 import org.tawhid.readout.book.openbook.data.dto.BookWorkDto
-import org.tawhid.readout.book.openbook.data.dto.SearchResponseDto
 import org.tawhid.readout.book.openbook.data.dto.BrowseResponseDto
+import org.tawhid.readout.book.openbook.data.dto.SearchResponseDto
+import org.tawhid.readout.core.cloudtts.dto.AudioConfig
+import org.tawhid.readout.core.cloudtts.dto.CloudTextToSpeechRequestDto
+import org.tawhid.readout.core.cloudtts.dto.CloudTextToSpeechResponseDto
+import org.tawhid.readout.core.cloudtts.dto.Input
+import org.tawhid.readout.core.cloudtts.dto.Voice
 import org.tawhid.readout.core.data.network.safeCall
 import org.tawhid.readout.core.domain.DataError
 import org.tawhid.readout.core.domain.Result
@@ -19,6 +24,7 @@ import org.tawhid.readout.core.gemini.dto.ContentItem
 import org.tawhid.readout.core.gemini.dto.GeminiResponseDto
 import org.tawhid.readout.core.gemini.dto.RequestBody
 import org.tawhid.readout.core.gemini.dto.RequestPart
+import org.tawhid.readout.core.utils.CLOUD_TEXT_TO_SPEECH_BASE_URL
 import org.tawhid.readout.core.utils.GEMINI_BASE_URL
 import org.tawhid.readout.core.utils.GEMINI_FLASH
 import org.tawhid.readout.core.utils.OPEN_LIBRARY_BASE_URL
@@ -60,7 +66,38 @@ class RemoteBookDataSourceImpl(
             httpClient.post(
                 urlString = "${GEMINI_BASE_URL}/v1beta/models/${GEMINI_FLASH}:generateContent"
             ) {
-               parameter("key", BuildKonfig.GEMINI_API_KEY)
+                parameter("key", BuildKonfig.GEMINI_API_KEY)
+                setBody(
+                    Json.encodeToString(requestBody)
+                )
+            }
+        }
+    }
+
+    override suspend fun fetchBookSummaryAudio(summary: String): Result<CloudTextToSpeechResponseDto, DataError.Remote> {
+        return safeCall<CloudTextToSpeechResponseDto> {
+
+            val requestBody = CloudTextToSpeechRequestDto(
+                input = Input(
+                    text = "Convert"
+                ),
+                audioConfig = AudioConfig(
+                    audioEncoding = "MP3",
+                    pitch = 0,
+                    speakingRate = 1,
+                ),
+                voice = Voice(
+                    languageCode = "en-US",
+                    name = "en-US-Studio-Q"
+                )
+            )
+
+            httpClient.post(
+                urlString = "${CLOUD_TEXT_TO_SPEECH_BASE_URL}/v1beta1/text:synthesize"
+            ) {
+                header("Accept", "application/json")
+                header("Content-Type", "application/json")
+                parameter("key", BuildKonfig.CLOUD_TEXT_TO_SPEECH_API_KEY)
                 setBody(
                     Json.encodeToString(requestBody)
                 )
@@ -90,7 +127,11 @@ class RemoteBookDataSourceImpl(
         }
     }
 
-    override suspend fun fetchBrowseBooks(subject: String, resultLimit: Int?, offset: Int?): Result<BrowseResponseDto, DataError.Remote> {
+    override suspend fun fetchBrowseBooks(
+        subject: String,
+        resultLimit: Int?,
+        offset: Int?
+    ): Result<BrowseResponseDto, DataError.Remote> {
         return safeCall {
             httpClient.get(
                 urlString = "${OPEN_LIBRARY_BASE_URL}/subjects/$subject.json"

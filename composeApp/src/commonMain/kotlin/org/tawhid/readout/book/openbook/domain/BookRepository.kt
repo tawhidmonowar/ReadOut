@@ -9,4 +9,5 @@ interface BookRepository {
     suspend fun getBookDescriptionById(bookId: String): Result<String?, DataError>
     suspend fun getBrowseBooks(subject: String,resultLimit: Int? = null, offset: Int? = null): Result<List<Book>, DataError.Remote>
     suspend fun getBookSummary(prompt: String): Result<String?, DataError>
+    suspend fun getSummaryAudio(summary: String): Result<String?, DataError>
 }

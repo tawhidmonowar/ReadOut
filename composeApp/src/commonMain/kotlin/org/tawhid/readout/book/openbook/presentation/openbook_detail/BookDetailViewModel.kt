@@ -10,15 +10,19 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.openbook.domain.BookRepository
 import org.tawhid.readout.core.domain.onError
 import org.tawhid.readout.core.domain.onSuccess
 import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
+import org.tawhid.readout.core.player.presentation.PlayerAction
+import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.utils.toUiText
 
 class BookDetailViewModel(
     private val bookRepository: BookRepository,
+    private val playerViewModel: PlayerViewModel,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -43,8 +47,8 @@ class BookDetailViewModel(
                 }
             }
 
-            is BookDetailAction.OnSaveClick -> {
-
+            is BookDetailAction.OnSummaryPlayClick -> {
+                getBookSummaryAudio()
             }
 
             is BookDetailAction.OnSummaryClick -> {
@@ -81,6 +85,18 @@ class BookDetailViewModel(
         _state.value.book?.let { book ->
             bookRepository.getBookSummary(prompt = geminiBookSummaryPrompt(book))
                 .onSuccess { summary ->
+
+                    if (summary != null) {
+                        bookRepository.getSummaryAudio(summary = summary)
+                            .onSuccess { summaryAudioByteArray ->
+                                _state.update {
+                                    it.copy(
+                                        summaryAudioByteArray = summaryAudioByteArray
+                                    )
+                                }
+                            }
+                    }
+
                     _state.update {
                         it.copy(
                             summary = summary,
@@ -88,13 +104,42 @@ class BookDetailViewModel(
                         )
                     }
                 }.onError { error ->
-                _state.update {
-                    it.copy(
-                        isSummaryLoading = false,
-                        summaryErrorMsg = error.toUiText()
-                    )
+                    _state.update {
+                        it.copy(
+                            isSummaryLoading = false,
+                            summaryErrorMsg = error.toUiText()
+                        )
+                    }
                 }
-            }
+        }
+    }
+
+    private fun getBookSummaryAudio() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isSummaryAudioByteArrayLoading = true
+            )
+        }
+        _state.value.book?.let { book ->
+            bookRepository.getSummaryAudio(summary = "summary")
+                .onSuccess { summaryAudioByteArray ->
+                    summaryAudioByteArray?.let {
+                        playerViewModel.onAction(PlayerAction.OnPlayAudioBase64Click(it))
+                    }
+                    _state.update {
+                        it.copy(
+                            summaryAudioByteArray = summaryAudioByteArray,
+                            isSummaryAudioByteArrayLoading = false
+                        )
+                    }
+                }.onError { error ->
+                    _state.update {
+                        it.copy(
+                            isSummaryAudioByteArrayLoading = false,
+                            summaryAudioByteArrayErrorMsg = error.toUiText()
+                        )
+                    }
+                }
         }
     }
 }

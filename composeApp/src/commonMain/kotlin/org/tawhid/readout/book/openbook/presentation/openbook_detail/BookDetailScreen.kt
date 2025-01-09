@@ -43,6 +43,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,9 +58,13 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.core.player.presentation.PlayerAction
+import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedScreenPadding
@@ -98,6 +103,7 @@ fun BookDetailScreenRoot(
     innerPadding: PaddingValues
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     BookDetailScreen(
         state = state,
         innerPadding = innerPadding,
@@ -225,13 +231,15 @@ private fun BookDetailScreen(
                             BookDetailCompactLayout(
                                 book = book,
                                 isSummaryAvailable = state.isSummaryAvailable,
-                                onAction = onAction
+                                onAction = onAction,
+                                state = state
                             )
                         } else {
                             BookDetailExpandedLayout(
                                 book = book,
                                 isSummaryAvailable = state.isSummaryAvailable,
-                                onAction = onAction
+                                onAction = onAction,
+                                state = state
                             )
                         }
                     }
@@ -324,9 +332,11 @@ private fun BookTitleAndAuthors(
 
 @Composable
 private fun BookDetailButton(
+    state: BookDetailState,
     isSummaryAvailable: Boolean,
     onAction: (BookDetailAction) -> Unit
 ) {
+
     if (isSummaryAvailable) {
 
         Button(
@@ -348,8 +358,12 @@ private fun BookDetailButton(
         Spacer(modifier = Modifier.width(small))
         Button(
             onClick = {
-                onAction(BookDetailAction.OnSummaryClick)
-            }) {
+                onAction(BookDetailAction.OnSummaryPlayClick)
+                state.summaryAudioByteArray?.let {
+
+                }
+            }
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -378,6 +392,7 @@ private fun BookDetailButton(
 
 @Composable
 private fun BookDetailCompactLayout(
+    state: BookDetailState,
     book: Book,
     isSummaryAvailable: Boolean,
     onAction: (BookDetailAction) -> Unit
@@ -407,7 +422,8 @@ private fun BookDetailCompactLayout(
             ) {
                 BookDetailButton(
                     isSummaryAvailable = isSummaryAvailable,
-                    onAction = onAction
+                    onAction = onAction,
+                    state = state
                 )
             }
         }
@@ -416,6 +432,7 @@ private fun BookDetailCompactLayout(
 
 @Composable
 private fun BookDetailExpandedLayout(
+    state: BookDetailState,
     book: Book,
     isSummaryAvailable: Boolean,
     onAction: (BookDetailAction) -> Unit
@@ -448,7 +465,8 @@ private fun BookDetailExpandedLayout(
             ) {
                 BookDetailButton(
                     isSummaryAvailable = isSummaryAvailable,
-                    onAction = onAction
+                    onAction = onAction,
+                    state = state
                 )
             }
         }

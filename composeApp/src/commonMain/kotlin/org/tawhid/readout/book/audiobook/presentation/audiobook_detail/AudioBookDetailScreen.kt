@@ -114,7 +114,6 @@ private fun AudioBookDetailScreen(
 ) {
 
     val playerViewModel = koinViewModel<PlayerViewModel>()
-    val playerState by playerViewModel.state.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val startPadding by animateDpAsState(
