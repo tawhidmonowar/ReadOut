@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
     id("com.vanniktech.maven.publish") version "0.29.0"
     id("com.google.osdetector") version "1.7.3"
 }
@@ -26,6 +28,10 @@ kotlin {
     }
 
     jvm("desktop")
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 
     sourceSets {
         val desktopMain by getting
@@ -62,6 +68,10 @@ kotlin {
 
             implementation(libs.bundles.ktor)
             implementation(libs.bundles.coil)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+
         }
 
         desktopMain.dependencies {
@@ -81,6 +91,10 @@ kotlin {
             implementation("org.openjfx:javafx-swing:19:${fxSuffix}")
             implementation("org.openjfx:javafx-web:19:${fxSuffix}")
             implementation("org.openjfx:javafx-media:19:${fxSuffix}")
+        }
+
+        dependencies {
+            ksp(libs.androidx.room.compiler)
         }
     }
 }
