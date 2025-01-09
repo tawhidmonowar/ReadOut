@@ -142,6 +142,10 @@ buildkonfig {
             FieldSpec.Type.STRING,
             "GEMINI_API_KEY", localProperties["GEMINI_API_KEY"]?.toString() ?: "",
         )
+        buildConfigField(
+            FieldSpec.Type.STRING,
+            "CLOUD_TEXT_TO_SPEECH_API_KEY", localProperties["CLOUD_TEXT_TO_SPEECH_API_KEY"]?.toString() ?: "",
+        )
     }
 }
 
