@@ -1,15 +1,11 @@
 package org.tawhid.readout.app.navigation
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -18,12 +14,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailAction
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailScreenRoot
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
-import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScreenRoot
-import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
+import org.tawhid.readout.app.home.HomeScreenRoot
+import org.tawhid.readout.app.home.HomeViewModel
 import org.tawhid.readout.app.setting.SettingScreenRoot
 import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.presentation.SharedAudioBookViewModel
@@ -32,6 +24,12 @@ import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeScreenRoot
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeViewModel
+import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
+import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailAction
+import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailScreenRoot
+import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
+import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScreenRoot
+import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
 import org.tawhid.readout.core.utils.WindowSizes
 
 fun NavGraphBuilder.navGraphBuilder(
@@ -41,7 +39,18 @@ fun NavGraphBuilder.navGraphBuilder(
     innerPadding: PaddingValues
 ) {
     composable<Route.Home> {
-        Text(text = "Home")
+        val homeViewModel = koinViewModel<HomeViewModel>()
+        HomeScreenRoot(
+            viewModel = homeViewModel,
+            onSettingClick = {
+                rootNavController.navigate(Route.Setting)
+            },
+            onSummarizeClick = {
+                rootNavController.navigate(Route.Summarize)
+            },
+            windowSize = windowSize,
+            innerPadding = innerPadding
+        )
     }
 
     composable<Route.Setting> {
@@ -107,7 +116,8 @@ fun NavGraphBuilder.navGraphBuilder(
     ) {
         composable<Route.AudioBook> {
             val audioBookHomeViewModel = koinViewModel<AudioBookHomeViewModel>()
-            val sharedAudioBookViewModel = it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            val sharedAudioBookViewModel =
+                it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
             LaunchedEffect(true) { sharedAudioBookViewModel.onSelectBook(null) }
             AudioBookHomeScreenRoot(
                 viewModel = audioBookHomeViewModel,
@@ -127,7 +137,8 @@ fun NavGraphBuilder.navGraphBuilder(
 
         composable<Route.AudioBookDetail> { it ->
             val audioBookDetailViewModel = koinViewModel<AudioBookDetailViewModel>()
-            val sharedAudioBookViewModel = it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            val sharedAudioBookViewModel =
+                it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
             val selectedBook by sharedAudioBookViewModel.selectedBook.collectAsStateWithLifecycle()
             LaunchedEffect(selectedBook) {
                 selectedBook?.let {
@@ -146,7 +157,6 @@ fun NavGraphBuilder.navGraphBuilder(
 
     }
 }
-
 
 
 @Composable

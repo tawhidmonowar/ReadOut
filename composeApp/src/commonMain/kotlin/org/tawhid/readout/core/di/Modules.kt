@@ -7,6 +7,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.tawhid.readout.app.home.HomeViewModel
 import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSourceImpl
@@ -41,6 +42,7 @@ val sharedModule = module {
     single { get<ReadOutDatabase>().summarizeDao }
 
     viewModelOf(::SettingViewModel)
+    viewModelOf(::HomeViewModel)
     singleOf(::AppPreferences)
 
     singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
