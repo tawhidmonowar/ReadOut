@@ -14,8 +14,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.app.home.HomeScreenRoot
-import org.tawhid.readout.app.home.HomeViewModel
+import org.tawhid.readout.app.home.presentation.HomeScreenRoot
+import org.tawhid.readout.app.home.presentation.HomeViewModel
 import org.tawhid.readout.app.setting.SettingScreenRoot
 import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.presentation.SharedAudioBookViewModel

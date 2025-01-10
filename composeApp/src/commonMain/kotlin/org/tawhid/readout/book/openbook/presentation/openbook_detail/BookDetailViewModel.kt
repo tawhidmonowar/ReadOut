@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
+import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.domain.BookRepository
 import org.tawhid.readout.core.domain.onError
 import org.tawhid.readout.core.domain.onSuccess
@@ -30,6 +31,7 @@ class BookDetailViewModel(
 
     val state = _state.onStart {
         fetchBookDescription()
+        _state.value.book?.let { insertBookIntoDB(it) }
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -147,6 +149,13 @@ class BookDetailViewModel(
                         )
                     }
                 }
+        }
+    }
+
+
+    private fun insertBookIntoDB(book: Book) {
+        viewModelScope.launch {
+            bookRepository.saveBook(book)
         }
     }
 }

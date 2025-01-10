@@ -1,4 +1,4 @@
-package org.tawhid.readout.app.home
+package org.tawhid.readout.app.home.presentation
 
 
 sealed interface HomeAction {

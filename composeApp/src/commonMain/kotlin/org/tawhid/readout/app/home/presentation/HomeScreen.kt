@@ -1,10 +1,8 @@
-package org.tawhid.readout.app.home
+package org.tawhid.readout.app.home.presentation
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
@@ -31,19 +31,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.tawhid.readout.app.home.presentation.components.RecentlyViewedBookHorizontalGridList
 import org.tawhid.readout.core.theme.Shapes
+import org.tawhid.readout.core.theme.compactFeedWidth
+import org.tawhid.readout.core.theme.compactScreenPadding
+import org.tawhid.readout.core.theme.expandedFeedWidth
+import org.tawhid.readout.core.theme.expandedScreenPadding
+import org.tawhid.readout.core.theme.mediumFeedWidth
+import org.tawhid.readout.core.theme.mediumScreenPadding
+import org.tawhid.readout.core.theme.small
+import org.tawhid.readout.core.theme.thin
+import org.tawhid.readout.core.theme.zero
+import org.tawhid.readout.core.ui.components.FeedTitleWithButton
 import org.tawhid.readout.core.ui.components.FullScreenDialog
+import org.tawhid.readout.core.ui.feed.Feed
+import org.tawhid.readout.core.ui.feed.row
+import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.home
@@ -85,7 +95,7 @@ fun HomeScreenRoot(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Button(onClick = {viewModel.onAction(HomeAction.OnHideAboutInfoDialog) }) {
+                    Button(onClick = { viewModel.onAction(HomeAction.OnHideAboutInfoDialog) }) {
                         Text("Close")
                     }
                     Spacer(modifier = Modifier.width(8.dp))
@@ -129,6 +139,8 @@ private fun HomeScreen(
         end = endPadding,
         bottom = bottomPadding
     )
+
+    val gridState = rememberLazyGridState()
 
     Surface(modifier = Modifier.padding(animatedPadding)) {
         Scaffold(
@@ -176,6 +188,73 @@ private fun HomeScreen(
             }
         ) { innerPadding ->
 
+            val columns = when {
+                windowSize.isExpandedScreen -> GridCells.Adaptive(expandedFeedWidth)
+                windowSize.isMediumScreen -> GridCells.Adaptive(mediumFeedWidth)
+                else -> GridCells.Adaptive(compactFeedWidth)
+            }
+
+            val contentPadding = PaddingValues(horizontal = thin, vertical = thin)
+            val verticalArrangement =
+                if (!windowSize.isCompactScreen) Arrangement.spacedBy(small) else Arrangement.spacedBy(
+                    zero
+                )
+            val horizontalArrangement =
+                if (!windowSize.isCompactScreen) Arrangement.spacedBy(small) else Arrangement.spacedBy(
+                    zero
+                )
+
+            val animatedStartPadding by animateDpAsState(
+                targetValue = if (windowSize.isExpandedScreen) expandedScreenPadding
+                else if (windowSize.isMediumScreen) mediumScreenPadding
+                else compactScreenPadding,
+                animationSpec = tween(durationMillis = 300)
+            )
+
+            val animatedEndPadding by animateDpAsState(
+                targetValue = if (windowSize.isExpandedScreen) expandedScreenPadding
+                else if (windowSize.isMediumScreen) mediumScreenPadding
+                else compactScreenPadding,
+                animationSpec = tween(durationMillis = 300)
+            )
+
+            Feed(
+                modifier = Modifier.padding(
+                    start = animatedStartPadding,
+                    top = innerPadding.calculateTopPadding(),
+                    end = animatedEndPadding,
+                    bottom = innerPadding.calculateBottomPadding()
+                ).fillMaxSize(),
+                columns = columns,
+                state = gridState,
+                contentPadding = contentPadding,
+                verticalArrangement = verticalArrangement,
+                horizontalArrangement = horizontalArrangement
+            ) {
+
+                if (state.recentlyViewedBooks.isNotEmpty()) {
+                    title(contentType = "recently-played-title") {
+                        FeedTitleWithButton(
+                            title = "Recently Viewed",
+                            btnText = "View All",
+                            onClick = {
+
+                            }
+                        )
+                    }
+                    row(contentType = "verified-shimmer-effect") {
+                        RecentlyViewedBookHorizontalGridList(
+                            books = state.recentlyViewedBooks,
+                            onBookClick = {
+
+                            }
+                        )
+                    }
+                }
+
+
+
+            }
         }
     }
 }

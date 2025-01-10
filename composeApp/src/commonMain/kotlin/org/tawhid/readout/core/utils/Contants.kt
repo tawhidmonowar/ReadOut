@@ -31,9 +31,10 @@ enum class Theme(val title: StringResource) {
 const val DATA_STORE_FILE_NAME = "setting.preferences_pb"
 const val SEARCH_TRIGGER_CHAR = 3
 
-
-
-
+object BookType {
+    const val AUDIO_BOOK = "AudioBook"
+    const val OPEN_BOOK = "OpenBook"
+}
 
 val librivox_book_subject = listOf(
     "Poetry",

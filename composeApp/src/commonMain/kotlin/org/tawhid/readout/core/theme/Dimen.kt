@@ -12,7 +12,7 @@ val mediumNavigationBarWidth = 100.dp
 
 val expandedFeedWidth = 150.dp
 val mediumFeedWidth = 140.dp
-val compactFeedWidth = 125.dp
+val compactFeedWidth = 150.dp
 
 val expandedScreenPadding = 50.dp
 val mediumScreenPadding = 20.dp
