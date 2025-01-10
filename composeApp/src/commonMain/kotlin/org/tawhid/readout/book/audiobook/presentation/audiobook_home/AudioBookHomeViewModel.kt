@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
-import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeAction
 import org.tawhid.readout.core.domain.onError
 import org.tawhid.readout.core.domain.onSuccess
 import org.tawhid.readout.core.utils.SEARCH_TRIGGER_CHAR
@@ -29,12 +28,18 @@ class AudioBookHomeViewModel(
 
     private val cachedBooks = emptyList<AudioBook>()
     private var searchJob: Job? = null
+    private var observeSaveJob: Job? = null
 
     private val _state = MutableStateFlow(AudioBookHomeState())
     val state = _state.onStart {
+
         if (cachedBooks.isEmpty()) {
             observeSearchQuery()
         }
+
+        observeSavedBooks()
+        getBrowseAudioBooks()
+
     }.stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
@@ -48,6 +53,7 @@ class AudioBookHomeViewModel(
                     it.copy(searchQuery = action.query)
                 }
             }
+
             is AudioBookHomeAction.ActivateSearchMode -> {
                 _state.update {
                     it.copy(isSearchActive = true)
@@ -59,6 +65,22 @@ class AudioBookHomeViewModel(
                     it.copy(isSearchActive = false)
                 }
             }
+
+            is AudioBookHomeAction.OnGenreSelect -> {
+                _state.update {
+                    it.copy(
+                        genre = action.genre,
+                        browseAudioBooks = emptyList(),
+                        page = 0
+                    )
+                }
+                getBrowseAudioBooks()
+            }
+
+            is AudioBookHomeAction.OnGetBrowseAudioBooks -> {
+                getBrowseAudioBooks()
+            }
+
             else -> Unit
         }
     }
@@ -107,5 +129,54 @@ class AudioBookHomeViewModel(
                 )
             }
         }
+    }
+
+    private fun getBrowseAudioBooks() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isBrowseLoading = true
+            )
+        }
+
+        val page = _state.value.page
+        val genre = _state.value.genre
+
+        audioBookRepository.getBrowseAudioBooks(genre = genre, page = page)
+            .onSuccess { audioBooks ->
+                _state.update { state ->
+                    val allBooks = state.browseAudioBooks + audioBooks
+                    val uniqueBooks = allBooks.distinctBy { it.id }
+                    state.copy(
+                        isBrowseLoading = false,
+                        browseErrorMsg = null,
+                        browseAudioBooks = uniqueBooks,
+                        isEndReached = audioBooks.isEmpty(),
+                        page = state.page + 1
+                    )
+                }
+            }.onError { error ->
+                _state.update {
+                    it.copy(
+                        browseErrorMsg = error.toUiText(),
+                        isBrowseLoading = false
+                    )
+                }
+            }
+    }
+
+    private fun observeSavedBooks() {
+        observeSaveJob?.cancel()
+        observeSaveJob = audioBookRepository.getSavedBooks()
+            .map { savedBooks ->
+                savedBooks.reversed()
+            }
+            .onEach { savedBooks ->
+                _state.update {
+                    it.copy(
+                        savedBooks = savedBooks
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 }

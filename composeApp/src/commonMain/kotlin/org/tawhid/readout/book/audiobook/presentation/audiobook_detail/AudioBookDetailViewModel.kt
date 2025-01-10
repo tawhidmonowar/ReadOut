@@ -41,11 +41,21 @@ class AudioBookDetailViewModel(
                     )
                 }
             }
+
             is AudioBookDetailAction.OnTabSelected -> {
                 _state.update {
                     it.copy(selectedTabIndex = action.index)
                 }
             }
+
+            is AudioBookDetailAction.OnSaveClick -> {
+                viewModelScope.launch {
+                    state.value.audioBook?.let { book ->
+                        audioBookRepository.saveBook(book)
+                    }
+                }
+            }
+
             else -> Unit
         }
     }
@@ -57,22 +67,22 @@ class AudioBookDetailViewModel(
             )
         }
         if (audioBookId != null) {
-            audioBookRepository.getAudioBookTracks(audioBookId = audioBookId).onSuccess { audioBookTracks ->
-                _state.update {
-                    it.copy(
-                        isAudioBookTracksLoading = false,
-                        audioBookTracks = audioBookTracks
-                    )
+            audioBookRepository.getAudioBookTracks(audioBookId = audioBookId)
+                .onSuccess { audioBookTracks ->
+                    _state.update {
+                        it.copy(
+                            isAudioBookTracksLoading = false,
+                            audioBookTracks = audioBookTracks
+                        )
+                    }
+                }.onError { error ->
+                    _state.update {
+                        it.copy(
+                            isAudioBookTracksLoading = false,
+                            audioBookTracksErrorMsg = error.toUiText()
+                        )
+                    }
                 }
-            }.onError { error ->
-                _state.update {
-                    it.copy(
-                        isAudioBookTracksLoading = false,
-                        audioBookTracksErrorMsg = error.toUiText()
-                    )
-                }
-            }
         }
     }
-
 }

@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.resources.stringResource
+import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.small
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.right_arrow
+import readout.composeapp.generated.resources.select_subject
 
 @Composable
 fun FeedTitle(
@@ -35,7 +37,7 @@ fun FeedTitle(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            modifier = Modifier.padding(small),
+            modifier = Modifier.padding(horizontal = medium, vertical = small),
             text = title,
             style = titleStyle
         )
@@ -59,7 +61,7 @@ fun FeedTitleWithButton(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            modifier = Modifier.padding(small),
+            modifier = Modifier.padding(horizontal = medium, vertical = small),
             text = title,
             style = titleStyle
         )
@@ -86,7 +88,8 @@ fun FeedTitleWithButton(
 @Composable
 fun FeedTitleWithDropdown(
     title: String,
-    dropDownList: List<String>? = null,
+    dropDownList: List<String>,
+    placeHolder: String = stringResource(Res.string.select_subject),
     onItemSelected: (String) -> Unit? = {},
     modifier: Modifier = Modifier,
     titleStyle: TextStyle = MaterialTheme.typography.titleMedium.copy(
@@ -100,17 +103,17 @@ fun FeedTitleWithDropdown(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            modifier = Modifier.padding(small),
+            modifier = Modifier.padding(horizontal = medium, vertical = small),
             text = title,
             style = titleStyle
         )
-        dropDownList?.let { list ->
-            CustomDropdownMenu(
-                items = list,
-                onItemSelected = { selectedItem ->
-                    onItemSelected(selectedItem)
-                }
-            )
-        }
+
+        CustomDropdownMenu(
+            items = dropDownList,
+            placeHolder = placeHolder,
+            onItemSelected = { selectedItem ->
+                onItemSelected(selectedItem)
+            }
+        )
     }
 }

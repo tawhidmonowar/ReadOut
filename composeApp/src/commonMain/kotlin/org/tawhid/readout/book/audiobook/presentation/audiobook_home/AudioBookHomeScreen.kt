@@ -1,11 +1,8 @@
 package org.tawhid.readout.book.audiobook.presentation.audiobook_home
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,17 +10,14 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,27 +29,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookGridItem
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookSearchResult
-import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeAction
-import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedFeedWidth
@@ -65,22 +51,25 @@ import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
-import org.tawhid.readout.core.ui.components.ChipSectionScrollableLazyRow
 import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
-import org.tawhid.readout.core.ui.components.FeedTitle
+import org.tawhid.readout.core.ui.components.ErrorView
+import org.tawhid.readout.core.ui.components.FeedTitleWithButton
 import org.tawhid.readout.core.ui.components.FeedTitleWithDropdown
 import org.tawhid.readout.core.ui.feed.Feed
-import org.tawhid.readout.core.ui.feed.action
 import org.tawhid.readout.core.ui.feed.row
 import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
 import org.tawhid.readout.core.utils.librivox_book_subject
-import org.tawhid.readout.core.utils.openLibrary_book_subject
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.audiobooks
+import readout.composeapp.generated.resources.browse
 import readout.composeapp.generated.resources.info
+import readout.composeapp.generated.resources.loading
+import readout.composeapp.generated.resources.saved_books
 import readout.composeapp.generated.resources.search
+import readout.composeapp.generated.resources.select_subject
 import readout.composeapp.generated.resources.setting
+import readout.composeapp.generated.resources.view_all
 
 @Composable
 fun AudioBookHomeScreenRoot(
@@ -136,7 +125,7 @@ private fun AudioBookHomeScreen(
 
     val gridState = rememberLazyGridState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val bookSize by mutableStateOf(state.searchResult.size)
+    val bookSize by mutableStateOf(state.browseAudioBooks.size)
 
 
     Surface(modifier = Modifier.padding(animatedPadding)) {
@@ -257,37 +246,79 @@ private fun AudioBookHomeScreen(
                 horizontalArrangement = horizontalArrangement
             ) {
 
-                row (
-                    contentType = "subject-selector") {
-                    ChipSectionScrollableLazyRow(
-                        items = librivox_book_subject,
-                        selectedItem = null,
-                        onItemSelected = { selectedSubject.value = it },
-                        itemLabel = { it }
-                    )
+                if (state.savedBooks.isNotEmpty()) {
+                    title(contentType = "saved-book-title") {
+                        FeedTitleWithButton(
+                            title = stringResource(Res.string.saved_books),
+                            btnText = stringResource(Res.string.view_all),
+                            onClick = {
+
+                            }
+                        )
+                    }
+                    row(contentType = "verified-shimmer-effect") {
+                        AudioBookHorizontalGridList(
+                            books = state.savedBooks,
+                            onBookClick = {
+                                onAction(AudioBookHomeAction.OnAudioBookClick(it))
+                            }
+                        )
+                    }
                 }
 
+
                 title(contentType = "browse-title") {
-                    FeedTitle(title = "Browse")
+                    FeedTitleWithDropdown(
+                        title = stringResource(Res.string.browse),
+                        dropDownList = librivox_book_subject,
+                        placeHolder = if (state.isBrowseLoading) {
+                            stringResource(Res.string.loading)
+                        } else {
+                            stringResource(Res.string.select_subject)
+                        },
+                        onItemSelected = {
+                            onAction(AudioBookHomeAction.OnGenreSelect(it))
+                        }
+                    )
                 }
 
                 items(
                     count = bookSize,
-                    key = { index -> state.searchResult[index].id }
+                    key = { index -> state.browseAudioBooks[index].id }
                 ) { index ->
 
-                    val book = state.searchResult[index]
-
-                    if (index == bookSize - 1 && !state.isEndReached) {
-                        // onAction(BookHomeAction.)
+                    val book = state.browseAudioBooks[index]
+                    if (index == bookSize - 1 && !state.isBrowseLoading && !state.isEndReached && state.browseErrorMsg == null) {
+                        onAction(AudioBookHomeAction.OnGetBrowseAudioBooks)
                     }
-
                     AudioBookGridItem(
                         book = book,
                         onClick = {
-
+                            onAction(AudioBookHomeAction.OnAudioBookClick(book))
                         }
                     )
+                }
+
+                if (state.browseErrorMsg != null) {
+                    row(contentType = "error") {
+                        ErrorView(
+                            errorMsg = state.browseErrorMsg,
+                            onRetryClick = {
+                                onAction(AudioBookHomeAction.OnGetBrowseAudioBooks)
+                            }
+                        )
+                    }
+                } else if (state.isBrowseLoading) {
+                    row(contentType = "loading") {
+                        Box(
+                            modifier = Modifier.fillMaxSize().animateContentSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(small)
+                            )
+                        }
+                    }
                 }
             }
         }

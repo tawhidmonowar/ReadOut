@@ -1,5 +1,6 @@
 package org.tawhid.readout.book.audiobook.data.mappers
 
+import org.tawhid.readout.book.audiobook.data.database.AudioBookEntity
 import org.tawhid.readout.book.audiobook.data.dto.AudioBookTrackDto
 import org.tawhid.readout.book.audiobook.data.dto.SearchedAudioBookDto
 import org.tawhid.readout.book.audiobook.domain.AudioBook
@@ -30,5 +31,46 @@ fun AudioBookTrackDto.toAudioBookTracks(): AudioBookTrack {
         listenUrl = listenUrl,
         language = language,
         playtime = playtime,
+    )
+}
+
+fun AudioBookEntity.toAudioBook(): AudioBook {
+    return AudioBook(
+        id = id,
+        title = title ?: "Title Not Found",
+        description = description,
+        language = language,
+        copyrightYear = copyrightYear,
+        numSections = numSections,
+        textSourceUrl = textSourceUrl,
+        zipFileUrl = zipFileUrl,
+        libriVoxUrl = libriVoxUrl,
+        totalTime = totalTime,
+        imgUrl = imgUrl,
+        authors = authors,
+    )
+}
+
+fun AudioBook.toAudioBookEntity(): AudioBookEntity {
+    return AudioBookEntity(
+        id = id,
+        title = title,
+        description = description,
+        language = language,
+        copyrightYear = copyrightYear,
+        numSections = numSections,
+        textSourceUrl = textSourceUrl,
+        zipFileUrl = zipFileUrl,
+        libriVoxUrl = libriVoxUrl,
+        totalTime = totalTime,
+        imgUrl = imgUrl,
+        authors = authors,
+        audioBookTracks = null,
+        bookType = null,
+        isSaved = null,
+        isViewed = null,
+        summaryText = null,
+        summaryBase64 = null,
+        timeStamp = System.currentTimeMillis()
     )
 }

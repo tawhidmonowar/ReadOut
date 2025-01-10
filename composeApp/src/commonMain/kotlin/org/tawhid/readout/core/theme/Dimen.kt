@@ -16,7 +16,7 @@ val compactFeedWidth = 150.dp
 
 val expandedScreenPadding = 50.dp
 val mediumScreenPadding = 20.dp
-val compactScreenPadding = 0.dp
+val compactScreenPadding = 4.dp
 
 val zero = 0.dp
 val extraThin = 1.dp

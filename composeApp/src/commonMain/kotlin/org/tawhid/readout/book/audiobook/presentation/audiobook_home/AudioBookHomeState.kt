@@ -14,4 +14,8 @@ data class AudioBookHomeState(
     val isEndReached: Boolean = false,
     val browseErrorMsg: UiText? = null,
     val browseAudioBooks: List<AudioBook> = emptyList(),
+    val genre: String? = null,
+    val page: Int = 0,
+
+    val savedBooks: List<AudioBook> = emptyList(),
 )

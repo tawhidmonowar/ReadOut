@@ -11,6 +11,6 @@ interface RemoteAudioBookDataSource {
         resultLimit: Int? = null
     ): Result<SearchResponseDto, DataError.Remote>
 
-    suspend fun fetchBrowseAudioBooks(resultLimit: Int? = null): Result<SearchResponseDto, DataError.Remote>
+    suspend fun fetchBrowseAudioBooks(genre: String? = null, page: Int? = 0): Result<SearchResponseDto, DataError.Remote>
     suspend fun fetchAudioBookTracks(audioBookId: String): Result<AudioBookTrackResponseDto, DataError.Remote>
 }

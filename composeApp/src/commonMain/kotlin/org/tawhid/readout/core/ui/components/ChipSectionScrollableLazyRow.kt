@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import org.tawhid.readout.core.theme.Shapes
+import org.tawhid.readout.core.theme.small
 
 @Composable
 fun <T> ChipSectionScrollableLazyRow(
@@ -50,20 +51,25 @@ fun <T> ChipSectionScrollableLazyRow(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
-                    .clip(RoundedCornerShape(5.dp))
+                    .padding(start = small, top = small, bottom = small)
+                    .clip(Shapes.small)
                     .clickable {
                         selectedIndex.value = index
                         onItemSelected(item)
                     }
                     .background(
-                        color = if (selectedIndex.value == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer
+                        color = if (selectedIndex.value == index) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.secondaryContainer
+                        }
                     )
-                    .padding(10.dp)
+                    .padding(horizontal = 12.dp, vertical = 10.dp)
             ) {
                 Text(
                     text = itemLabel(item),
-                    color = if (selectedIndex.value == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         }

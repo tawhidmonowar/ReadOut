@@ -37,17 +37,21 @@ object BookType {
 }
 
 val librivox_book_subject = listOf(
-    "Poetry",
-    "Fiction",
+    "*Non-fiction",
     "Short Stories",
-    "Romance",
-    "Non-fiction",
-    "Dramatic Readings",
-    "Family Life",
     "Drama",
+    "General Fiction",
+    "Essays & Short Works",
+    "Family Life",
     "Comedy",
-    "Religious",
+    "Historical Fiction",
+    "History",
+    "Poetry",
+    "Religion",
+    "Romance",
+    "Science Fiction"
 )
+
 
 val openLibrary_book_subject = listOf(
     "Arts",

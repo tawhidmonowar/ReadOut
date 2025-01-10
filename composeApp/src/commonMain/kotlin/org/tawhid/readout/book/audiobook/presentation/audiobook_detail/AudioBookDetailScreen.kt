@@ -180,7 +180,7 @@ private fun AudioBookDetailScreen(
                             )
                         }
                         IconButton(onClick = {
-                            onAction(AudioBookDetailAction.OnBackClick)
+                            onAction(AudioBookDetailAction.OnSaveClick)
                         }) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_bookmark_outlined),

@@ -31,6 +31,7 @@ import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.ui.components.CustomAsyncImage
 import readout.composeapp.generated.resources.Res
+import readout.composeapp.generated.resources.audiobook_cover_error_img
 import readout.composeapp.generated.resources.book_cover_error_img
 
 @Composable
@@ -62,7 +63,7 @@ fun AudioBookGridItem(
             CustomAsyncImage(
                 imageUrl = book.imgUrl,
                 contentDescription = book.title,
-                errorImage = painterResource(Res.drawable.book_cover_error_img),
+                errorImage = painterResource(Res.drawable.audiobook_cover_error_img),
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(audioBookCoverAspectRatio)
@@ -73,7 +74,7 @@ fun AudioBookGridItem(
 
             Text(
                 text = book.title,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth()
@@ -83,7 +84,7 @@ fun AudioBookGridItem(
 
             book.authors.firstOrNull()?.let { authorName ->
                 Text(
-                    text = authorName,
+                    text = "By $authorName",
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -95,7 +96,7 @@ fun AudioBookGridItem(
 
             book.totalTime?.let { totalTime ->
                 Text(
-                    text = "Total Time: $totalTime",
+                    text = "Total Play Time: $totalTime",
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

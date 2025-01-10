@@ -24,15 +24,17 @@ import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.small
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.right_arrow
+import readout.composeapp.generated.resources.select_subject
 import java.util.Locale
 
 @Composable
 fun CustomDropdownMenu(
     items: List<String>,
+    placeHolder: String,
     onItemSelected: (String) -> Unit
 ) {
     var isDropDownExpanded by remember { mutableStateOf(false) }
-    var selectedItem by rememberSaveable { mutableStateOf("Select Subject") }
+    var selectedItem by rememberSaveable { mutableStateOf(placeHolder) }
 
     Box(contentAlignment = Alignment.CenterEnd) {
         TextButton(
