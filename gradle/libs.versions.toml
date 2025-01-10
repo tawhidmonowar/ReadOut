@@ -27,7 +27,7 @@ ktor = "3.0.0"
 coil = "3.0.0-rc02"
 
 buildkonfig = "0.15.2"
-vlcj = "4.8.3"
+core-splashscreen = "1.0.1"
 media3Exoplayer = "1.5.1"
 
 ksp = "2.0.21-1.0.26"
@@ -86,6 +86,8 @@ androidx-media3-exoplayer-hls = { module = "androidx.media3:media3-exoplayer-hls
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
