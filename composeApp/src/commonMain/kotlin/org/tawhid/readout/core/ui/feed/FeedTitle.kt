@@ -1,4 +1,4 @@
-package org.tawhid.readout.core.ui.components
+package org.tawhid.readout.core.ui.feed
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.resources.stringResource
 import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.small
+import org.tawhid.readout.core.ui.components.CustomDropdownMenu
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.right_arrow
 import readout.composeapp.generated.resources.select_subject

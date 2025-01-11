@@ -49,7 +49,7 @@ import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
-import org.tawhid.readout.core.ui.components.FeedTitleWithButton
+import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
 import org.tawhid.readout.core.ui.components.FullScreenDialog
 import org.tawhid.readout.core.ui.feed.Feed
 import org.tawhid.readout.core.ui.feed.row

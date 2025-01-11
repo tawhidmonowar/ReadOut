@@ -53,8 +53,8 @@ import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
 import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
 import org.tawhid.readout.core.ui.components.ErrorView
-import org.tawhid.readout.core.ui.components.FeedTitleWithButton
-import org.tawhid.readout.core.ui.components.FeedTitleWithDropdown
+import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
+import org.tawhid.readout.core.ui.feed.FeedTitleWithDropdown
 import org.tawhid.readout.core.ui.feed.Feed
 import org.tawhid.readout.core.ui.feed.row
 import org.tawhid.readout.core.ui.feed.title
@@ -64,7 +64,6 @@ import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.audiobooks
 import readout.composeapp.generated.resources.browse
 import readout.composeapp.generated.resources.info
-import readout.composeapp.generated.resources.loading
 import readout.composeapp.generated.resources.saved_books
 import readout.composeapp.generated.resources.search
 import readout.composeapp.generated.resources.select_subject
