@@ -20,6 +20,7 @@
     <string name="saved_books">Saved Books</string>
     <string name="view_all">View All</string>
     <string name="loading">Loading...</string>
+    <string name="history">History</string>
 
     <string name="book_details">Book Details</string>
     <string name="book_cover">Book Cover</string>

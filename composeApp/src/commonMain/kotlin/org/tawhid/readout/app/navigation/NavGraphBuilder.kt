@@ -1,7 +1,6 @@
 package org.tawhid.readout.app.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +29,7 @@ import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailS
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScreenRoot
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
+import org.tawhid.readout.book.summarize.presentation.summarize_home.SummarizeScreenRoot
 import org.tawhid.readout.core.utils.WindowSizes
 
 fun NavGraphBuilder.navGraphBuilder(
@@ -64,7 +64,10 @@ fun NavGraphBuilder.navGraphBuilder(
     }
 
     composable<Route.Summarize> {
-        Text(text = "Summarize")
+        SummarizeScreenRoot(
+            innerPadding = innerPadding,
+            windowSize = windowSize
+        )
     }
 
 

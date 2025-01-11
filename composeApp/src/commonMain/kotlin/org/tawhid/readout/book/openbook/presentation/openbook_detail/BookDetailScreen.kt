@@ -283,6 +283,7 @@ private fun BookDetailScreen(
                             .fillMaxWidth()
                             .padding(top = large)
                     )
+
                     Text(
                         text = stringResource(Res.string.summary_generated_with_ai),
                         style = MaterialTheme.typography.bodyMedium
