@@ -268,14 +268,11 @@ private fun AudioBookHomeScreen(
 
 
                 title(contentType = "browse-title") {
+                    println(state.isBrowseLoading)
                     FeedTitleWithDropdown(
                         title = stringResource(Res.string.browse),
                         dropDownList = librivox_book_subject,
-                        placeHolder = if (state.isBrowseLoading) {
-                            stringResource(Res.string.loading)
-                        } else {
-                            stringResource(Res.string.select_subject)
-                        },
+                        placeHolder = stringResource(Res.string.select_subject),
                         onItemSelected = {
                             onAction(AudioBookHomeAction.OnGenreSelect(it))
                         }
