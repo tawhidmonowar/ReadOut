@@ -128,17 +128,16 @@ class RemoteBookDataSourceImpl(
     }
 
     override suspend fun fetchBrowseBooks(
-        subject: String,
-        resultLimit: Int?,
-        offset: Int?
+        subject: String?,
+        page: Int?
     ): Result<BrowseResponseDto, DataError.Remote> {
         return safeCall {
             httpClient.get(
                 urlString = "${OPEN_LIBRARY_BASE_URL}/subjects/$subject.json"
             ) {
                 header("User-Agent", USER_AGENT)
-                parameter("offset", offset)
-                parameter("limit", resultLimit)
+                parameter("offset", page)
+                parameter("limit", 100)
             }
         }
     }

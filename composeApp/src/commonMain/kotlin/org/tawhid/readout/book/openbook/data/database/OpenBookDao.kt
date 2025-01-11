@@ -10,7 +10,7 @@ interface OpenBookDao {
     @Upsert
     suspend fun upsert(openBook: OpenBookEntity)
 
-    @Query("SELECT * FROM OpenBookEntity")
+    @Query("SELECT * FROM OpenBookEntity WHERE isSaved = 1")
     fun getSavedBooks(): Flow<List<OpenBookEntity>>
 
     @Query("SELECT * FROM OpenBookEntity WHERE id = :id")
@@ -18,4 +18,7 @@ interface OpenBookDao {
 
     @Query("DELETE FROM OpenBookEntity WHERE id = :id")
     suspend fun deleteSavedBook(id: String)
+
+    @Query("UPDATE OpenBookEntity SET isSaved = :isSaved, timeStamp = :timeStamp WHERE id = :id")
+    suspend fun updateIsSaved(id: String, isSaved: Boolean, timeStamp: Long)
 }

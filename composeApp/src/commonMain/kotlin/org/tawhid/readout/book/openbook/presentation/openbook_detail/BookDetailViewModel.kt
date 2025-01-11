@@ -59,7 +59,8 @@ class BookDetailViewModel(
             is BookDetailAction.OnSaveClick -> {
                 viewModelScope.launch {
                     state.value.book?.let { book ->
-                        bookRepository.saveBook(book)
+                        val currentTime = System.currentTimeMillis()
+                        bookRepository.updateIsSaved(book = book, isSaved = true, currentTime = currentTime)
                     }
                 }
             }
@@ -155,7 +156,7 @@ class BookDetailViewModel(
 
     private fun insertBookIntoDB(book: Book) {
         viewModelScope.launch {
-            bookRepository.saveBook(book)
+            bookRepository.insertBookIntoDB(book)
         }
     }
 }

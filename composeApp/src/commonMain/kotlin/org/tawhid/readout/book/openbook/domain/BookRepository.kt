@@ -9,9 +9,10 @@ interface BookRepository {
     suspend fun searchBooksByQuery(query: String): Result<List<Book>, DataError.Remote>
     suspend fun getTrendingBooks(): Result<List<Book>, DataError.Remote>
     suspend fun getBookDescriptionById(bookId: String): Result<String?, DataError>
-    suspend fun getBrowseBooks(subject: String,resultLimit: Int? = null, offset: Int? = null): Result<List<Book>, DataError.Remote>
+    suspend fun getBrowseBooks(subject: String?, page: Int? = 0): Result<List<Book>, DataError.Remote>
     suspend fun getBookSummary(prompt: String): Result<String?, DataError>
     suspend fun getSummaryAudio(summary: String): Result<String?, DataError>
-    suspend fun saveBook(book: Book): EmptyResult<DataError.Local>
+    suspend fun insertBookIntoDB(book: Book): EmptyResult<DataError.Local>
+    suspend fun updateIsSaved(book: Book, isSaved: Boolean, currentTime: Long): EmptyResult<DataError.Local>
     fun getSavedBooks(): Flow<List<Book>>
 }

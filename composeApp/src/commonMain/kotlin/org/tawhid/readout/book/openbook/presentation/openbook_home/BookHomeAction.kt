@@ -11,6 +11,6 @@ sealed interface BookHomeAction {
     data object ActivateSearchMode : BookHomeAction
     data object DeactivateSearchMode : BookHomeAction
 
-    data object LoadBrowseBooks : BookHomeAction
+    data object OnLoadBrowseBooks : BookHomeAction
     data class OnSubjectChange(val subject: String) : BookHomeAction
 }

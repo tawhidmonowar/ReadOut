@@ -1,5 +1,6 @@
 package org.tawhid.readout.book.openbook.presentation.openbook_home
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +29,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeAction
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
@@ -48,22 +52,22 @@ import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
 import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
+import org.tawhid.readout.core.ui.components.ErrorView
 import org.tawhid.readout.core.ui.components.FeedTitleWithButton
 import org.tawhid.readout.core.ui.components.FeedTitleWithDropdown
 import org.tawhid.readout.core.ui.components.ShimmerEffect
-import org.tawhid.readout.core.ui.components.ShimmerEffect.BookGridItemShimmer
 import org.tawhid.readout.core.ui.feed.Feed
 import org.tawhid.readout.core.ui.feed.row
-import org.tawhid.readout.core.ui.feed.single
 import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
 import org.tawhid.readout.core.utils.openLibrary_book_subject
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.info
 import readout.composeapp.generated.resources.open_library
+import readout.composeapp.generated.resources.saved_books
 import readout.composeapp.generated.resources.search
 import readout.composeapp.generated.resources.setting
-import readout.composeapp.generated.resources.view_more
+import readout.composeapp.generated.resources.view_all
 
 @Composable
 fun BookHomeScreenRoot(
@@ -236,24 +240,23 @@ private fun BookHomeScreen(
                 verticalArrangement = verticalArrangement,
                 horizontalArrangement = horizontalArrangement
             ) {
-                title(contentType = "trending-title") {
-                    FeedTitleWithButton(
-                        title = "Trending",
-                        btnText = stringResource(Res.string.view_more),
-                        onClick = {
 
-                        }
-                    )
-                }
+                if (state.savedBooks.isNotEmpty()) {
+                    title(contentType = "saved-book-title") {
+                        FeedTitleWithButton(
+                            title = stringResource(Res.string.saved_books),
+                            btnText = stringResource(Res.string.view_all),
+                            onClick = {
 
-                row(contentType = "verified-shimmer-effect") {
-
-                    if (state.isTrendingLoading) {
-                        ShimmerEffect.BookHorizontalGridItemShimmerEffect()
-                    } else {
+                            }
+                        )
+                    }
+                    row(contentType = "saved-books") {
                         BookHorizontalGridList(
                             books = state.savedBooks,
-                            onAction = { onAction((it)) }
+                            onBookClick = {
+                                onAction(BookHomeAction.OnBookClick(it))
+                            }
                         )
                     }
                 }
@@ -274,16 +277,37 @@ private fun BookHomeScreen(
                 ) { index ->
                     val book = state.browseBooks[index]
 
-                    if (index == bookSize - 1 && !state.endReached) {
-                       // onAction(BookHomeAction.)
+                    if (index == bookSize - 1 && !state.isBrowseLoading && !state.endReached && state.browseErrorMsg == null) {
+                        onAction(BookHomeAction.OnLoadBrowseBooks)
                     }
-
                     BookGridItem(
                         book = book,
                         onClick = {
                             onAction(BookHomeAction.OnBookClick(book))
                         }
                     )
+                }
+
+                if (state.browseErrorMsg != null) {
+                    row(contentType = "error") {
+                        ErrorView(
+                            errorMsg = state.browseErrorMsg,
+                            onRetryClick = {
+                                onAction(BookHomeAction.OnLoadBrowseBooks)
+                            }
+                        )
+                    }
+                } else if (state.isBrowseLoading) {
+                    row(contentType = "loading") {
+                        Box(
+                            modifier = Modifier.fillMaxSize().animateContentSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(small)
+                            )
+                        }
+                    }
                 }
             }
         }

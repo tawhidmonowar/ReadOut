@@ -11,14 +11,12 @@ data class BookHomeState(
     val isSearchLoading: Boolean = false,
     val searchErrorMsg: UiText? = null,
 
-    val trendingBooks: List<Book> = emptyList(),
-    val isTrendingLoading: Boolean = false,
-    val trendingErrorMsg: UiText? = null,
-
     val browseBooks: List<Book> = emptyList(),
     val isBrowseLoading: Boolean = false,
     val browseErrorMsg: UiText? = null,
     val endReached: Boolean = false,
+    val subject: String? = "english",
+    val page: Int = 0,
     val isBrowseShimmerEffectVisible: Boolean = true,
 
     val savedBooks: List<Book> = emptyList(),

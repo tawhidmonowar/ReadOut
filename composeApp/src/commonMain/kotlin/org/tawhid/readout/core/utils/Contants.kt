@@ -54,12 +54,15 @@ val librivox_book_subject = listOf(
 
 
 val openLibrary_book_subject = listOf(
+    "Animals",
     "Arts",
-    "Science Fiction",
-    "Biographies",
+    "Biography",
     "Children",
+    "Fiction",
     "History",
-    "Medicine",
+    "Plays",
+    "Poetry",
     "Religion",
-    "Science"
+    "Science",
+    "Thriller"
 )

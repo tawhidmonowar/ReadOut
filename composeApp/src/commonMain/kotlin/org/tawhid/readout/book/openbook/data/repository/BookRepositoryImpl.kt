@@ -49,14 +49,12 @@ class BookRepositoryImpl(
     }
 
     override suspend fun getBrowseBooks(
-        subject: String,
-        resultLimit: Int?,
-        offset: Int?
+        subject: String?,
+        page: Int?
     ): Result<List<Book>, DataError.Remote> {
         return remoteBookDataSource.fetchBrowseBooks(
             subject = subject,
-            resultLimit = resultLimit,
-            offset = offset
+            page = page
         ).map { dto ->
             dto.results.map { it.toBook() }
         }
@@ -74,7 +72,7 @@ class BookRepositoryImpl(
         }
     }
 
-    override suspend fun saveBook(book: Book): EmptyResult<DataError.Local> {
+    override suspend fun insertBookIntoDB(book: Book): EmptyResult<DataError.Local> {
         return try {
             openBookDao.upsert(book.toBookBookEntity())
             Result.Success(Unit)
@@ -83,9 +81,23 @@ class BookRepositoryImpl(
         }
     }
 
-    override fun getSavedBooks(): Flow<List<Book>> {
-        return openBookDao.getSavedBooks().map { bookEntities ->
-            bookEntities.map { it.toBook() }
+    override suspend fun updateIsSaved(
+        book: Book,
+        isSaved: Boolean,
+        currentTime: Long
+    ): EmptyResult<DataError.Local> {
+        return try {
+            openBookDao.updateIsSaved(id = book.id, isSaved = isSaved, timeStamp = currentTime)
+            Result.Success(Unit)
+        } catch (e: SQLiteException) {
+            Result.Error(DataError.Local.DISK_FULL)
         }
+    }
+
+    override fun getSavedBooks(): Flow<List<Book>> {
+        return openBookDao.getSavedBooks()
+            .map { bookEntities ->
+                bookEntities.sortedByDescending { it.timeStamp }.map { it.toBook() }
+            }
     }
 }

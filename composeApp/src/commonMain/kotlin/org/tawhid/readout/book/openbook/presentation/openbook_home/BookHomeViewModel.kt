@@ -2,8 +2,10 @@ package org.tawhid.readout.book.openbook.presentation.openbook_home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
@@ -31,16 +33,15 @@ class BookHomeViewModel(
     private var observeSaveJob: Job? = null
 
     private val _state = MutableStateFlow(BookHomeState())
-    val state = _state
-        .onStart {
-            if (cachedBooks.isEmpty()) {
-                observeSearchQuery()
-                getTrendingBooks()
-            }
-            observeSavedBooks()
-            getBrowseBooks("english")
-            println()
+    val state = _state.onStart {
+
+        if (cachedBooks.isEmpty()) {
+            observeSearchQuery()
         }
+
+        observeSavedBooks()
+        getBrowseBooks()
+    }
         .stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
@@ -59,10 +60,10 @@ class BookHomeViewModel(
                 _state.update {
                     it.copy(
                         browseBooks = emptyList(),
-                        isBrowseShimmerEffectVisible = true
+                        subject = action.subject
                     )
                 }
-                getBrowseBooks(action.subject)
+                getBrowseBooks()
             }
 
             is BookHomeAction.ActivateSearchMode -> {
@@ -77,8 +78,9 @@ class BookHomeViewModel(
                 }
             }
 
-            is BookHomeAction.LoadBrowseBooks -> {
-                
+            is BookHomeAction.OnLoadBrowseBooks -> {
+                getBrowseBooks()
+
             }
 
             else -> Unit
@@ -88,9 +90,6 @@ class BookHomeViewModel(
     private fun observeSavedBooks() {
         observeSaveJob?.cancel()
         observeSaveJob = bookRepository.getSavedBooks()
-            .map { savedBooks ->
-                savedBooks.reversed()
-            }
             .onEach { savedBooks ->
                 _state.update {
                     it.copy(
@@ -100,6 +99,7 @@ class BookHomeViewModel(
             }
             .launchIn(viewModelScope)
     }
+
 
     @OptIn(FlowPreview::class)
     private fun observeSearchQuery() {
@@ -116,6 +116,7 @@ class BookHomeViewModel(
                             )
                         }
                     }
+
                     query.length >= 3 -> {
                         searchJob?.cancel()
                         searchJob = searchBooks(query)
@@ -153,64 +154,39 @@ class BookHomeViewModel(
 
     }
 
-    private fun getTrendingBooks() = viewModelScope.launch {
+    private fun getBrowseBooks() = viewModelScope.launch {
 
-        _state.update {
-            it.copy(
-                isTrendingLoading = true
-            )
-        }
-
-        bookRepository.getTrendingBooks().onSuccess { trendingBooks ->
-            _state.update {
-                it.copy(
-                    isTrendingLoading = false,
-                    errorMsg = null,
-                    trendingBooks = trendingBooks
-                )
-            }
-        }.onError { error ->
-            _state.update {
-                it.copy(
-                    trendingBooks = emptyList(),
-                    isTrendingLoading = false,
-                    errorMsg = error.toUiText()
-                )
-            }
-        }
-    }
-
-    private fun getBrowseBooks(
-        subject: String,
-        resultLimit: Int? = 102,
-        offset: Int? = null
-    ) = viewModelScope.launch {
         _state.update {
             it.copy(
                 isBrowseLoading = true
             )
         }
-        bookRepository.getBrowseBooks(
-            subject = subject,
-            resultLimit = resultLimit,
-        ).onSuccess { browseBooks ->
-            _state.update {
-                it.copy(
+
+        val page = _state.value.page
+        val subject = _state.value.subject
+
+        bookRepository.getBrowseBooks(subject = subject, page = page).onSuccess { browseBooks ->
+            _state.update { state ->
+                val allBooks = state.browseBooks + browseBooks
+                val uniqueBooks = allBooks.distinctBy { it.id }
+                state.copy(
                     isBrowseLoading = false,
                     isBrowseShimmerEffectVisible = false,
                     browseErrorMsg = null,
-                    browseBooks = browseBooks
+                    browseBooks = uniqueBooks,
+                    page = state.page + 1
                 )
+
             }
         }.onError { error ->
             _state.update {
                 it.copy(
-                    browseBooks = emptyList(),
                     isBrowseLoading = false,
                     isBrowseShimmerEffectVisible = false,
                     browseErrorMsg = error.toUiText()
                 )
             }
         }
+
     }
 }
