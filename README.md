@@ -4,7 +4,9 @@ This project follows the MVI (Model-View-Intent) design pattern combined with Cl
 ![image](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/images/read_out_architecture.png)
 
 * The Presentation Layer is responsible for rendering the UI and managing user interactions via a unidirectional flow of Intent, State, and ViewModel.
+
 * The Domain Layer encapsulates business logic in UseCases, This layer is completely independent of other layers, ensuring that it can be reused and tested in isolation.
+
 * The Data Layer abstracts data sources (API, Database) through a Repository pattern.
 
 ## API Usage Overview
