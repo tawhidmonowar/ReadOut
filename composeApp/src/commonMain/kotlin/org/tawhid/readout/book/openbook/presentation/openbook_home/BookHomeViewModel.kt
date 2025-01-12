@@ -2,10 +2,8 @@ package org.tawhid.readout.book.openbook.presentation.openbook_home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Delay
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
@@ -22,6 +20,7 @@ import org.tawhid.readout.book.openbook.domain.BookRepository
 
 import org.tawhid.readout.core.domain.onError
 import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.toUiText
 
 class BookHomeViewModel(
@@ -162,23 +161,25 @@ class BookHomeViewModel(
             )
         }
 
-        val page = _state.value.page
+        val offset = _state.value.offset
+        val limit = MAX_BOOKS_TO_FETCH
         val subject = _state.value.subject
 
-        bookRepository.getBrowseBooks(subject = subject, page = page).onSuccess { browseBooks ->
-            _state.update { state ->
-                val allBooks = state.browseBooks + browseBooks
-                val uniqueBooks = allBooks.distinctBy { it.id }
-                state.copy(
-                    isBrowseLoading = false,
-                    isBrowseShimmerEffectVisible = false,
-                    browseErrorMsg = null,
-                    browseBooks = uniqueBooks,
-                    page = state.page + 1
-                )
+        bookRepository.getBrowseBooks(subject = subject, offset = offset, limit = limit)
+            .onSuccess { browseBooks ->
+                _state.update { state ->
+                    val allBooks = state.browseBooks + browseBooks
+                    val uniqueBooks = allBooks.distinctBy { it.id }
+                    state.copy(
+                        isBrowseLoading = false,
+                        isBrowseShimmerEffectVisible = false,
+                        browseErrorMsg = null,
+                        browseBooks = uniqueBooks,
+                        offset = state.offset + limit
+                    )
 
-            }
-        }.onError { error ->
+                }
+            }.onError { error ->
             _state.update {
                 it.copy(
                     isBrowseLoading = false,
@@ -187,6 +188,5 @@ class BookHomeViewModel(
                 )
             }
         }
-
     }
 }

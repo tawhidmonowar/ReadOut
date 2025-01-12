@@ -50,11 +50,13 @@ class BookRepositoryImpl(
 
     override suspend fun getBrowseBooks(
         subject: String?,
-        page: Int?
+        offset: Int?,
+        limit: Int
     ): Result<List<Book>, DataError.Remote> {
         return remoteBookDataSource.fetchBrowseBooks(
             subject = subject,
-            page = page
+            offset = offset,
+            limit = limit
         ).map { dto ->
             dto.results.map { it.toBook() }
         }

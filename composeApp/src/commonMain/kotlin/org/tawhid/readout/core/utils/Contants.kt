@@ -30,6 +30,7 @@ enum class Theme(val title: StringResource) {
 
 const val DATA_STORE_FILE_NAME = "setting.preferences_pb"
 const val SEARCH_TRIGGER_CHAR = 3
+const val MAX_BOOKS_TO_FETCH = 100
 
 object BookType {
     const val AUDIO_BOOK = "AudioBook"

@@ -16,7 +16,7 @@ data class BookHomeState(
     val browseErrorMsg: UiText? = null,
     val endReached: Boolean = false,
     val subject: String? = "english",
-    val page: Int = 0,
+    val offset: Int = 0,
     val isBrowseShimmerEffectVisible: Boolean = true,
 
     val savedBooks: List<Book> = emptyList(),
