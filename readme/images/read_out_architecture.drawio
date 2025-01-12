@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0" version="26.0.5">
   <diagram name="Page-1" id="mBGkU9F05mkswkDvs1eW">
-    <mxGraphModel dx="1560" dy="1140" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="200" pageHeight="200" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="1055" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="200" pageHeight="200" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -76,7 +76,7 @@
         <mxCell id="IX3JWbPE97Z0-Mn2hiBN-60" value="&lt;span&gt;UseCase&lt;br&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;shadow=1;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=0;fontSize=19;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="823" y="144" width="224" height="61" as="geometry" />
         </mxCell>
-        <mxCell id="IX3JWbPE97Z0-Mn2hiBN-61" value="&lt;div&gt;Manager&lt;/div&gt;&lt;div&gt;&amp;lt;&amp;lt;Singleton&amp;gt;&amp;gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;shadow=1;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=0;fontSize=19;strokeWidth=2;" parent="1" vertex="1">
+        <mxCell id="IX3JWbPE97Z0-Mn2hiBN-61" value="Entities" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;shadow=1;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=0;fontSize=19;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="706" y="278" width="224" height="72" as="geometry" />
         </mxCell>
         <mxCell id="IX3JWbPE97Z0-Mn2hiBN-62" value="&lt;div&gt;&lt;span&gt;Repository&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;shadow=1;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=0;fontSize=19;strokeWidth=2;" parent="1" vertex="1">
