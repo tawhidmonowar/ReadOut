@@ -6,7 +6,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
-import javafx.application.Platform
 import org.jetbrains.compose.resources.stringResource
 import org.tawhid.readout.app.App
 import org.tawhid.readout.core.di.initKoin
@@ -20,7 +19,6 @@ import java.awt.Dimension
 
 fun main() {
     initKoin()
-    Platform.startup {}
     application {
         Window(
             onCloseRequest = ::exitApplication,

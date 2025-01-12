@@ -1,83 +1,97 @@
 package org.tawhid.readout.core.player
 
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
-import javafx.util.Duration
 import org.tawhid.readout.core.player.domain.PlayerRepository
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory
+import uk.co.caprica.vlcj.player.base.MediaPlayer
+import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter
+
 import java.io.File
+import java.nio.file.Files
 import java.util.Base64
 
 actual class PlayerController : PlayerRepository {
 
-    private var mediaPlayer: MediaPlayer? = null
+    private val mediaPlayerFactory: MediaPlayerFactory = MediaPlayerFactory()
+    private val mediaPlayer: MediaPlayer = mediaPlayerFactory.mediaPlayers().newMediaPlayer()
 
     override fun play(audioUrl: String) {
-        mediaPlayer?.stop()
-        val media = Media(audioUrl)
-        mediaPlayer = MediaPlayer(media).apply {
-            play()
-        }
+        stop()
+        mediaPlayer.media().play(audioUrl)
     }
 
     override fun playAudioBase64(audioBase64: String) {
-        mediaPlayer?.stop()
+        stop()
 
-        val decodedBytes = Base64.getDecoder().decode(audioBase64)
-        val tempFile = File.createTempFile("audio", ".mp3")
-        tempFile.writeBytes(decodedBytes)
+        try {
+            val decodedBytes = Base64.getDecoder().decode(audioBase64)
+            val tempFile = File.createTempFile("audio", ".mp3")
+            Files.write(tempFile.toPath(), decodedBytes)
 
-        println("Play Clickkkk")
+            println("Play Clickkkk")
 
-        val media = Media(tempFile.toURI().toString())
-        mediaPlayer = MediaPlayer(media).apply {
-            play()
-        }
+            mediaPlayer.media().play(tempFile.absolutePath)
 
-        mediaPlayer?.setOnEndOfMedia {
-            tempFile.delete()
+            mediaPlayer.events().addMediaPlayerEventListener(object : MediaPlayerEventAdapter() {
+                override fun finished(mediaPlayer: MediaPlayer) {
+                    tempFile.delete()
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     override fun playAll(audioUrls: List<String>) {
         if (audioUrls.isEmpty()) return
-        play(audioUrls.first())
-        var index = 1
-        mediaPlayer?.setOnEndOfMedia {
-            if (index < audioUrls.size) {
-                play(audioUrls[index])
-                index++
+
+        play(audioUrls[0])
+
+        mediaPlayer.events().addMediaPlayerEventListener(object : MediaPlayerEventAdapter() {
+            var index = 1
+
+            override fun finished(mediaPlayer: MediaPlayer) {
+                if (index < audioUrls.size) {
+                    play(audioUrls[index])
+                    index++
+                }
             }
-        }
+        })
     }
 
     override fun forward() {
-        mediaPlayer?.let {
-            val currentTime = it.currentTime.toMillis()
-            val forwardTime = currentTime + 10000.0
-            val duration = it.totalDuration.toMillis()
-            it.seek(Duration.millis(minOf(forwardTime, duration)))
+        if (mediaPlayer.status().isPlaying) {
+            val currentTime = mediaPlayer.status().time()
+            val forwardTime = currentTime + 10000
+            val duration = mediaPlayer.media().info().duration()
+            mediaPlayer.controls().setTime(minOf(forwardTime, duration))
         }
     }
 
     override fun rewind() {
-        mediaPlayer?.let {
-            val currentTime = it.currentTime.toMillis()
-            val rewindTime = currentTime - 10000.0
-            it.seek(Duration.millis(maxOf(rewindTime, 0.0)))
+        if (mediaPlayer.status().isPlaying) {
+            val currentTime = mediaPlayer.status().time()
+            val rewindTime = currentTime - 10000
+            mediaPlayer.controls().setTime(maxOf(rewindTime, 0))
         }
     }
 
     override fun pauseResume() {
-        mediaPlayer?.let {
-            if (it.status == MediaPlayer.Status.PLAYING) {
-                it.pause()
-            } else if (it.status == MediaPlayer.Status.PAUSED || it.status == MediaPlayer.Status.STOPPED) {
-                it.play()
-            }
+        if (mediaPlayer.status().isPlaying) {
+            mediaPlayer.controls().pause()
+        } else {
+            mediaPlayer.controls().play()
+        }
+    }
+
+    fun stop() {
+        if (mediaPlayer.status().isPlaying) {
+            mediaPlayer.controls().stop()
         }
     }
 
     fun release() {
-        mediaPlayer?.dispose()
+        mediaPlayer.release()
+        mediaPlayerFactory.release()
     }
 }
