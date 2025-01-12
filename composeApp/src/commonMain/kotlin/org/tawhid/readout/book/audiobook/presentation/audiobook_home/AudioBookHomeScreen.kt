@@ -29,7 +29,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -53,9 +52,9 @@ import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
 import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
 import org.tawhid.readout.core.ui.components.ErrorView
+import org.tawhid.readout.core.ui.feed.Feed
 import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
 import org.tawhid.readout.core.ui.feed.FeedTitleWithDropdown
-import org.tawhid.readout.core.ui.feed.Feed
 import org.tawhid.readout.core.ui.feed.row
 import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
@@ -75,6 +74,7 @@ fun AudioBookHomeScreenRoot(
     viewModel: AudioBookHomeViewModel = koinViewModel(),
     onAudioBookClick: (AudioBook) -> Unit,
     onSettingClick: () -> Unit,
+    onViewAllClick: () -> Unit,
     innerPadding: PaddingValues,
     windowSize: WindowSizes
 ) {
@@ -87,6 +87,7 @@ fun AudioBookHomeScreenRoot(
             when (action) {
                 is AudioBookHomeAction.OnAudioBookClick -> onAudioBookClick(action.audioBook)
                 is AudioBookHomeAction.OnSettingClick -> onSettingClick()
+                is AudioBookHomeAction.OnViewALlClick -> onViewAllClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -229,8 +230,6 @@ private fun AudioBookHomeScreen(
                 animationSpec = tween(durationMillis = 300)
             )
 
-            val selectedSubject = rememberSaveable { mutableStateOf<String?>(null) }
-
             Feed(
                 modifier = Modifier.padding(
                     start = animatedStartPadding,
@@ -251,7 +250,7 @@ private fun AudioBookHomeScreen(
                             title = stringResource(Res.string.saved_books),
                             btnText = stringResource(Res.string.view_all),
                             onClick = {
-
+                                onAction(AudioBookHomeAction.OnViewALlClick)
                             }
                         )
                     }

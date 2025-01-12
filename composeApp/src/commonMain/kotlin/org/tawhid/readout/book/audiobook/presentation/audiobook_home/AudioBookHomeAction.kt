@@ -8,6 +8,7 @@ interface AudioBookHomeAction {
     data class OnGenreSelect(val genre: String) : AudioBookHomeAction
     data object OnGetBrowseAudioBooks : AudioBookHomeAction
     data object OnSettingClick : AudioBookHomeAction
+    data object OnViewALlClick : AudioBookHomeAction
     data object ActivateSearchMode : AudioBookHomeAction
     data object DeactivateSearchMode : AudioBookHomeAction
 }

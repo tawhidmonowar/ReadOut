@@ -18,6 +18,7 @@ import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
 import org.tawhid.readout.book.audiobook.presentation.SharedAudioBookViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeViewModel
+import org.tawhid.readout.book.audiobook.presentation.audiobook_saved.AudioBookSavedViewModel
 import org.tawhid.readout.book.openbook.data.network.RemoteBookDataSource
 import org.tawhid.readout.book.openbook.data.network.RemoteBookDataSourceImpl
 import org.tawhid.readout.book.openbook.data.repository.BookRepositoryImpl
@@ -62,6 +63,7 @@ val sharedModule = module {
     singleOf(::AudioBookRepositoryImpl).bind<AudioBookRepository>()
     viewModelOf(::AudioBookHomeViewModel)
     viewModelOf(::AudioBookDetailViewModel)
+    viewModelOf(::AudioBookSavedViewModel)
     viewModelOf(::SharedAudioBookViewModel)
 
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()

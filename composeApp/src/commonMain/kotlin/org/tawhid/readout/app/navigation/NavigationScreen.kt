@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -78,6 +76,7 @@ fun NavigationScreenRoot(
                 add(Route.OpenLibraryDetail())
                 add(Route.AudioBookDetail())
                 add(Route.BookSavedScreen)
+                add(Route.AudioBookSaved)
             }
         }
     }
@@ -95,7 +94,8 @@ fun NavigationScreenRoot(
             Route.Summarize,
             Route.OpenLibraryDetail(),
             Route.AudioBookDetail(),
-            Route.BookSavedScreen
+            Route.BookSavedScreen,
+            Route.AudioBookSaved
         )
     }
 
@@ -117,7 +117,6 @@ fun NavigationScreenRoot(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NavigationScreen(
     modifier: Modifier = Modifier,
@@ -240,6 +239,7 @@ private fun getCurrentRoute(currentRouteString: String): Route? {
         Route.Summarize::class.qualifiedName -> Route.Summarize
         Route.OpenLibraryDetail()::class.qualifiedName -> Route.OpenLibraryDetail()
         Route.BookSavedScreen::class.qualifiedName -> Route.BookSavedScreen
+        Route.AudioBookSaved::class.qualifiedName -> Route.AudioBookSaved
         Route.AudioBookDetail()::class.qualifiedName -> Route.AudioBookDetail()
         else -> null
     }

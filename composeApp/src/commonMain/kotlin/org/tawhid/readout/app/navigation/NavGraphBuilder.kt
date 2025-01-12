@@ -23,6 +23,8 @@ import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeScreenRoot
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeViewModel
+import org.tawhid.readout.book.audiobook.presentation.audiobook_saved.AudioBookSavedScreenRoot
+import org.tawhid.readout.book.audiobook.presentation.audiobook_saved.AudioBookSavedViewModel
 import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailAction
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailScreenRoot
@@ -159,6 +161,30 @@ fun NavGraphBuilder.navGraphBuilder(
                 },
                 onSettingClick = {
                     rootNavController.navigate(Route.Setting)
+                },
+                onViewAllClick = {
+                    rootNavController.navigate(Route.AudioBookSaved)
+                }
+            )
+        }
+
+        composable<Route.AudioBookSaved> {
+            val audioBookSavedViewModel = koinViewModel<AudioBookSavedViewModel>()
+            val sharedAudioBookViewModel =
+                it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            LaunchedEffect(true) { sharedAudioBookViewModel.onSelectBook(null) }
+            AudioBookSavedScreenRoot(
+                viewModel = audioBookSavedViewModel,
+                windowSize = windowSize,
+                innerPadding = innerPadding,
+                onBookClick = { book ->
+                    sharedAudioBookViewModel.onSelectBook(book)
+                    rootNavController.navigate(
+                        Route.AudioBookDetail(book.id)
+                    )
+                },
+                onBackClick = {
+                    rootNavController.navigateUp()
                 }
             )
         }
