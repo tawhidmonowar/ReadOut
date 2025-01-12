@@ -24,5 +24,7 @@ sealed interface Route {
     data object OpenLibrary : Route
     @Serializable
     data class OpenLibraryDetail(val id: String? = null) : Route
+    @Serializable
+    data object BookSavedScreen : Route
 
 }

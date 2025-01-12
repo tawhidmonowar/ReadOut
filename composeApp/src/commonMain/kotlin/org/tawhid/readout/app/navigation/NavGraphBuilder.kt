@@ -29,6 +29,8 @@ import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailS
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeScreenRoot
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
+import org.tawhid.readout.book.openbook.presentation.openbook_saved.BookSavedScreenRoot
+import org.tawhid.readout.book.openbook.presentation.openbook_saved.BookSavedViewModel
 import org.tawhid.readout.book.summarize.presentation.summarize_home.SummarizeScreenRoot
 import org.tawhid.readout.core.utils.WindowSizes
 
@@ -90,7 +92,30 @@ fun NavGraphBuilder.navGraphBuilder(
                 },
                 onSettingClick = {
                     rootNavController.navigate(Route.Setting)
+                },
+                onViewAllClick = {
+                    rootNavController.navigate(Route.BookSavedScreen)
                 }
+            )
+        }
+
+        composable<Route.BookSavedScreen> {
+            val bookSavedViewModel = koinViewModel<BookSavedViewModel>()
+            val sharedBookViewModel = it.sharedKoinViewModel<SharedBookViewModel>(rootNavController)
+            LaunchedEffect(true) { sharedBookViewModel.onSelectBook(null) }
+            BookSavedScreenRoot(
+                viewModel = bookSavedViewModel,
+                windowSize = windowSize,
+                innerPadding = innerPadding,
+                onBookClick = { book ->
+                    sharedBookViewModel.onSelectBook(book)
+                    rootNavController.navigate(
+                        Route.OpenLibraryDetail(book.id)
+                    )
+                },
+                onBackClick = {
+                    rootNavController.navigateUp()
+                },
             )
         }
 

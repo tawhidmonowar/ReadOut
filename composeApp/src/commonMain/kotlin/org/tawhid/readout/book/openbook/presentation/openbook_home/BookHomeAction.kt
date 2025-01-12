@@ -7,6 +7,7 @@ sealed interface BookHomeAction {
     data class OnSearchQueryChange(val query: String) : BookHomeAction
     data class OnBookClick(val book: Book) : BookHomeAction
     data object OnSettingClick : BookHomeAction
+    data object OnViewAllClick : BookHomeAction
 
     data object ActivateSearchMode : BookHomeAction
     data object DeactivateSearchMode : BookHomeAction

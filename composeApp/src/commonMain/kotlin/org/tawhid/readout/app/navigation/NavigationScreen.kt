@@ -77,6 +77,7 @@ fun NavigationScreenRoot(
                 add(Route.Summarize)
                 add(Route.OpenLibraryDetail())
                 add(Route.AudioBookDetail())
+                add(Route.BookSavedScreen)
             }
         }
     }
@@ -93,7 +94,8 @@ fun NavigationScreenRoot(
             Route.Setting,
             Route.Summarize,
             Route.OpenLibraryDetail(),
-            Route.AudioBookDetail()
+            Route.AudioBookDetail(),
+            Route.BookSavedScreen
         )
     }
 
@@ -237,6 +239,7 @@ private fun getCurrentRoute(currentRouteString: String): Route? {
         Route.Setting::class.qualifiedName -> Route.Setting
         Route.Summarize::class.qualifiedName -> Route.Summarize
         Route.OpenLibraryDetail()::class.qualifiedName -> Route.OpenLibraryDetail()
+        Route.BookSavedScreen::class.qualifiedName -> Route.BookSavedScreen
         Route.AudioBookDetail()::class.qualifiedName -> Route.AudioBookDetail()
         else -> null
     }

@@ -1,4 +1,4 @@
-package org.tawhid.readout.book.openbook.presentation.openbook_home
+package org.tawhid.readout.book.openbook.presentation.openbook_saved
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
@@ -13,10 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,19 +25,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
-import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
-import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookSearchResult
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedFeedWidth
@@ -50,29 +43,18 @@ import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
-import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
-import org.tawhid.readout.core.ui.components.ErrorView
-import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
-import org.tawhid.readout.core.ui.feed.FeedTitleWithDropdown
 import org.tawhid.readout.core.ui.feed.Feed
-import org.tawhid.readout.core.ui.feed.row
-import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
-import org.tawhid.readout.core.utils.openLibrary_book_subject
 import readout.composeapp.generated.resources.Res
-import readout.composeapp.generated.resources.info
-import readout.composeapp.generated.resources.open_library
+import readout.composeapp.generated.resources.go_back
+import readout.composeapp.generated.resources.no_saved_books_found
 import readout.composeapp.generated.resources.saved_books
-import readout.composeapp.generated.resources.search
-import readout.composeapp.generated.resources.setting
-import readout.composeapp.generated.resources.view_all
 
 @Composable
-fun BookHomeScreenRoot(
-    viewModel: BookHomeViewModel = koinViewModel(),
+fun BookSavedScreenRoot(
+    viewModel: BookSavedViewModel = koinViewModel(),
     onBookClick: (Book) -> Unit,
-    onSettingClick: () -> Unit,
-    onViewAllClick: () -> Unit,
+    onBackClick: () -> Unit,
     innerPadding: PaddingValues,
     windowSize: WindowSizes
 ) {
@@ -83,12 +65,9 @@ fun BookHomeScreenRoot(
         windowSize = windowSize,
         onAction = { action ->
             when (action) {
-                is BookHomeAction.OnBookClick -> onBookClick(action.book)
-                is BookHomeAction.OnSettingClick -> onSettingClick()
-                is BookHomeAction.OnViewAllClick -> onViewAllClick()
-                else -> Unit
+                is BookSavedAction.OnBookClick -> onBookClick(action.book)
+                is BookSavedAction.OnBackClick -> onBackClick()
             }
-            viewModel.onAction(action)
         }
     )
 }
@@ -96,10 +75,10 @@ fun BookHomeScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BookHomeScreen(
-    state: BookHomeState,
+    state: BookSavedState,
     innerPadding: PaddingValues,
     windowSize: WindowSizes,
-    onAction: (BookHomeAction) -> Unit
+    onAction: (BookSavedAction) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val startPadding by animateDpAsState(
@@ -122,8 +101,7 @@ private fun BookHomeScreen(
     )
 
     val gridState = rememberLazyGridState()
-    val bookSize by mutableStateOf(state.browseBooks.size)
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val bookSize = state.savedBooks.size
 
     Surface(modifier = Modifier.padding(animatedPadding)) {
         Scaffold(
@@ -134,69 +112,24 @@ private fun BookHomeScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = stringResource(Res.string.open_library),
+                            text = stringResource(Res.string.saved_books),
                             style = MaterialTheme.typography.titleLarge
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-
+                            onAction(BookSavedAction.OnBackClick)
                         }) {
                             Icon(
-                                imageVector = Icons.Outlined.Info,
-                                contentDescription = stringResource(Res.string.info),
+                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                contentDescription = stringResource(Res.string.go_back),
                             )
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            onAction(BookHomeAction.ActivateSearchMode)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Search,
-                                contentDescription = stringResource(Res.string.search),
-                            )
-                        }
-                        if (windowSize.isCompactScreen) {
-                            IconButton(onClick = {
-                                onAction(BookHomeAction.OnSettingClick)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Settings,
-                                    contentDescription = stringResource(Res.string.setting),
-                                )
-                            }
                         }
                     },
                     scrollBehavior = scrollBehavior
                 )
-                if (state.isSearchActive) {
-                    EmbeddedSearchBar(
-                        query = state.searchQuery,
-                        onQueryChange = { query ->
-                            onAction(BookHomeAction.OnSearchQueryChange(query))
-                        },
-                        onSearch = {
-                            keyboardController?.hide()
-                        },
-                        content = {
-                            BookSearchResult(
-                                state = state,
-                                onBookClick = { book ->
-                                    keyboardController?.hide()
-                                    onAction(BookHomeAction.OnBookClick(book))
-                                }
-                            )
-                        },
-                        onBack = {
-                            onAction(BookHomeAction.DeactivateSearchMode)
-                        },
-                        isActive = true
-                    )
-                }
             }
         ) { innerPadding ->
-
             val columns = when {
                 windowSize.isExpandedScreen -> GridCells.Adaptive(expandedFeedWidth)
                 windowSize.isMediumScreen -> GridCells.Adaptive(mediumFeedWidth)
@@ -242,70 +175,25 @@ private fun BookHomeScreen(
             ) {
 
                 if (state.savedBooks.isNotEmpty()) {
-                    title(contentType = "saved-book-title") {
-                        FeedTitleWithButton(
-                            title = stringResource(Res.string.saved_books),
-                            btnText = stringResource(Res.string.view_all),
+                    items(
+                        count = bookSize,
+                        key = { index -> state.savedBooks[index].id }
+                    ) { index ->
+                        val book = state.savedBooks[index]
+                        BookGridItem(
+                            book = book,
                             onClick = {
-                                onAction(BookHomeAction.OnViewAllClick)
+                                onAction(BookSavedAction.OnBookClick(book))
                             }
                         )
                     }
-                    row(contentType = "saved-books") {
-                        BookHorizontalGridList(
-                            books = state.savedBooks,
-                            onBookClick = {
-                                onAction(BookHomeAction.OnBookClick(it))
-                            }
-                        )
-                    }
-                }
-
-                title(contentType = "browse-title") {
-                    FeedTitleWithDropdown(
-                        title = "Browse",
-                        dropDownList = openLibrary_book_subject,
-                        onItemSelected = { selectedItem ->
-                            onAction(BookHomeAction.OnSubjectChange(selectedItem.lowercase()))
-                        }
-                    )
-                }
-
-                items(
-                    count = bookSize,
-                    key = { index -> state.browseBooks[index].id }
-                ) { index ->
-                    val book = state.browseBooks[index]
-
-                    if (index == bookSize - 1 && !state.isBrowseLoading && !state.endReached && state.browseErrorMsg == null) {
-                        onAction(BookHomeAction.OnLoadBrowseBooks)
-                    }
-                    BookGridItem(
-                        book = book,
-                        onClick = {
-                            onAction(BookHomeAction.OnBookClick(book))
-                        }
-                    )
-                }
-
-                if (state.browseErrorMsg != null) {
-                    row(contentType = "error") {
-                        ErrorView(
-                            errorMsg = state.browseErrorMsg,
-                            onRetryClick = {
-                                onAction(BookHomeAction.OnLoadBrowseBooks)
-                            }
-                        )
-                    }
-                } else if (state.isBrowseLoading) {
-                    row(contentType = "loading") {
+                } else {
+                    item {
                         Box(
                             modifier = Modifier.fillMaxSize().animateContentSize(),
                             contentAlignment = Alignment.Center,
                         ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.padding(small)
-                            )
+                            Text(text = stringResource(Res.string.no_saved_books_found))
                         }
                     }
                 }
@@ -313,6 +201,3 @@ private fun BookHomeScreen(
         }
     }
 }
-
-
-//https://openlibrary.org/subjects/english.json?limit=50&offset=1

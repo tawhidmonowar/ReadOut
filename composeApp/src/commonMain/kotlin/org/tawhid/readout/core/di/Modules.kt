@@ -25,6 +25,7 @@ import org.tawhid.readout.book.openbook.domain.BookRepository
 import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
+import org.tawhid.readout.book.openbook.presentation.openbook_saved.BookSavedViewModel
 import org.tawhid.readout.core.data.database.DatabaseFactory
 import org.tawhid.readout.core.data.database.ReadOutDatabase
 import org.tawhid.readout.core.data.network.HttpClientFactory
@@ -53,6 +54,7 @@ val sharedModule = module {
     singleOf(::RemoteBookDataSourceImpl).bind<RemoteBookDataSource>()
     singleOf(::BookRepositoryImpl).bind<BookRepository>()
     viewModelOf(::BookHomeViewModel)
+    viewModelOf(::BookSavedViewModel)
     viewModelOf(::BookDetailViewModel)
     viewModelOf(::SharedBookViewModel)
 
