@@ -31,9 +31,14 @@ class AudioBookRepositoryImpl(
 
     override suspend fun getBrowseAudioBooks(
         genre: String?,
-        page: Int?
+        offset: Int?,
+        limit: Int
     ): Result<List<AudioBook>, DataError.Remote> {
-        return remoteAudioBookDataSource.fetchBrowseAudioBooks(genre = genre, page = page)
+        return remoteAudioBookDataSource.fetchBrowseAudioBooks(
+            genre = genre,
+            offset = offset,
+            limit = limit
+        )
             .map { dto ->
                 dto.results.map {
                     it.toAudioBook()

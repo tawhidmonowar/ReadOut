@@ -23,22 +23,26 @@ class RemoteAudioBookDataSourceImpl(
                 urlString = "${LIBRI_VOX_BASE_URL}/audiobooks"
             ) {
                 parameter("title", "^${query}")
-                parameter("coverart",1)
+                parameter("coverart", 1)
                 parameter("limit", resultLimit)
                 parameter("format", "json")
             }
         }
     }
 
-    override suspend fun fetchBrowseAudioBooks(genre: String?, page: Int?): Result<SearchResponseDto, DataError.Remote> {
+    override suspend fun fetchBrowseAudioBooks(
+        genre: String?,
+        offset: Int?,
+        limit: Int
+    ): Result<SearchResponseDto, DataError.Remote> {
         return safeCall {
             httpClient.get(
                 urlString = "${LIBRI_VOX_BASE_URL}/audiobooks"
             ) {
-                parameter("coverart",1)
-                parameter("offset",page)
-                parameter("limit", 100)
-                parameter("genre",genre)
+                parameter("coverart", 1)
+                parameter("offset", offset)
+                parameter("limit", limit)
+                parameter("genre", genre)
                 parameter("format", "json")
             }
         }

@@ -19,6 +19,7 @@ import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
 import org.tawhid.readout.core.domain.onError
 import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.SEARCH_TRIGGER_CHAR
 import org.tawhid.readout.core.utils.toUiText
 
@@ -71,7 +72,7 @@ class AudioBookHomeViewModel(
                     it.copy(
                         genre = action.genre,
                         browseAudioBooks = emptyList(),
-                        page = 0
+                        offset = 0
                     )
                 }
                 getBrowseAudioBooks()
@@ -138,10 +139,11 @@ class AudioBookHomeViewModel(
             )
         }
 
-        val page = _state.value.page
+        val offset = _state.value.offset
+        val limit = MAX_BOOKS_TO_FETCH
         val genre = _state.value.genre
 
-        audioBookRepository.getBrowseAudioBooks(genre = genre, page = page)
+        audioBookRepository.getBrowseAudioBooks(genre = genre, offset = offset, limit = limit)
             .onSuccess { audioBooks ->
                 _state.update { state ->
                     val allBooks = state.browseAudioBooks + audioBooks
@@ -151,7 +153,7 @@ class AudioBookHomeViewModel(
                         browseErrorMsg = null,
                         browseAudioBooks = uniqueBooks,
                         isEndReached = audioBooks.isEmpty(),
-                        page = state.page + 1
+                        offset = state.offset + limit
                     )
                 }
             }.onError { error ->
