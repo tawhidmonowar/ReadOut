@@ -10,7 +10,6 @@ This project follows the MVI (Model-View-Intent) design pattern combined with Cl
 * The Data Layer abstracts data sources (API, Database) through a Repository pattern.
 
 ## API Usage Overview
-
 This project uses several APIs to enhance functionality and provide seamless user experiences. Below is a list of the APIs used in this project.
 
 <table>
@@ -23,3 +22,7 @@ This project uses several APIs to enhance functionality and provide seamless use
     </tr>
   </tbody>
 </table>
+
+## Author
+**Tawhid Monowar** - *Computer Science & Engineering Student* <br>
+[LinkedIn](https://www.linkedin.com/in/tawhidmonowar) | [Portfolio](https://tawhidmonowar.github.io/profile)
