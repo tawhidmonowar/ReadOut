@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextOverflow
 import org.jetbrains.compose.resources.painterResource
-import org.tawhid.readout.app.home.domain.RecentlyViewedBooks
+import org.tawhid.readout.app.home.domain.entity.RecentlyViewedBooks
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.bookCoverAspectRatio
 import org.tawhid.readout.core.theme.extraThin

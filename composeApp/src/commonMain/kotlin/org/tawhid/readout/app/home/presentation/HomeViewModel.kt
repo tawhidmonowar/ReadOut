@@ -6,15 +6,22 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import org.tawhid.readout.app.home.domain.HomeRepository
+import kotlinx.coroutines.launch
+import org.tawhid.readout.app.home.domain.usecase.GetRecentReleasedAudioBooksUseCase
+import org.tawhid.readout.app.home.domain.usecase.GetRecentlyViewedBooksUseCase
+import org.tawhid.readout.app.home.domain.usecase.GetTrendingBooksUseCase
+import org.tawhid.readout.core.domain.onError
+import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.toUiText
 
 class HomeViewModel(
-    private val homeRepository: HomeRepository
+    private val getRecentlyViewedBooksUseCase: GetRecentlyViewedBooksUseCase,
+    private val getRecentReleasedAudioBooksUseCase: GetRecentReleasedAudioBooksUseCase,
+    private val getTrendingBooksUseCase: GetTrendingBooksUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -22,6 +29,8 @@ class HomeViewModel(
     val state = _state
         .onStart {
             observeSavedBooks()
+            recentlyReleasedAudioBooks()
+            trendingBooks()
         }
         .stateIn(
             viewModelScope,
@@ -47,24 +56,76 @@ class HomeViewModel(
                 }
             }
 
+            is HomeAction.OnLoadAudioBooks -> {
+                recentlyReleasedAudioBooks()
+            }
+
+            is HomeAction.OnLoadTrendingBooks -> {
+                trendingBooks()
+            }
+
             else -> Unit
         }
     }
 
     private fun observeSavedBooks() {
         observeSaveJob?.cancel()
-        observeSaveJob = homeRepository.getRecentlyViewedBooks()
-            .map { savedBooks ->
-                savedBooks.sortedByDescending { it.timeStamp }
+        observeSaveJob = getRecentlyViewedBooksUseCase().onEach { recentlyViewedBooks ->
+            _state.update {
+                it.copy(
+                    recentlyViewedBooks = recentlyViewedBooks
+                )
             }
-            .onEach { recentlyPlayedBooks ->
-                _state.update {
-                    it.copy(
-                        recentlyViewedBooks = recentlyPlayedBooks
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
     }
 
+    private fun recentlyReleasedAudioBooks() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isAudioBooksLoading = true,
+                audioBooksErrorMsg = null
+            )
+        }
+        getRecentReleasedAudioBooksUseCase().onSuccess { audioBooks ->
+            _state.update {
+                it.copy(
+                    isAudioBooksLoading = false,
+                    audioBooksErrorMsg = null,
+                    recentlyReleasedAudioBooks = audioBooks
+                )
+            }
+        }.onError { error ->
+            _state.update {
+                it.copy(
+                    isAudioBooksLoading = false,
+                    audioBooksErrorMsg = error.toUiText()
+                )
+            }
+        }
+    }
+
+    private fun trendingBooks() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isTrendingLoading = true,
+                trendingErrorMsg = null
+            )
+        }
+        getTrendingBooksUseCase().onSuccess { books ->
+            _state.update {
+                it.copy(
+                    isTrendingLoading = false,
+                    trendingErrorMsg = null,
+                    trendingBooks = books
+                )
+            }
+        }.onError { error ->
+            _state.update {
+                it.copy(
+                    isTrendingLoading = false,
+                    trendingErrorMsg = error.toUiText()
+                )
+            }
+        }
+    }
 }

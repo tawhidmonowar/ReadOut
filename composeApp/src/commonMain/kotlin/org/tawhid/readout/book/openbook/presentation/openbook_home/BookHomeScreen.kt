@@ -313,6 +313,3 @@ private fun BookHomeScreen(
         }
     }
 }
-
-
-//https://openlibrary.org/subjects/english.json?limit=50&offset=1

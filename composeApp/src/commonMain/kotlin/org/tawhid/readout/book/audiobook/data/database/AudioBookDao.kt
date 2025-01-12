@@ -13,6 +13,9 @@ interface AudioBookDao {
     @Query("SELECT * FROM AudioBookEntity")
     fun getSavedBooks(): Flow<List<AudioBookEntity>>
 
+    @Query("SELECT * FROM AudioBookEntity")
+    fun getAllBooks(): Flow<List<AudioBookEntity>>
+
     @Query("SELECT * FROM AudioBookEntity WHERE id = :id")
     suspend fun getSavedBook(id: String): AudioBookEntity?
 

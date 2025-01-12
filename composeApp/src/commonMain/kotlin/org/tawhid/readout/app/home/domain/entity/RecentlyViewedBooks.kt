@@ -1,4 +1,4 @@
-package org.tawhid.readout.app.home.domain
+package org.tawhid.readout.app.home.domain.entity
 
 data class RecentlyViewedBooks(
     val id: String,

@@ -16,11 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.tawhid.readout.app.home.domain.RecentlyViewedBooks
-import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeAction
-import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
+import org.tawhid.readout.app.home.domain.entity.RecentlyViewedBooks
 import org.tawhid.readout.core.theme.horizontalGridMaxHeight
-import org.tawhid.readout.core.theme.horizontalGridMaxWidth
+import org.tawhid.readout.core.theme.horizontalScrollGridMaxWidth
 import org.tawhid.readout.core.theme.zero
 
 @Composable
@@ -54,7 +52,7 @@ fun RecentlyViewedBookHorizontalGridList(
                 onClick = {
                     onBookClick(books[it])
                 },
-                modifier = Modifier.width(150.dp)
+                modifier = Modifier.width(horizontalScrollGridMaxWidth)
             )
         }
     }

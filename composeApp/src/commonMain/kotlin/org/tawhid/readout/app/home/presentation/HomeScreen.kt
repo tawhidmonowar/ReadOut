@@ -1,8 +1,10 @@
 package org.tawhid.readout.app.home.presentation
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,19 +44,26 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.home.presentation.components.RecentlyViewedBookHorizontalGridList
+import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
+import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedFeedWidth
 import org.tawhid.readout.core.theme.expandedScreenPadding
+import org.tawhid.readout.core.theme.large
 import org.tawhid.readout.core.theme.mediumFeedWidth
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
-import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
+import org.tawhid.readout.core.ui.components.ErrorView
 import org.tawhid.readout.core.ui.components.FullScreenDialog
 import org.tawhid.readout.core.ui.feed.Feed
+import org.tawhid.readout.core.ui.feed.FeedTitle
+import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
 import org.tawhid.readout.core.ui.feed.row
 import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
@@ -59,14 +71,18 @@ import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.home
 import readout.composeapp.generated.resources.ic_auto_awesome_filled
 import readout.composeapp.generated.resources.info
+import readout.composeapp.generated.resources.recently_released
 import readout.composeapp.generated.resources.setting
 import readout.composeapp.generated.resources.summarize
+import readout.composeapp.generated.resources.trending_books
 
 @Composable
 fun HomeScreenRoot(
     viewModel: HomeViewModel = koinViewModel(),
     onSettingClick: () -> Unit,
     onSummarizeClick: () -> Unit,
+    onAudioBookClick: (AudioBook) -> Unit,
+    onBookClick: (Book) -> Unit,
     innerPadding: PaddingValues,
     windowSize: WindowSizes
 ) {
@@ -79,6 +95,8 @@ fun HomeScreenRoot(
             when (action) {
                 is HomeAction.OnSettingClick -> onSettingClick()
                 is HomeAction.OnSummarizeClick -> onSummarizeClick()
+                is HomeAction.OnAudioBookClick -> onAudioBookClick(action.audioBook)
+                is HomeAction.OnBookClick -> onBookClick(action.book)
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -252,8 +270,84 @@ private fun HomeScreen(
                     }
                 }
 
+                title(contentType = "audiobook-title") {
+                    FeedTitle(
+                        title = stringResource(Res.string.recently_released),
+                        modifier = Modifier.padding(vertical = small)
+                    )
+                }
 
+                if (state.audioBooksErrorMsg != null) {
+                    row(contentType = "error") {
+                        ErrorView(
+                            errorMsg = state.audioBooksErrorMsg,
+                            onRetryClick = {
+                                onAction(HomeAction.OnLoadAudioBooks)
+                            }
+                        )
+                    }
+                } else if (state.isAudioBooksLoading) {
+                    row(contentType = "loading") {
+                        Box(
+                            modifier = Modifier.fillMaxSize().animateContentSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(large)
+                            )
+                        }
+                    }
+                } else {
+                    row(contentType = "recently-released-audiobooks") {
+                        AudioBookHorizontalGridList(
+                            books = state.recentlyReleasedAudioBooks,
+                            onBookClick = { audioBook ->
+                                onAction(HomeAction.OnAudioBookClick(audioBook))
+                            }
+                        )
+                    }
+                }
 
+                title(contentType = "trending-books-title") {
+                    FeedTitle(
+                        title = stringResource(Res.string.trending_books),
+                        modifier = Modifier.padding(vertical = small)
+                    )
+                }
+
+                if (state.trendingErrorMsg != null) {
+                    row(contentType = "error") {
+                        ErrorView(
+                            errorMsg = state.trendingErrorMsg,
+                            onRetryClick = {
+                                onAction(HomeAction.OnLoadTrendingBooks)
+                            }
+                        )
+                    }
+                } else if (!state.isAudioBooksLoading && state.isTrendingLoading) {
+                    row(contentType = "loading") {
+                        Box(
+                            modifier = Modifier.fillMaxSize().animateContentSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(large)
+                            )
+                        }
+                    }
+                } else {
+                    row(contentType = "trending-books") {
+                        BookHorizontalGridList(
+                            books = state.trendingBooks,
+                            onBookClick = { book ->
+                                onAction(HomeAction.OnBookClick(book))
+                            }
+                        )
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(large))
+                }
             }
         }
     }

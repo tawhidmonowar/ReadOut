@@ -1,6 +1,6 @@
 package org.tawhid.readout.app.home.data.mappers
 
-import org.tawhid.readout.app.home.domain.RecentlyViewedBooks
+import org.tawhid.readout.app.home.domain.entity.RecentlyViewedBooks
 import org.tawhid.readout.book.audiobook.data.database.AudioBookEntity
 import org.tawhid.readout.book.openbook.data.database.OpenBookEntity
 import org.tawhid.readout.core.utils.BookType

@@ -116,17 +116,6 @@ class RemoteBookDataSourceImpl(
         }
     }
 
-    override suspend fun fetchTrendingBooks(resultLimit: Int?): Result<BrowseResponseDto, DataError.Remote> {
-        return safeCall {
-            httpClient.get(
-                urlString = "${OPEN_LIBRARY_BASE_URL}/trending/daily.json"
-            ) {
-                header("User-Agent", USER_AGENT)
-                parameter("limit", resultLimit)
-            }
-        }
-    }
-
     override suspend fun fetchBrowseBooks(
         subject: String?,
         offset: Int?,

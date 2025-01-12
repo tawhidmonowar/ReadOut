@@ -43,6 +43,11 @@ fun NavGraphBuilder.navGraphBuilder(
     innerPadding: PaddingValues
 ) {
     composable<Route.Home> {
+        val sharedAudioBookViewModel =
+            it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+        LaunchedEffect(true) { sharedAudioBookViewModel.onSelectBook(null) }
+        val sharedBookViewModel = it.sharedKoinViewModel<SharedBookViewModel>(rootNavController)
+        LaunchedEffect(true) { sharedBookViewModel.onSelectBook(null) }
         val homeViewModel = koinViewModel<HomeViewModel>()
         HomeScreenRoot(
             viewModel = homeViewModel,
@@ -52,8 +57,40 @@ fun NavGraphBuilder.navGraphBuilder(
             onSummarizeClick = {
                 rootNavController.navigate(Route.Summarize)
             },
+            onAudioBookClick = { audioBook ->
+                sharedAudioBookViewModel.onSelectBook(audioBook)
+                rootNavController.navigate(
+                    Route.AudioBookDetail(audioBook.id)
+                )
+            },
+            onBookClick = { book ->
+                sharedBookViewModel.onSelectBook(book)
+                rootNavController.navigate(
+                    Route.OpenLibraryDetail(book.id)
+                )
+            },
             windowSize = windowSize,
             innerPadding = innerPadding
+        )
+    }
+
+    composable<Route.AudioBookDetail> { it ->
+        val audioBookDetailViewModel = koinViewModel<AudioBookDetailViewModel>()
+        val sharedAudioBookViewModel =
+            it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+        val selectedBook by sharedAudioBookViewModel.selectedBook.collectAsStateWithLifecycle()
+        LaunchedEffect(selectedBook) {
+            selectedBook?.let {
+                audioBookDetailViewModel.onAction(AudioBookDetailAction.OnSelectedBookChange(it))
+            }
+        }
+        AudioBookDetailScreenRoot(
+            viewModel = audioBookDetailViewModel,
+            innerPadding = innerPadding,
+            windowSize = windowSize,
+            onBackClick = {
+                rootNavController.navigateUp()
+            }
         )
     }
 

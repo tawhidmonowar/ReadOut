@@ -27,15 +27,6 @@ class BookRepositoryImpl(
             }
     }
 
-    override suspend fun getTrendingBooks(): Result<List<Book>, DataError.Remote> {
-        return remoteBookDataSource.fetchTrendingBooks(
-            resultLimit = 102
-        )
-            .map { dto ->
-                dto.results.map { it.toBook() }
-            }
-    }
-
     override suspend fun getBookDescriptionById(bookId: String): Result<String?, DataError> {
         //val localResult = saveBookDao.getSavedBook(bookId)
         val localResult = null

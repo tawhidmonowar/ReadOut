@@ -13,6 +13,9 @@ interface OpenBookDao {
     @Query("SELECT * FROM OpenBookEntity WHERE isSaved = 1")
     fun getSavedBooks(): Flow<List<OpenBookEntity>>
 
+    @Query("SELECT * FROM OpenBookEntity")
+    fun getAllBooks(): Flow<List<OpenBookEntity>>
+
     @Query("SELECT * FROM OpenBookEntity WHERE id = :id")
     suspend fun getSavedBook(id: String): OpenBookEntity?
 

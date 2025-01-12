@@ -7,8 +7,13 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.tawhid.readout.app.home.data.network.RemoteHomeDataSource
+import org.tawhid.readout.app.home.data.network.RemoteHomeDataSourceImpl
 import org.tawhid.readout.app.home.data.repository.HomeRepositoryImpl
-import org.tawhid.readout.app.home.domain.HomeRepository
+import org.tawhid.readout.app.home.domain.repository.HomeRepository
+import org.tawhid.readout.app.home.domain.usecase.GetRecentReleasedAudioBooksUseCase
+import org.tawhid.readout.app.home.domain.usecase.GetRecentlyViewedBooksUseCase
+import org.tawhid.readout.app.home.domain.usecase.GetTrendingBooksUseCase
 import org.tawhid.readout.app.home.presentation.HomeViewModel
 import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
@@ -76,7 +81,11 @@ val sharedModule = module {
     singleOf(::GetBookSummaryUseCase)
     viewModelOf(::SummarizeViewModel)
 
+    singleOf(::RemoteHomeDataSourceImpl).bind<RemoteHomeDataSource>()
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
+    singleOf(::GetRecentlyViewedBooksUseCase)
+    singleOf(::GetRecentReleasedAudioBooksUseCase)
+    singleOf(::GetTrendingBooksUseCase)
     viewModelOf(::HomeViewModel)
 
 }
