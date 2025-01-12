@@ -30,8 +30,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.summarize.presentation.summarize_home.components.BookSummarizeForm
 import org.tawhid.readout.book.summarize.presentation.summarize_home.components.BookSummary
 import org.tawhid.readout.core.utils.WindowSizes
@@ -44,20 +46,37 @@ import readout.composeapp.generated.resources.summarize
 
 @Composable
 fun SummarizeScreenRoot(
+    viewModel: SummarizeViewModel = koinViewModel(),
+    onSettingClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onHistoryClick: () -> Unit,
     innerPadding: PaddingValues,
     windowSize: WindowSizes,
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     SummarizeScreen(
+        state = state,
         innerPadding = innerPadding,
-        windowSize = windowSize
+        windowSize = windowSize,
+        onAction = { action ->
+            when (action) {
+                is SummarizeAction.OnBackClick -> onBackClick()
+                is SummarizeAction.OnHistoryClick -> onHistoryClick()
+                is SummarizeAction.OnSettingClick -> onSettingClick()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SummarizeScreen(
+    state: SummarizeState,
     innerPadding: PaddingValues,
     windowSize: WindowSizes,
+    onAction: (SummarizeAction) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val startPadding by animateDpAsState(
@@ -96,7 +115,7 @@ private fun SummarizeScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-
+                            onAction(SummarizeAction.OnBackClick)
                         }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
@@ -106,7 +125,7 @@ private fun SummarizeScreen(
                     },
                     actions = {
                         IconButton(onClick = {
-
+                            onAction(SummarizeAction.OnHistoryClick)
                         }) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_history),
@@ -115,7 +134,7 @@ private fun SummarizeScreen(
                         }
                         if (windowSize.isCompactScreen) {
                             IconButton(onClick = {
-
+                                onAction(SummarizeAction.OnSettingClick)
                             }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Settings,
@@ -140,12 +159,10 @@ private fun SummarizeScreen(
                 BookSummarizeForm(
                     onSummarizeClick = { title, authors, description ->
                         keyboardController?.hide()
+                        onAction(SummarizeAction.OnSummarizeClick(title, authors, description))
                     }
                 )
-
-                BookSummary (
-
-                )
+                BookSummary(state = state)
             }
         }
     }

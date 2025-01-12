@@ -27,6 +27,12 @@ import org.tawhid.readout.book.openbook.presentation.SharedBookViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeViewModel
 import org.tawhid.readout.book.openbook.presentation.openbook_saved.BookSavedViewModel
+import org.tawhid.readout.book.summarize.data.network.RemoteSummarizeDataSource
+import org.tawhid.readout.book.summarize.data.network.RemoteSummarizeDataSourceImpl
+import org.tawhid.readout.book.summarize.data.repository.SummarizeRepositoryImpl
+import org.tawhid.readout.book.summarize.domain.repository.SummarizeRepository
+import org.tawhid.readout.book.summarize.domain.usecase.GetBookSummaryUseCase
+import org.tawhid.readout.book.summarize.presentation.summarize_home.SummarizeViewModel
 import org.tawhid.readout.core.data.database.DatabaseFactory
 import org.tawhid.readout.core.data.database.ReadOutDatabase
 import org.tawhid.readout.core.data.network.HttpClientFactory
@@ -39,7 +45,6 @@ expect val platformModule: Module
 
 val sharedModule = module {
     single { HttpClientFactory.create(OkHttp.create()) }
-
     single { get<DatabaseFactory>().create().setDriver(BundledSQLiteDriver()).build() }
     single { get<ReadOutDatabase>().openBookDao }
     single { get<ReadOutDatabase>().audioBookDao }
@@ -65,6 +70,11 @@ val sharedModule = module {
     viewModelOf(::AudioBookDetailViewModel)
     viewModelOf(::AudioBookSavedViewModel)
     viewModelOf(::SharedAudioBookViewModel)
+
+    singleOf(::RemoteSummarizeDataSourceImpl).bind<RemoteSummarizeDataSource>()
+    singleOf(::SummarizeRepositoryImpl).bind<SummarizeRepository>()
+    singleOf(::GetBookSummaryUseCase)
+    viewModelOf(::SummarizeViewModel)
 
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
     viewModelOf(::HomeViewModel)

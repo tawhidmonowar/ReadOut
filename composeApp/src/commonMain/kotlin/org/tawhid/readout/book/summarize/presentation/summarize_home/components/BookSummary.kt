@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import org.jetbrains.compose.resources.stringResource
+import org.tawhid.readout.book.summarize.presentation.summarize_home.SummarizeState
 import org.tawhid.readout.core.theme.large
 import org.tawhid.readout.core.theme.medium
 import readout.composeapp.generated.resources.Res
@@ -21,38 +22,43 @@ import readout.composeapp.generated.resources.summary_generated_with_ai
 
 @Composable
 fun BookSummary(
-
+    state: SummarizeState
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = stringResource(Res.string.book_summary),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .fillMaxWidth()
-                .padding(top = large)
-        )
-        Text(
-            text = stringResource(Res.string.summary_generated_with_ai),
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(medium),
-            contentAlignment = Alignment.Center
+    if (state.isSummaryRequest) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            CircularProgressIndicator()
+            Text(
+                text = stringResource(Res.string.book_summary),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .fillMaxWidth()
+                    .padding(top = large)
+            )
+            Text(
+                text = stringResource(Res.string.summary_generated_with_ai),
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            if (state.isSummaryLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(medium),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                state.summarize?.summary?.let { summary ->
+                    Text(
+                        text = summary,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Justify,
+                    )
+                }
+            }
         }
     }
-
-    Text(
-        text = "Summary text",
-        style = MaterialTheme.typography.bodyLarge,
-        textAlign = TextAlign.Justify,
-    )
 }

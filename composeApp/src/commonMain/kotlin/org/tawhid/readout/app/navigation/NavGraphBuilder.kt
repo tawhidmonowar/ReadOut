@@ -69,6 +69,15 @@ fun NavGraphBuilder.navGraphBuilder(
 
     composable<Route.Summarize> {
         SummarizeScreenRoot(
+            onBackClick = {
+                rootNavController.navigateUp()
+            },
+            onSettingClick = {
+                rootNavController.navigate(Route.Setting)
+            },
+            onHistoryClick = {
+
+            },
             innerPadding = innerPadding,
             windowSize = windowSize
         )

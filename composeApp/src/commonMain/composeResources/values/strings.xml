@@ -36,6 +36,11 @@
     <string name="no_saved_books_found">No Saved Books Found!</string>
 
 
+    <string name="title">Title*</string>
+    <string name="title_cannot_empty">Title cannot be empty!</string>
+    <string name="authors">Author(s)</string>
+    <string name="more_details_about_the_book">More Details About The Book</string>
+    <string name="summarize_book_description">*Fill in the Details and Let AI Summarize your Book.</string>
 
 
 
@@ -46,6 +51,7 @@
 
 
 
+    <string name="clear">Clear</string>
     <string name="clear_data">Clear all data</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
