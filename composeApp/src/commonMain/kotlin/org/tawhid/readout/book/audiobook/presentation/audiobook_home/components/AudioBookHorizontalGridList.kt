@@ -20,6 +20,7 @@ import org.tawhid.readout.app.home.domain.RecentlyViewedBooks
 import org.tawhid.readout.app.home.presentation.components.RecentlyViewedBookGridItem
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.core.theme.horizontalGridMaxHeight
+import org.tawhid.readout.core.theme.horizontalScrollGridMaxWidth
 import org.tawhid.readout.core.theme.zero
 
 @Composable
@@ -53,7 +54,7 @@ fun AudioBookHorizontalGridList(
                 onClick = {
                     onBookClick(books[it])
                 },
-                modifier = Modifier.width(170.dp)
+                modifier = Modifier.width(horizontalScrollGridMaxWidth)
             )
         }
     }

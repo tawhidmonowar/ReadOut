@@ -31,5 +31,6 @@ const val bookCoverAspectRatio = 0.66f
 const val audioBookCoverAspectRatio = 1f
 val horizontalGridMaxHeight = 450.dp
 val horizontalGridMaxWidth = 125.dp
+val horizontalScrollGridMaxWidth = 180.dp
 
 val maxWidthIn = 1000.dp
