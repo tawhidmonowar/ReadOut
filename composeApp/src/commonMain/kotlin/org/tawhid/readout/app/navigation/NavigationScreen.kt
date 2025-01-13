@@ -218,12 +218,9 @@ private fun NavigationScreen(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(innerPadding)
             ) {
                 PlayingOverlay(
-                    onPlayerClick = {
-
-                    }
+                    windowSize = windowSize,
                 )
             }
-
         }
     }
 }

@@ -42,14 +42,6 @@ class PlayerViewModel(
                 repository.playAll(action.audioUrls)
             }
 
-            is PlayerAction.OnSelectPlayer -> {
-                _state.update {
-                    it.copy(
-                        selectedPlayerComponent = action.playerComponent
-                    )
-                }
-            }
-
             is PlayerAction.OnForwardClick -> {
                 repository.forward()
             }
@@ -59,6 +51,11 @@ class PlayerViewModel(
             }
 
             is PlayerAction.OnPauseResumeClick -> {
+                _state.update {
+                    it.copy(
+                        isPaused = !it.isPaused
+                    )
+                }
                 repository.pauseResume()
             }
 
@@ -69,6 +66,9 @@ class PlayerViewModel(
                     )
                 }
             }
+
+            else -> Unit
+
         }
     }
 }

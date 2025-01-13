@@ -1,17 +1,17 @@
 package org.tawhid.readout.core.player.presentation.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
+import org.tawhid.readout.core.utils.WindowSizes
 
 @Composable
 fun PlayingOverlay(
-    onPlayerClick: () -> Unit
+    windowSize: WindowSizes,
 ) {
     val playerViewModel = koinViewModel<PlayerViewModel>()
     val playerState by playerViewModel.state.collectAsState()
@@ -19,7 +19,6 @@ fun PlayingOverlay(
     if (playerState.isPlaying) {
         if (playerState.isCollapsed) {
             CollapsedView(
-                state = playerState,
                 onAction = { playerAction ->
                     when (playerAction) {
                         is PlayerAction.OnCollapseClick -> playerViewModel.onAction(playerAction)
@@ -30,6 +29,7 @@ fun PlayingOverlay(
         } else {
             FullWidthView(
                 state = playerState,
+                windowSize = windowSize,
                 onAction = { playerAction ->
                     when (playerAction) {
                         is PlayerAction.OnPauseResumeClick -> playerViewModel.onAction(playerAction)
@@ -37,8 +37,7 @@ fun PlayingOverlay(
                         is PlayerAction.OnCollapseClick -> playerViewModel.onAction(playerAction)
                         else -> Unit
                     }
-                },
-                modifier = Modifier.clickable { onPlayerClick() }
+                }
             )
         }
     }

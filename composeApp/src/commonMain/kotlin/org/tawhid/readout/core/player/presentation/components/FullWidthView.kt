@@ -3,19 +3,20 @@ package org.tawhid.readout.core.player.presentation.components
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,36 +26,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerState
 import org.tawhid.readout.core.theme.Shapes
+import org.tawhid.readout.core.theme.extraSmall
+import org.tawhid.readout.core.theme.extraThin
+import org.tawhid.readout.core.utils.WindowSizes
+import readout.composeapp.generated.resources.Res
+import readout.composeapp.generated.resources.ic_forward_10
+import readout.composeapp.generated.resources.ic_pause
+import readout.composeapp.generated.resources.ic_play
+import readout.composeapp.generated.resources.ic_rewind_10
 
 @Composable
 fun FullWidthView(
     state: PlayerState,
+    windowSize: WindowSizes,
     onAction: (PlayerAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val imgUrl = state.selectedPlayerComponent?.imgUrl
-    val title = state.selectedPlayerComponent?.title
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceContainer)
             .animateContentSize()
-            .height(80.dp)
-            .background(MaterialTheme.colorScheme.primary)
+            .padding(start = extraSmall, end = extraSmall, bottom = extraSmall)
+            .height(70.dp)
+            .then(if (windowSize.isCompactScreen) Modifier.clip(Shapes.small) else Modifier.clip(Shapes.medium))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        onAction(PlayerAction.OnCollapseClick)
+                    }
+                )
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = extraSmall)
         ) {
             Box(
                 modifier = Modifier
                     .size(60.dp)
+                    .padding(5.dp)
                     .clip(Shapes.small)
                     .background(Color.White)
                     .padding(1.dp)
@@ -70,13 +90,12 @@ fun FullWidthView(
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .weight(1f)
+                    .weight(0.4f)
             ) {
                 Text(
-                    text = title ?: "No Title!",
+                    text = "Now Playing",
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
@@ -84,54 +103,73 @@ fun FullWidthView(
                         initialDelayMillis = 0,
                         iterations = Int.MAX_VALUE,
                     ),
-                    text = "Now Playing: " + (state.selectedPlayerComponent?.description ?: "Unknown!"),
+                    text = "Now Playing: ${state.nowPlaying}",
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                 )
             }
 
-            IconButton(onClick = {
-                onAction(PlayerAction.OnPauseResumeClick)
-            }
+
+            Row(
+                modifier = Modifier.fillMaxHeight().weight(0.6f).padding(end = extraSmall),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
             ) {
-                Icon(
+                IconButton(
                     modifier = Modifier.clip(RoundedCornerShape(100))
-                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
-                        .padding(6.dp).size(50.dp),
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Pause or Play",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-
-            IconButton(
-                onClick = {
-                    onAction(PlayerAction.OnForwardClick)
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .size(50.dp),
+                    onClick = {
+                        onAction(PlayerAction.OnForwardClick)
+                    }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(Res.drawable.ic_rewind_10),
+                        contentDescription = "Collapse",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
                 }
-            ) {
-                Icon(
-                    modifier = Modifier.clip(RoundedCornerShape(100))
-                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
-                        .padding(5.dp).size(50.dp),
-                    imageVector = Icons.Default.ThumbUp,
-                    contentDescription = "Collapse",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
 
-            IconButton(
-                onClick = {
-                    onAction(PlayerAction.OnCollapseClick)
+                Spacer(modifier = Modifier.width(2.dp))
+
+                IconButton(
+                    modifier = Modifier.padding(5.dp).clip(RoundedCornerShape(100))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .size(50.dp),
+                    onClick = {
+                        onAction(PlayerAction.OnPauseResumeClick)
+                    }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        painter = if (state.isPaused) {
+                            painterResource(Res.drawable.ic_pause)
+                        } else {
+                            painterResource(Res.drawable.ic_play)
+                        },
+                        contentDescription = "Pause or Play",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
                 }
-            ) {
-                Icon(
+
+                Spacer(modifier = Modifier.width(2.dp))
+
+                IconButton(
                     modifier = Modifier.clip(RoundedCornerShape(100))
-                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f))
-                        .padding(5.dp).size(50.dp),
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Collapse",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .size(50.dp),
+                    onClick = {
+                        onAction(PlayerAction.OnCollapseClick)
+                    }
+                ) {
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(Res.drawable.ic_forward_10),
+                        contentDescription = "Collapse",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
             }
         }
     }
