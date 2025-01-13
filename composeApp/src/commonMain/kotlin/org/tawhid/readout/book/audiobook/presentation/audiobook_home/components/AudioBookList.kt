@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.core.theme.maxWidthIn
 import org.tawhid.readout.core.theme.medium
 

@@ -2,7 +2,7 @@ package org.tawhid.readout.book.audiobook.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 
 @Entity
 data class AudioBookEntity(

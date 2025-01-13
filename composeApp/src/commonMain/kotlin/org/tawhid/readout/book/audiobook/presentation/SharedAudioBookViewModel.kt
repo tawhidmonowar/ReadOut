@@ -3,7 +3,7 @@ package org.tawhid.readout.book.audiobook.presentation
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 
 class SharedAudioBookViewModel : ViewModel() {
 

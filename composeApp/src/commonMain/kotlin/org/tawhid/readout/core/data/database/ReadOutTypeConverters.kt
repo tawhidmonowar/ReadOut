@@ -3,7 +3,7 @@ package org.tawhid.readout.core.data.database
 import androidx.room.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 
 object ReadOutTypeConverters {
 

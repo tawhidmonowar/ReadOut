@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.extraSmall
 import org.tawhid.readout.core.theme.medium

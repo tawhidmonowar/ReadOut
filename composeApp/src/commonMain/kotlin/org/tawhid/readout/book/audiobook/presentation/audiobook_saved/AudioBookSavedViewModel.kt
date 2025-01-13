@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
 
 class AudioBookSavedViewModel(
     private val audioBookRepository: AudioBookRepository

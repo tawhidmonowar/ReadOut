@@ -22,17 +22,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextOverflow
 import org.jetbrains.compose.resources.painterResource
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.audioBookCoverAspectRatio
-import org.tawhid.readout.core.theme.bookCoverAspectRatio
 import org.tawhid.readout.core.theme.extraThin
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.ui.components.CustomAsyncImage
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.audiobook_cover_error_img
-import readout.composeapp.generated.resources.book_cover_error_img
 
 @Composable
 fun AudioBookGridItem(

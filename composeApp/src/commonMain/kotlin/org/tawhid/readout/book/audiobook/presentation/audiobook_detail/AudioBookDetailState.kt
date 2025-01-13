@@ -1,7 +1,7 @@
 package org.tawhid.readout.book.audiobook.presentation.audiobook_detail
 
-import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 import org.tawhid.readout.core.utils.UiText
 
 data class AudioBookDetailState(

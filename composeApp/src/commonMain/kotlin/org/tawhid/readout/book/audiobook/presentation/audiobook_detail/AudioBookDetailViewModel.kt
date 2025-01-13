@@ -11,21 +11,27 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
-import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.usecase.DeleteFromSavedUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookTracksUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetSavedBookByIdUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.SaveAudioBookUseCase
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
 
 class AudioBookDetailViewModel(
-    private val audioBookRepository: AudioBookRepository,
+    private val getAudioBookTracksUseCase: GetAudioBookTracksUseCase,
+    private val getSavedBookByIdUseCase: GetSavedBookByIdUseCase,
+    private val deleteFromSavedUseCase: DeleteFromSavedUseCase,
+    private val saveAudioBookUseCase: SaveAudioBookUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val audioBookId = savedStateHandle.toRoute<Route.AudioBookDetail>().id
     private val _state = MutableStateFlow(AudioBookDetailState())
-
     val state = _state.onStart {
         getAudioBookTracks()
+        observeSavedStatus()
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -49,10 +55,10 @@ class AudioBookDetailViewModel(
             }
 
             is AudioBookDetailAction.OnSaveClick -> {
-                viewModelScope.launch {
-                    state.value.audioBook?.let { book ->
-                        audioBookRepository.saveBook(book)
-                    }
+                if (state.value.isSaved) {
+                    deleteFromSaved()
+                } else {
+                    saveAudioBook()
                 }
             }
 
@@ -66,23 +72,55 @@ class AudioBookDetailViewModel(
                 isAudioBookTracksLoading = true
             )
         }
-        if (audioBookId != null) {
-            audioBookRepository.getAudioBookTracks(audioBookId = audioBookId)
-                .onSuccess { audioBookTracks ->
+        audioBookId?.let { audioBookId ->
+            getAudioBookTracksUseCase(audioBookId).onSuccess { audioBookTracks ->
+                _state.update {
+                    it.copy(
+                        isAudioBookTracksLoading = false,
+                        audioBookTracks = audioBookTracks
+                    )
+                }
+            }.onError { error ->
+                _state.update {
+                    it.copy(
+                        isAudioBookTracksLoading = false,
+                        audioBookTracksErrorMsg = error.toUiText()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun saveAudioBook() = viewModelScope.launch {
+        state.value.audioBook?.let { book ->
+            saveAudioBookUseCase(book)
+        }
+    }
+
+    private fun deleteFromSaved() = viewModelScope.launch {
+        audioBookId?.let { audioBookId ->
+            deleteFromSavedUseCase(audioBookId)
+        }
+    }
+
+    private fun observeSavedStatus() = viewModelScope.launch {
+        audioBookId?.let { audioBookId ->
+            getSavedBookByIdUseCase(audioBookId).collect { audioBook ->
+                if (audioBook != null) {
                     _state.update {
                         it.copy(
-                            isAudioBookTracksLoading = false,
-                            audioBookTracks = audioBookTracks
+                            isSaved = true,
+                            audioBook = audioBook
                         )
                     }
-                }.onError { error ->
+                } else {
                     _state.update {
                         it.copy(
-                            isAudioBookTracksLoading = false,
-                            audioBookTracksErrorMsg = error.toUiText()
+                            isSaved = false,
                         )
                     }
                 }
+            }
         }
     }
 }

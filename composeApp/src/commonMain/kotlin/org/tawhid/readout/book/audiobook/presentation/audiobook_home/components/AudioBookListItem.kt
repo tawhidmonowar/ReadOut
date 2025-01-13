@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.extraSmall
 import org.tawhid.readout.core.theme.medium

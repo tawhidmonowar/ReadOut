@@ -38,7 +38,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +52,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.components.AudioTrackList
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
@@ -76,6 +75,7 @@ import readout.composeapp.generated.resources.bookmark
 import readout.composeapp.generated.resources.browse
 import readout.composeapp.generated.resources.description_unavailable
 import readout.composeapp.generated.resources.go_back
+import readout.composeapp.generated.resources.ic_bookmark_filled
 import readout.composeapp.generated.resources.ic_bookmark_outlined
 import readout.composeapp.generated.resources.ic_browse
 import readout.composeapp.generated.resources.ic_headphones
@@ -183,7 +183,11 @@ private fun AudioBookDetailScreen(
                             onAction(AudioBookDetailAction.OnSaveClick)
                         }) {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
+                                painter = if (state.isSaved) {
+                                    painterResource(Res.drawable.ic_bookmark_filled)
+                                } else {
+                                    painterResource(Res.drawable.ic_bookmark_outlined)
+                                },
                                 contentDescription = stringResource(Res.string.bookmark),
                             )
                         }

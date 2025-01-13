@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.launch
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.core.theme.horizontalGridMaxHeight
 import org.tawhid.readout.core.theme.horizontalScrollGridMaxWidth
 import org.tawhid.readout.core.theme.zero

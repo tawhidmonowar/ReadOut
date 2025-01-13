@@ -74,26 +74,6 @@ fun NavGraphBuilder.navGraphBuilder(
         )
     }
 
-    composable<Route.AudioBookDetail> { it ->
-        val audioBookDetailViewModel = koinViewModel<AudioBookDetailViewModel>()
-        val sharedAudioBookViewModel =
-            it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
-        val selectedBook by sharedAudioBookViewModel.selectedBook.collectAsStateWithLifecycle()
-        LaunchedEffect(selectedBook) {
-            selectedBook?.let {
-                audioBookDetailViewModel.onAction(AudioBookDetailAction.OnSelectedBookChange(it))
-            }
-        }
-        AudioBookDetailScreenRoot(
-            viewModel = audioBookDetailViewModel,
-            innerPadding = innerPadding,
-            windowSize = windowSize,
-            onBackClick = {
-                rootNavController.navigateUp()
-            }
-        )
-    }
-
     composable<Route.Setting> {
         SettingScreenRoot(
             viewModel = settingViewModel,
@@ -192,8 +172,7 @@ fun NavGraphBuilder.navGraphBuilder(
     ) {
         composable<Route.AudioBook> {
             val audioBookHomeViewModel = koinViewModel<AudioBookHomeViewModel>()
-            val sharedAudioBookViewModel =
-                it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            val sharedAudioBookViewModel = it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
             LaunchedEffect(true) { sharedAudioBookViewModel.onSelectBook(null) }
             AudioBookHomeScreenRoot(
                 viewModel = audioBookHomeViewModel,
@@ -237,8 +216,7 @@ fun NavGraphBuilder.navGraphBuilder(
 
         composable<Route.AudioBookDetail> { it ->
             val audioBookDetailViewModel = koinViewModel<AudioBookDetailViewModel>()
-            val sharedAudioBookViewModel =
-                it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+            val sharedAudioBookViewModel = it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
             val selectedBook by sharedAudioBookViewModel.selectedBook.collectAsStateWithLifecycle()
             LaunchedEffect(selectedBook) {
                 selectedBook?.let {

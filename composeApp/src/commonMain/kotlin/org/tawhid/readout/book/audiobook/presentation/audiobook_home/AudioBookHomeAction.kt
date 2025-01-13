@@ -1,6 +1,6 @@
 package org.tawhid.readout.book.audiobook.presentation.audiobook_home
 
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 
 interface AudioBookHomeAction {
     data class OnSearchQueryChange(val query: String) : AudioBookHomeAction

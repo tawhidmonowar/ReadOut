@@ -1,4 +1,4 @@
-package org.tawhid.readout.book.audiobook.domain
+package org.tawhid.readout.book.audiobook.domain.entity
 
 data class AudioBook(
     val id: String,

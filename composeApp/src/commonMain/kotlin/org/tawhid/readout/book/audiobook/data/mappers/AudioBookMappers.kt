@@ -3,8 +3,8 @@ package org.tawhid.readout.book.audiobook.data.mappers
 import org.tawhid.readout.book.audiobook.data.database.AudioBookEntity
 import org.tawhid.readout.book.audiobook.data.dto.AudioBookTrackDto
 import org.tawhid.readout.book.audiobook.data.dto.SearchedAudioBookDto
-import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 
 fun SearchedAudioBookDto.toAudioBook(): AudioBook {
     return AudioBook(

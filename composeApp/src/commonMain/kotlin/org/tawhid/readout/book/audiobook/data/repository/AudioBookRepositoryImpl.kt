@@ -8,9 +8,9 @@ import org.tawhid.readout.book.audiobook.data.mappers.toAudioBook
 import org.tawhid.readout.book.audiobook.data.mappers.toAudioBookEntity
 import org.tawhid.readout.book.audiobook.data.mappers.toAudioBookTracks
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
-import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
+import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.EmptyResult
 import org.tawhid.readout.core.utils.Result
@@ -63,9 +63,20 @@ class AudioBookRepositoryImpl(
         }
     }
 
+    override suspend fun deleteFromSaved(id: String) {
+        audioBookDao.deleteSavedBook(id)
+    }
+
     override fun getSavedBooks(): Flow<List<AudioBook>> {
         return audioBookDao.getSavedBooks().map { audioBookEntities ->
             audioBookEntities.map { it.toAudioBook() }
         }
     }
+
+    override fun getSavedBookById(id: String): Flow<AudioBook?> {
+        return audioBookDao.getSavedBookById(id).map { bookEntities ->
+            bookEntities?.toAudioBook()
+        }
+    }
+
 }

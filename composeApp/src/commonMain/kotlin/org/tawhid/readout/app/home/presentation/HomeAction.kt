@@ -1,6 +1,6 @@
 package org.tawhid.readout.app.home.presentation
 
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.openbook.domain.Book
 
 sealed interface HomeAction {

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
-import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 import org.tawhid.readout.core.theme.maxWidthIn
 import org.tawhid.readout.core.theme.medium
 

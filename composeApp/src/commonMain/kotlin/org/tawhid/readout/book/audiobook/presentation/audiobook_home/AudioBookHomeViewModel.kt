@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
+import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH

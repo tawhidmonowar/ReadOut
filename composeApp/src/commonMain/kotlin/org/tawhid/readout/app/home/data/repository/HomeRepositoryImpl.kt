@@ -8,7 +8,7 @@ import org.tawhid.readout.app.home.domain.repository.HomeRepository
 import org.tawhid.readout.app.home.domain.entity.RecentlyViewedBooks
 import org.tawhid.readout.book.audiobook.data.database.AudioBookDao
 import org.tawhid.readout.book.audiobook.data.mappers.toAudioBook
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.openbook.data.database.OpenBookDao
 import org.tawhid.readout.book.openbook.data.mappers.toBook
 import org.tawhid.readout.book.openbook.domain.Book

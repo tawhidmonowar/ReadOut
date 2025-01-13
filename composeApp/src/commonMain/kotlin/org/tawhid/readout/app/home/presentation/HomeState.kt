@@ -1,7 +1,7 @@
 package org.tawhid.readout.app.home.presentation
 
 import org.tawhid.readout.app.home.domain.entity.RecentlyViewedBooks
-import org.tawhid.readout.book.audiobook.domain.AudioBook
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.core.utils.UiText
 

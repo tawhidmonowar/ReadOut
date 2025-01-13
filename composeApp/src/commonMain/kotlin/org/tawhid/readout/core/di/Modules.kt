@@ -19,7 +19,11 @@ import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSourceImpl
 import org.tawhid.readout.book.audiobook.data.repository.AudioBookRepositoryImpl
-import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.usecase.DeleteFromSavedUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookTracksUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetSavedBookByIdUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.SaveAudioBookUseCase
 import org.tawhid.readout.book.audiobook.presentation.SharedAudioBookViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.AudioBookDetailViewModel
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeViewModel
@@ -75,6 +79,10 @@ val sharedModule = module {
     viewModelOf(::AudioBookDetailViewModel)
     viewModelOf(::AudioBookSavedViewModel)
     viewModelOf(::SharedAudioBookViewModel)
+    singleOf(::GetAudioBookTracksUseCase)
+    singleOf(::SaveAudioBookUseCase)
+    singleOf(::GetSavedBookByIdUseCase)
+    singleOf(::DeleteFromSavedUseCase)
 
     singleOf(::RemoteSummarizeDataSourceImpl).bind<RemoteSummarizeDataSource>()
     singleOf(::SummarizeRepositoryImpl).bind<SummarizeRepository>()
