@@ -1,6 +1,5 @@
 package org.tawhid.readout.app.setting.components
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import org.tawhid.readout.core.theme.large
 import org.tawhid.readout.core.theme.medium
 
-
 @Composable
 fun SettingItem(
     onClick: () -> Unit,
@@ -28,7 +26,11 @@ fun SettingItem(
     itemColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().clickable { onClick() }.padding(medium),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }.padding(medium),
         horizontalArrangement = Arrangement.spacedBy(medium, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically
     ) {

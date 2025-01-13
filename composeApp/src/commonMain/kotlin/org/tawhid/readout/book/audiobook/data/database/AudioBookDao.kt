@@ -21,4 +21,7 @@ interface AudioBookDao {
 
     @Query("DELETE FROM AudioBookEntity WHERE id = :id")
     suspend fun deleteSavedBook(id: String)
+
+    @Query("DELETE FROM AudioBookEntity")
+    suspend fun clearAll()
 }

@@ -16,4 +16,7 @@ interface SummarizeDao {
     @Query("DELETE FROM SummarizeEntity")
     suspend fun deleteAllSummary()
 
+    @Query("DELETE FROM SummarizeEntity")
+    suspend fun clearAll()
+
 }

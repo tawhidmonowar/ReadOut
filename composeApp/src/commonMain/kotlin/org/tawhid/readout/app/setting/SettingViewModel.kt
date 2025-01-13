@@ -8,10 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.tawhid.readout.core.data.database.ReadOutDatabase
 import org.tawhid.readout.core.utils.AppPreferences
 
 class SettingViewModel(
     private val appPreferences: AppPreferences,
+    private val readOutDatabase: ReadOutDatabase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -52,6 +54,13 @@ class SettingViewModel(
 
             is SettingAction.HideClearDataDialog -> {
                 _state.update { it.copy(showClearDataDialog = false) }
+            }
+
+            is SettingAction.OnClearDataClick -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    readOutDatabase.clearAllEntities()
+                    _state.update { it.copy(showClearDataDialog = false) }
+                }
             }
 
             else -> Unit

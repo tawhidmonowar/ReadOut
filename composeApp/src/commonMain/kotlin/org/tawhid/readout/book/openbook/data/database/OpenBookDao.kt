@@ -24,4 +24,7 @@ interface OpenBookDao {
 
     @Query("UPDATE OpenBookEntity SET isSaved = :isSaved, timeStamp = :timeStamp WHERE id = :id")
     suspend fun updateIsSaved(id: String, isSaved: Boolean, timeStamp: Long)
+
+    @Query("DELETE FROM OpenBookEntity")
+    suspend fun clearAll()
 }

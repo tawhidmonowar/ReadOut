@@ -6,5 +6,6 @@ sealed interface SettingAction {
     data object HideThemeDialog : SettingAction
     data object ShowClearDataDialog : SettingAction
     data object HideClearDataDialog : SettingAction
+    data object OnClearDataClick : SettingAction
     data class ChangeTheme(val theme: String) : SettingAction
 }

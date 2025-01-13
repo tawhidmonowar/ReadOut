@@ -32,4 +32,10 @@ abstract class ReadOutDatabase : RoomDatabase() {
     companion object {
         const val READ_OUT_DB_NAME = "ReadOut.db"
     }
+
+    suspend fun clearAllEntities() {
+        openBookDao.clearAll()
+        audioBookDao.clearAll()
+        summarizeDao.clearAll()
+    }
 }

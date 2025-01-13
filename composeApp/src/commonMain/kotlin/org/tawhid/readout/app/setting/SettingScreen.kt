@@ -77,7 +77,7 @@ private fun SettingScreen(
                     onAction(SettingAction.HideClearDataDialog)
                 },
                 onDeleteHistory = {
-                    onAction(SettingAction.HideClearDataDialog)
+                    onAction(SettingAction.OnClearDataClick)
                 }
             )
         }
@@ -103,6 +103,7 @@ private fun SettingScreen(
             )
         }
     ) { paddingValues ->
+
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
