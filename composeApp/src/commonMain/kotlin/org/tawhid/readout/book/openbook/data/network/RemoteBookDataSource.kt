@@ -4,8 +4,8 @@ import org.tawhid.readout.book.openbook.data.dto.BookWorkDto
 import org.tawhid.readout.book.openbook.data.dto.SearchResponseDto
 import org.tawhid.readout.book.openbook.data.dto.BrowseResponseDto
 import org.tawhid.readout.core.cloudtts.dto.CloudTextToSpeechResponseDto
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 import org.tawhid.readout.core.gemini.dto.GeminiResponseDto
 
 interface RemoteBookDataSource {

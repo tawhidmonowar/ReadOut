@@ -11,10 +11,10 @@ import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
 import org.tawhid.readout.book.audiobook.domain.AudioBookTrack
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.EmptyResult
-import org.tawhid.readout.core.domain.Result
-import org.tawhid.readout.core.domain.map
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.EmptyResult
+import org.tawhid.readout.core.utils.Result
+import org.tawhid.readout.core.utils.map
 
 class AudioBookRepositoryImpl(
     private val remoteAudioBookDataSource: RemoteAudioBookDataSource,

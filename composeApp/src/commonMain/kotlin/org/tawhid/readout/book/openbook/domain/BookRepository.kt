@@ -1,9 +1,9 @@
 package org.tawhid.readout.book.openbook.domain
 
 import kotlinx.coroutines.flow.Flow
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.EmptyResult
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.EmptyResult
+import org.tawhid.readout.core.utils.Result
 
 interface BookRepository {
     suspend fun searchBooksByQuery(query: String): Result<List<Book>, DataError.Remote>

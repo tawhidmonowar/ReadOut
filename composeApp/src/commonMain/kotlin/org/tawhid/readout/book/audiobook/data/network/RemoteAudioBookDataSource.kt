@@ -2,8 +2,8 @@ package org.tawhid.readout.book.audiobook.data.network
 
 import org.tawhid.readout.book.audiobook.data.dto.AudioBookTrackResponseDto
 import org.tawhid.readout.book.audiobook.data.dto.SearchResponseDto
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 
 interface RemoteAudioBookDataSource {
     suspend fun searchAudioBooks(

@@ -2,9 +2,9 @@ package org.tawhid.readout.book.summarize.data.repository
 
 import org.tawhid.readout.book.summarize.data.network.RemoteSummarizeDataSource
 import org.tawhid.readout.book.summarize.domain.repository.SummarizeRepository
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
-import org.tawhid.readout.core.domain.map
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
+import org.tawhid.readout.core.utils.map
 
 class SummarizeRepositoryImpl(
     private val remoteSummarizeDataSource: RemoteSummarizeDataSource

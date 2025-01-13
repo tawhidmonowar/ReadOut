@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
-import org.tawhid.readout.core.domain.onError
-import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.SEARCH_TRIGGER_CHAR
 import org.tawhid.readout.core.utils.toUiText

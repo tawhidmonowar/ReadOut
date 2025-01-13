@@ -12,9 +12,9 @@ import org.tawhid.readout.book.audiobook.domain.AudioBook
 import org.tawhid.readout.book.openbook.data.database.OpenBookDao
 import org.tawhid.readout.book.openbook.data.mappers.toBook
 import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
-import org.tawhid.readout.core.domain.map
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
+import org.tawhid.readout.core.utils.map
 
 class HomeRepositoryImpl(
     private val remoteHomeDataSource: RemoteHomeDataSource,

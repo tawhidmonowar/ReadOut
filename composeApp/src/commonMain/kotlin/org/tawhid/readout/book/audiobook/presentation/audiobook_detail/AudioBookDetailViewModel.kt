@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.audiobook.domain.AudioBookRepository
-import org.tawhid.readout.core.domain.onError
-import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
 
 class AudioBookDetailViewModel(

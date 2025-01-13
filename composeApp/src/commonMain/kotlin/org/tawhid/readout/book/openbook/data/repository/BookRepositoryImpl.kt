@@ -9,10 +9,10 @@ import org.tawhid.readout.book.openbook.data.mappers.toBookBookEntity
 import org.tawhid.readout.book.openbook.data.network.RemoteBookDataSource
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.domain.BookRepository
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.EmptyResult
-import org.tawhid.readout.core.domain.Result
-import org.tawhid.readout.core.domain.map
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.EmptyResult
+import org.tawhid.readout.core.utils.Result
+import org.tawhid.readout.core.utils.map
 
 class BookRepositoryImpl(
     private val remoteBookDataSource: RemoteBookDataSource,

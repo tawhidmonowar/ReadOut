@@ -6,8 +6,8 @@ import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.statement.HttpResponse
 import io.ktor.util.network.UnresolvedAddressException
 import kotlinx.coroutines.ensureActive
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 import kotlin.coroutines.coroutineContext
 
 suspend inline fun <reified T> safeCall(

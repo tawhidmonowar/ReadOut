@@ -18,8 +18,8 @@ import org.tawhid.readout.core.cloudtts.dto.CloudTextToSpeechResponseDto
 import org.tawhid.readout.core.cloudtts.dto.Input
 import org.tawhid.readout.core.cloudtts.dto.Voice
 import org.tawhid.readout.core.data.network.safeCall
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 import org.tawhid.readout.core.gemini.dto.ContentItem
 import org.tawhid.readout.core.gemini.dto.GeminiResponseDto
 import org.tawhid.readout.core.gemini.dto.RequestBody

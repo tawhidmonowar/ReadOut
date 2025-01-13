@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.domain.BookRepository
-import org.tawhid.readout.core.domain.onError
-import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel

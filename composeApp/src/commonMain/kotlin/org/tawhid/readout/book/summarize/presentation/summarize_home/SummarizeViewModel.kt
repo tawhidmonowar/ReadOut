@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.book.summarize.domain.entity.Summarize
 import org.tawhid.readout.book.summarize.domain.usecase.GetBookSummaryUseCase
-import org.tawhid.readout.core.domain.onError
-import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
 import org.tawhid.readout.core.utils.toUiText
 

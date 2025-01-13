@@ -7,8 +7,8 @@ import io.ktor.client.request.parameter
 import org.tawhid.readout.book.audiobook.data.dto.SearchResponseDto
 import org.tawhid.readout.book.openbook.data.dto.BrowseResponseDto
 import org.tawhid.readout.core.data.network.safeCall
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 import org.tawhid.readout.core.utils.LIBRI_VOX_BASE_URL
 import org.tawhid.readout.core.utils.OPEN_LIBRARY_BASE_URL
 import org.tawhid.readout.core.utils.USER_AGENT

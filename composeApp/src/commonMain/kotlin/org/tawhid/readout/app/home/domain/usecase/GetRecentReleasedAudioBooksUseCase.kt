@@ -2,8 +2,8 @@ package org.tawhid.readout.app.home.domain.usecase
 
 import org.tawhid.readout.app.home.domain.repository.HomeRepository
 import org.tawhid.readout.book.audiobook.domain.AudioBook
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 import java.util.Calendar
 
 class GetRecentReleasedAudioBooksUseCase(

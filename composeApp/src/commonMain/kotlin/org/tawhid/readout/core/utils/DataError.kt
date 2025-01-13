@@ -1,4 +1,4 @@
-package org.tawhid.readout.core.domain
+package org.tawhid.readout.core.utils
 
 sealed interface DataError: Error {
     enum class Remote: DataError {

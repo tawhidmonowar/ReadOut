@@ -8,8 +8,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.tawhid.readout.BuildKonfig
 import org.tawhid.readout.core.data.network.safeCall
-import org.tawhid.readout.core.domain.DataError
-import org.tawhid.readout.core.domain.Result
+import org.tawhid.readout.core.utils.DataError
+import org.tawhid.readout.core.utils.Result
 import org.tawhid.readout.core.gemini.dto.ContentItem
 import org.tawhid.readout.core.gemini.dto.GeminiResponseDto
 import org.tawhid.readout.core.gemini.dto.RequestBody

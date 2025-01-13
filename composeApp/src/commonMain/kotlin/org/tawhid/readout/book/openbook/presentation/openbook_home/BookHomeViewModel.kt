@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.domain.BookRepository
 
-import org.tawhid.readout.core.domain.onError
-import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.toUiText
 

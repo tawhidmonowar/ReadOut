@@ -7,7 +7,6 @@ import readout.composeapp.generated.resources.error_request_timeout
 import readout.composeapp.generated.resources.error_serialization
 import readout.composeapp.generated.resources.error_too_many_requests
 import readout.composeapp.generated.resources.error_unknown
-import org.tawhid.readout.core.domain.DataError
 
 fun DataError.toUiText(): UiText {
     val stringRes = when (this) {

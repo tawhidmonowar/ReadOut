@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 import org.tawhid.readout.app.home.domain.usecase.GetRecentReleasedAudioBooksUseCase
 import org.tawhid.readout.app.home.domain.usecase.GetRecentlyViewedBooksUseCase
 import org.tawhid.readout.app.home.domain.usecase.GetTrendingBooksUseCase
-import org.tawhid.readout.core.domain.onError
-import org.tawhid.readout.core.domain.onSuccess
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
 
 class HomeViewModel(
