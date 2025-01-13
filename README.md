@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/bf233e9a-0f3a-4218-9791-18574a45565e" alt="ReadOut Logo" width="150">
+  <img src="https://github.com/user-attachments/assets/bf233e9a-0f3a-4218-9791-18574a45565e" alt="ReadOut Logo" width="120">
 </p>
 <h3 align="center">ReadOut</h3>
 <p align="center">
