@@ -10,7 +10,7 @@ import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 import org.tawhid.readout.core.theme.maxWidthIn
 import org.tawhid.readout.core.theme.medium
 
-fun LazyListScope.AudioTrackList(
+fun LazyListScope.audioTrackList(
     audioTracks: List<AudioBookTrack>,
     onPlayClick: (List<String>) -> Unit,
 ) {
@@ -20,13 +20,11 @@ fun LazyListScope.AudioTrackList(
     ) { audioTrack ->
 
         val currentIndex = audioTracks.indexOf(audioTrack)
-
         AudioTrackListItem(
             audioTrack = audioTrack,
             onPlayClick = {
                 val urlsFromIndex = audioTracks.drop(currentIndex).mapNotNull { it.listenUrl }
                 onPlayClick(urlsFromIndex)
-                println("All urls $urlsFromIndex")
             },
             modifier = Modifier
                 .widthIn(max = maxWidthIn)

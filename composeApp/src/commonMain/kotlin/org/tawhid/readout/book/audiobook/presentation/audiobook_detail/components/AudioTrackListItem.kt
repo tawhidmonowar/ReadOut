@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
@@ -30,9 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
 import org.tawhid.readout.core.theme.Shapes
@@ -40,6 +42,7 @@ import org.tawhid.readout.core.theme.extraSmall
 import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.thin
 import readout.composeapp.generated.resources.Res
+import readout.composeapp.generated.resources.ic_play_lesson
 import readout.composeapp.generated.resources.play
 
 @Composable
@@ -75,13 +78,14 @@ fun AudioTrackListItem(
             horizontalArrangement = Arrangement.spacedBy(medium)
         ) {
             Box(
-                modifier = Modifier.size(100.dp).background(Color.Blue),
+                modifier = Modifier.size(50.dp).clip(RoundedCornerShape(100)).background(MaterialTheme.colorScheme.secondaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 audioTrack.sectionNumber?.let {
                     Text(
                         text = it,
                         style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -101,9 +105,7 @@ fun AudioTrackListItem(
                     )
                 }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Column  {
                     Text(
                         text = "Play Time: ${audioTrack.playtime?.toIntOrNull()?.let { formatPlayTime(it) } ?: "00:00"}",
                         style = MaterialTheme.typography.bodyMedium,
@@ -121,12 +123,15 @@ fun AudioTrackListItem(
             }
 
             IconButton(
-                onClick = {},
+                onClick = {
+                    audioTrack.listenUrl?.let { onPlayClick(it) }
+                },
                 content = {
                     Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = stringResource(Res.string.play)
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(Res.drawable.ic_play_lesson),
+                        contentDescription = stringResource(Res.string.play),
+                        tint = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f)
                     )
                 }
             )

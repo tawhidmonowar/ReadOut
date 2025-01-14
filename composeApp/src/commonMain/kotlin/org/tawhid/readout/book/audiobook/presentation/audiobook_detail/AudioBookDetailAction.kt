@@ -6,6 +6,7 @@ sealed interface AudioBookDetailAction {
     data object OnBackClick : AudioBookDetailAction
     data object OnSaveClick : AudioBookDetailAction
     data object OnSummaryClick : AudioBookDetailAction
+    data class OnPlayAllClick(val allUrls: List<String>): AudioBookDetailAction
     data class OnTabSelected(val index: Int) : AudioBookDetailAction
     data class OnSelectedBookChange(val audioBook: AudioBook) : AudioBookDetailAction
 }

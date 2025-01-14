@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -53,7 +52,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.components.AudioTrackList
+import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.components.audioTrackList
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.theme.Shapes
@@ -90,6 +89,8 @@ fun AudioBookDetailScreenRoot(
     innerPadding: PaddingValues
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val playerViewModel = koinViewModel<PlayerViewModel>()
+
     AudioBookDetailScreen(
         state = state,
         innerPadding = innerPadding,
@@ -97,6 +98,12 @@ fun AudioBookDetailScreenRoot(
         onAction = { action ->
             when (action) {
                 is AudioBookDetailAction.OnBackClick -> onBackClick()
+                is AudioBookDetailAction.OnPlayAllClick -> playerViewModel.onAction(
+                    PlayerAction.OnPlayAllClick(
+                        action.allUrls
+                    )
+                )
+
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -112,8 +119,6 @@ private fun AudioBookDetailScreen(
     windowSize: WindowSizes,
     onAction: (AudioBookDetailAction) -> Unit
 ) {
-
-    val playerViewModel = koinViewModel<PlayerViewModel>()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val startPadding by animateDpAsState(
@@ -139,7 +144,6 @@ private fun AudioBookDetailScreen(
 
     val urlHandler = LocalUriHandler.current
     val pagerState = rememberPagerState { 2 }
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(state.selectedTabIndex) {
         pagerState.animateScrollToPage(state.selectedTabIndex)
@@ -224,10 +228,15 @@ private fun AudioBookDetailScreen(
                 item {
                     state.audioBook?.let { book ->
                         if (windowSize.isCompactScreen) {
-
+                            AudioBookDetailCompactLayout(
+                                book = book,
+                                state = state,
+                                onAction = onAction
+                            )
                         } else {
                             AudioBookDetailExpandedLayout(
                                 book = book,
+                                state = state,
                                 onAction = onAction
                             )
                         }
@@ -236,19 +245,19 @@ private fun AudioBookDetailScreen(
                 item {
                     TabRow(
                         modifier = Modifier
-                            .padding(horizontal = medium, vertical = small)
+                            .padding(horizontal = small, vertical = small)
                             .clip(Shapes.medium)
                             .widthIn(max = maxWidthIn)
                             .fillMaxWidth(),
                         selectedTabIndex = state.selectedTabIndex,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         divider = {},
                         indicator = {}
                     ) {
                         Tab(
                             modifier = Modifier,
                             selected = state.selectedTabIndex == 0,
-                            unselectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            unselectedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                             selectedContentColor = MaterialTheme.colorScheme.onPrimary,
                             onClick = {
                                 onAction(AudioBookDetailAction.OnTabSelected(0))
@@ -275,7 +284,7 @@ private fun AudioBookDetailScreen(
                             modifier = Modifier,
                             selected = state.selectedTabIndex == 1,
                             selectedContentColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedContentColor = Color.Black.copy(alpha = 0.8f),
+                            unselectedContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                             onClick = {
                                 onAction(AudioBookDetailAction.OnTabSelected(1))
                             }
@@ -302,10 +311,10 @@ private fun AudioBookDetailScreen(
 
                 if (state.selectedTabIndex == 0) {
                     state.audioBookTracks?.let {
-                        AudioTrackList(
+                        audioTrackList(
                             audioTracks = it,
                             onPlayClick = { allUrls ->
-                                playerViewModel.onAction(PlayerAction.OnPlayAllClick(allUrls))
+                                onAction(AudioBookDetailAction.OnPlayAllClick(allUrls))
                             }
                         )
                     }
@@ -332,7 +341,6 @@ private fun AudioBookDetailScreen(
                             )
                             Spacer(modifier = Modifier.height(medium))
                         }
-
 
                         Text(
                             text = stringResource(Res.string.book_summary),
@@ -371,6 +379,7 @@ private fun BookTitleAndAuthors(
 
 @Composable
 private fun BookDetailButton(
+    state: AudioBookDetailState,
     onAction: (AudioBookDetailAction) -> Unit
 ) {
     Button(
@@ -392,7 +401,7 @@ private fun BookDetailButton(
     Spacer(modifier = Modifier.width(small))
     Button(
         onClick = {
-            onAction(AudioBookDetailAction.OnSummaryClick)
+            onAction(AudioBookDetailAction.OnPlayAllClick(state.audioBookTracks?.mapNotNull { it.listenUrl } ?: emptyList()))
         }) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -403,7 +412,7 @@ private fun BookDetailButton(
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = "Listen", maxLines = 1)
+            Text(text = "Play All", maxLines = 1)
         }
     }
 }
@@ -411,6 +420,7 @@ private fun BookDetailButton(
 @Composable
 private fun AudioBookDetailExpandedLayout(
     book: AudioBook,
+    state: AudioBookDetailState,
     onAction: (AudioBookDetailAction) -> Unit
 ) {
     Row(
@@ -446,6 +456,60 @@ private fun AudioBookDetailExpandedLayout(
                 horizontalArrangement = Arrangement.Start
             ) {
                 BookDetailButton(
+                    state = state,
+                    onAction = onAction
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun AudioBookDetailCompactLayout(
+    book: AudioBook,
+    state: AudioBookDetailState,
+    onAction: (AudioBookDetailAction) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = small)
+            .clip(Shapes.medium)
+            .padding(large),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        book.imgUrl?.let {
+            BookCoverImage(
+                imgUrl = it,
+                height = 200.dp,
+                aspectRatio = 1f,
+                errorImg = Res.drawable.audiobook_cover_error_img
+            )
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(large))
+
+            BookTitleAndAuthors(
+                title = book.title,
+                authors = book.authors
+            )
+
+            Spacer(modifier = Modifier.height(medium))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                BookDetailButton(
+                    state = state,
                     onAction = onAction
                 )
             }
