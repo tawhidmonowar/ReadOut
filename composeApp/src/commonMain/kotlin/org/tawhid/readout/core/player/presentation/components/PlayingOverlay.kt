@@ -1,6 +1,5 @@
 package org.tawhid.readout.core.player.presentation.components
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,12 +30,7 @@ fun PlayingOverlay(
                 state = playerState,
                 windowSize = windowSize,
                 onAction = { playerAction ->
-                    when (playerAction) {
-                        is PlayerAction.OnPauseResumeClick -> playerViewModel.onAction(playerAction)
-                        is PlayerAction.OnForwardClick -> playerViewModel.onAction(playerAction)
-                        is PlayerAction.OnCollapseClick -> playerViewModel.onAction(playerAction)
-                        else -> Unit
-                    }
+                    playerViewModel.onAction(playerAction)
                 }
             )
         }

@@ -102,7 +102,8 @@ fun AudioBookDetailScreenRoot(
                 is AudioBookDetailAction.OnBackClick -> onBackClick()
                 is AudioBookDetailAction.OnPlayAllClick -> playerViewModel.onAction(
                     PlayerAction.OnPlayAllClick(
-                        action.allUrls
+                        audioUrls = action.allUrls,
+                        nowPlaying = state.audioBook?.title ?: "Now Playing Unknown"
                     )
                 )
 

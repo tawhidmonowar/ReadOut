@@ -18,8 +18,8 @@ class PlayerViewModel(
             is PlayerAction.OnPlayClick -> {
                 _state.update {
                     it.copy(
-                        isPaused = false,
-                        isPlaying = true
+                        isPlaying = true,
+                        nowPlaying = action.nowPlaying
                     )
                 }
                 repository.play(action.audioUrl)
@@ -29,7 +29,7 @@ class PlayerViewModel(
                 _state.update {
                     it.copy(
                         isPlaying = true,
-                        isPaused = false
+                        nowPlaying = action.nowPlaying
                     )
                 }
                 repository.playAudioBase64(action.audioBase64)
@@ -39,7 +39,7 @@ class PlayerViewModel(
                 _state.update {
                     it.copy(
                         isPlaying = true,
-                        isPaused = false
+                        nowPlaying = action.nowPlaying
                     )
                 }
                 repository.playAll(action.audioUrls)

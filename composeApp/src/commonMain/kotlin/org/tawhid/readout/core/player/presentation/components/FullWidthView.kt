@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerState
@@ -40,6 +42,7 @@ import readout.composeapp.generated.resources.ic_forward_10
 import readout.composeapp.generated.resources.ic_pause
 import readout.composeapp.generated.resources.ic_play
 import readout.composeapp.generated.resources.ic_rewind_10
+import readout.composeapp.generated.resources.player_broken_img
 
 @Composable
 fun FullWidthView(
@@ -77,15 +80,16 @@ fun FullWidthView(
                     .padding(5.dp)
                     .clip(Shapes.small)
                     .background(Color.White)
-                    .padding(1.dp)
+                    .padding(1.dp),
+                contentAlignment = Alignment.Center
             ) {
-                /*AsyncImage(
-                    modifier = Modifier.size(imageSize).clip(Shapes.small),
-                    model = imgUrl,
-                    error = painterResource(Res.drawable.broken_image_radio),
+                AsyncImage(
+                    modifier = Modifier.size(40.dp).clip(Shapes.small),
+                    model = state.imageUrl,
+                    error = painterResource(Res.drawable.player_broken_img),
                     contentScale = ContentScale.Crop,
                     contentDescription = null
-                )*/
+                )
             }
 
             Column(
@@ -120,7 +124,7 @@ fun FullWidthView(
                         .background(MaterialTheme.colorScheme.primaryContainer)
                         .size(50.dp),
                     onClick = {
-                        onAction(PlayerAction.OnForwardClick)
+                        onAction(PlayerAction.OnRewindClick)
                     }
                 ) {
                     Icon(
@@ -160,7 +164,7 @@ fun FullWidthView(
                         .background(MaterialTheme.colorScheme.primaryContainer)
                         .size(50.dp),
                     onClick = {
-                        onAction(PlayerAction.OnCollapseClick)
+                        onAction(PlayerAction.OnForwardClick)
                     }
                 ) {
                     Icon(
