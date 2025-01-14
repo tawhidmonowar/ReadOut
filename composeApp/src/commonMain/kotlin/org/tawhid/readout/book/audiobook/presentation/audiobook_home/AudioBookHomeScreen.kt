@@ -367,8 +367,7 @@ private fun ShowDialog(
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = small),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Justify,
+                    style = MaterialTheme.typography.bodyLarge,
                     text = stringResource(Res.string.disclaimer_text_audio_book)
                 )
             }
