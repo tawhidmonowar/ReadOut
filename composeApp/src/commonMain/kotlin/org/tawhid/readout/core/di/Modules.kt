@@ -41,6 +41,8 @@ import org.tawhid.readout.book.openbook.domain.usecase.DeleteBookFromSavedUseCas
 import org.tawhid.readout.book.openbook.domain.usecase.GetBookDescriptionUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.GetBrowseBooksUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookByIdUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookSummaryAudioUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookSummaryUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.GetSaveBooksUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.SaveBookUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.SearchBooksUseCase
@@ -91,6 +93,8 @@ val sharedModule = module {
     singleOf(::GetBookDescriptionUseCase)
     singleOf(::GetBrowseBooksUseCase)
     singleOf(::SearchBooksUseCase)
+    singleOf(::GetOpenBookSummaryUseCase)
+    singleOf(::GetOpenBookSummaryAudioUseCase)
 
     singleOf(::RemoteAudioBookDataSourceImpl).bind<RemoteAudioBookDataSource>()
     singleOf(::AudioBookRepositoryImpl).bind<AudioBookRepository>()

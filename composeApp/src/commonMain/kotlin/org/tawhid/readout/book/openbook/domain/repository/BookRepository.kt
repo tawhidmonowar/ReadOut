@@ -11,8 +11,8 @@ interface BookRepository {
     suspend fun searchBooksByQuery(query: String): Result<List<Book>, DataError.Remote>
     suspend fun getBookDescriptionById(bookId: String): Result<String?, DataError>
     suspend fun getBrowseBooks(subject: String?, offset: Int? = 0, limit: Int): Result<List<Book>, DataError.Remote>
-    suspend fun getBookSummary(prompt: String): Result<String?, DataError>
-    suspend fun getSummaryAudio(summary: String): Result<String?, DataError>
+    suspend fun getBookSummary(prompt: String, bookId: String): Result<String?, DataError>
+    suspend fun getSummaryAudio(summary: String, bookId: String): Result<String?, DataError>
     suspend fun insertBookIntoDB(book: Book): EmptyResult<DataError.Local>
     suspend fun updateIsSaved(book: Book, isSaved: Boolean, currentTime: Long): EmptyResult<DataError.Local>
     suspend fun saveBook(book: Book): EmptyResult<DataError.Local>

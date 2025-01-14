@@ -79,7 +79,7 @@ class RemoteBookDataSourceImpl(
 
             val requestBody = CloudTextToSpeechRequestDto(
                 input = Input(
-                    text = "Convert"
+                    text = summary
                 ),
                 audioConfig = AudioConfig(
                     audioEncoding = "MP3",

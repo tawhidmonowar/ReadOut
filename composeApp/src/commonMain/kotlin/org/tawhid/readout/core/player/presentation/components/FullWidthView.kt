@@ -7,7 +7,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -35,7 +34,6 @@ import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerState
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.extraSmall
-import org.tawhid.readout.core.theme.extraThin
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.ic_forward_10
@@ -59,7 +57,11 @@ fun FullWidthView(
             .animateContentSize()
             .padding(start = extraSmall, end = extraSmall, bottom = extraSmall)
             .height(70.dp)
-            .then(if (windowSize.isCompactScreen) Modifier.clip(Shapes.small) else Modifier.clip(Shapes.medium))
+            .then(
+                if (windowSize.isCompactScreen) Modifier.clip(Shapes.small) else Modifier.clip(
+                    Shapes.medium
+                )
+            )
             .background(MaterialTheme.colorScheme.secondaryContainer)
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -107,12 +109,11 @@ fun FullWidthView(
                         initialDelayMillis = 0,
                         iterations = Int.MAX_VALUE,
                     ),
-                    text = "Now Playing: ${state.nowPlaying}",
+                    text = state.nowPlaying ?: "Now PLaying: Unknown",
                     maxLines = 1,
                     color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                 )
             }
-
 
             Row(
                 modifier = Modifier.fillMaxHeight().weight(0.6f).padding(end = extraSmall),

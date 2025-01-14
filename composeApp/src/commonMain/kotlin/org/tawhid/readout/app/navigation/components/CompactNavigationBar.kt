@@ -27,6 +27,7 @@ fun CompactNavigationBar(
             val isSelected = when (navigationItem.route) {
                 Route.OpenLibraryGraph -> currentRoute in listOf(Route.OpenLibraryGraph, Route.OpenLibraryDetail())
                 Route.AudioBookGraph -> currentRoute in listOf(Route.AudioBookGraph, Route.AudioBookDetail())
+                Route.Home -> currentRoute in listOf(Route.Home, Route.RecentRelease)
                 else -> navigationItem.route == currentRoute
             }
             NavigationBarItem(

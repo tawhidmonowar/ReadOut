@@ -53,6 +53,7 @@ import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedScreenPadding
+import org.tawhid.readout.core.theme.extraSmall
 import org.tawhid.readout.core.theme.large
 import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumScreenPadding
@@ -73,7 +74,6 @@ import readout.composeapp.generated.resources.ic_bookmark_outlined
 import readout.composeapp.generated.resources.ic_browse
 import readout.composeapp.generated.resources.ic_headphones
 import readout.composeapp.generated.resources.ic_notes
-import readout.composeapp.generated.resources.summary
 import readout.composeapp.generated.resources.summary_generated_with_ai
 
 @Composable
@@ -215,19 +215,54 @@ private fun BookDetailScreen(
                         if (windowSize.isCompactScreen) {
                             BookDetailCompactLayout(
                                 book = book,
-                                isSummaryAvailable = state.isSummaryAvailable,
                                 onAction = onAction,
                                 state = state
                             )
                         } else {
                             BookDetailExpandedLayout(
                                 book = book,
-                                isSummaryAvailable = state.isSummaryAvailable,
                                 onAction = onAction,
                                 state = state
                             )
                         }
                     }
+
+                    if (state.isSummaryRequest) {
+                        Text(
+                            text = stringResource(Res.string.book_summary),
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .align(Alignment.Start)
+                                .fillMaxWidth()
+                                .padding(bottom = extraSmall)
+                        )
+
+                        Text( modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(bottom = medium),
+                            text = stringResource(Res.string.summary_generated_with_ai),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        if (state.isSummaryLoading) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(medium),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        } else {
+                            state.summary?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            }
+                        }
+
+                    }
+
 
                     Text(
                         text = stringResource(Res.string.about_book),
@@ -253,43 +288,9 @@ private fun BookDetailScreen(
                         })?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.bodyLarge,
-                                textAlign = TextAlign.Justify,
+                                style = MaterialTheme.typography.bodyMedium,
                             )
                             Spacer(modifier = Modifier.height(medium))
-                        }
-                    }
-
-                    Text(
-                        text = stringResource(Res.string.book_summary),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .align(Alignment.Start)
-                            .fillMaxWidth()
-                            .padding(top = large)
-                    )
-
-                    Text(
-                        text = stringResource(Res.string.summary_generated_with_ai),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    if (state.isSummaryLoading) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(medium),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        state.summary?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.bodyLarge,
-                                textAlign = TextAlign.Justify,
-                            )
                         }
                     }
                 }
@@ -319,68 +320,53 @@ private fun BookTitleAndAuthors(
 @Composable
 private fun BookDetailButton(
     state: BookDetailState,
-    isSummaryAvailable: Boolean,
     onAction: (BookDetailAction) -> Unit
 ) {
-
-    if (isSummaryAvailable) {
-
-        Button(
-            onClick = {
-                onAction(BookDetailAction.OnSummaryClick)
-            }) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_notes),
-                    contentDescription = "Read Summary",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Read Summary")
-            }
-        }
-        Spacer(modifier = Modifier.width(small))
-        Button(
-            onClick = {
-                onAction(BookDetailAction.OnSummaryPlayClick)
-                state.summaryAudioByteArray?.let {
-
-                }
-            }
+    Button(
+        onClick = {
+            onAction(BookDetailAction.OnSummaryClick)
+        }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_headphones),
-                    contentDescription = "Listen",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Listen")
+            Icon(
+                painter = painterResource(Res.drawable.ic_notes),
+                contentDescription = "Read Summary",
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = "Read Summary")
+        }
+    }
+    Spacer(modifier = Modifier.width(small))
+    Button(
+        onClick = {
+            onAction(BookDetailAction.OnSummaryPlayClick)
+            state.summaryAudio?.let {
+
             }
         }
-
-    } else {
-        Button(
-            onClick = {
-                onAction(BookDetailAction.OnSummaryClick)
-                // scrollToBottom.value = true
-            },
-            content = {
-                Text(text = stringResource(Res.string.summary))
-            }
-        )
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_headphones),
+                contentDescription = "Listen",
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = "Listen")
+        }
     }
+
 }
+
 
 @Composable
 private fun BookDetailCompactLayout(
     state: BookDetailState,
     book: Book,
-    isSummaryAvailable: Boolean,
     onAction: (BookDetailAction) -> Unit
 ) {
     Column(
@@ -407,7 +393,6 @@ private fun BookDetailCompactLayout(
                 horizontalArrangement = Arrangement.Center
             ) {
                 BookDetailButton(
-                    isSummaryAvailable = isSummaryAvailable,
                     onAction = onAction,
                     state = state
                 )
@@ -420,7 +405,6 @@ private fun BookDetailCompactLayout(
 private fun BookDetailExpandedLayout(
     state: BookDetailState,
     book: Book,
-    isSummaryAvailable: Boolean,
     onAction: (BookDetailAction) -> Unit
 ) {
     Row(
@@ -450,7 +434,6 @@ private fun BookDetailExpandedLayout(
                 horizontalArrangement = Arrangement.Start
             ) {
                 BookDetailButton(
-                    isSummaryAvailable = isSummaryAvailable,
                     onAction = onAction,
                     state = state
                 )

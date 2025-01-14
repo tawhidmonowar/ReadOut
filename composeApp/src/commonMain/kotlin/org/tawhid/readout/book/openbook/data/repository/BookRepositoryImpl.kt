@@ -13,6 +13,7 @@ import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.EmptyResult
 import org.tawhid.readout.core.utils.Result
 import org.tawhid.readout.core.utils.map
+import org.tawhid.readout.core.utils.onSuccess
 
 class BookRepositoryImpl(
     private val remoteBookDataSource: RemoteBookDataSource,
@@ -42,7 +43,6 @@ class BookRepositoryImpl(
         }
     }
 
-
     override suspend fun getBrowseBooks(
         subject: String?,
         offset: Int?,
@@ -57,16 +57,43 @@ class BookRepositoryImpl(
         }
     }
 
-    override suspend fun getBookSummary(prompt: String): Result<String?, DataError> {
-        return remoteBookDataSource
-            .fetchBookSummary(prompt)
-            .map { it.candidates.first().content.parts.first().text }
+    override suspend fun getBookSummary(
+        prompt: String,
+        bookId: String
+    ): Result<String?, DataError> {
+        val localResult = openBookDao.getSavedBook(bookId)
+        return if (localResult != null) {
+            if (localResult.summaryText == null) {
+                remoteBookDataSource.fetchBookSummary(prompt)
+                    .map { it.candidates.first().content.parts.first().text }
+                    .onSuccess { summary ->
+                        openBookDao.updateSummary(id = bookId, summary = summary)
+                    }
+            } else {
+                Result.Success(localResult.summaryText)
+            }
+        } else {
+            Result.Error(DataError.Remote.UNKNOWN)
+        }
     }
 
-    override suspend fun getSummaryAudio(summary: String): Result<String?, DataError> {
-        return remoteBookDataSource.fetchBookSummaryAudio(summary).map {
-            it.audioContent
+    override suspend fun getSummaryAudio(summary: String, bookId: String): Result<String?, DataError> {
+        val localResult = openBookDao.getSavedBook(bookId)
+        return if (localResult != null) {
+            if (localResult.summaryBase64 == null) {
+                remoteBookDataSource.fetchBookSummaryAudio(summary)
+                    .map { it.audioContent }
+                    .onSuccess { summaryBase64 ->
+                        openBookDao.updateSummaryBase64(id = bookId, summaryBase64 = summaryBase64)
+                    }
+            } else {
+                Result.Success(localResult.summaryBase64)
+            }
+        } else {
+            Result.Error(DataError.Remote.UNKNOWN)
         }
+
+
     }
 
     override suspend fun insertBookIntoDB(book: Book): EmptyResult<DataError.Local> {

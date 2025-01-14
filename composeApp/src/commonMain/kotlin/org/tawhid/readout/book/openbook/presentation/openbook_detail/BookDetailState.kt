@@ -8,12 +8,13 @@ data class BookDetailState(
     val isSaved: Boolean = false,
     val book: Book? = null,
 
+    val isSummaryRequest: Boolean = false,
     val isSummaryLoading: Boolean = false,
     val isSummaryAvailable: Boolean = true,
     val summaryErrorMsg: UiText? = null,
     val summary: String? = null,
 
-    val summaryAudioByteArray: String? = null,
-    val isSummaryAudioByteArrayLoading: Boolean = false,
-    val summaryAudioByteArrayErrorMsg: UiText? = null
+    val summaryAudio: String? = null,
+    val isSummaryAudioLoading: Boolean = false,
+    val summaryAudioErrorMsg: UiText? = null,
 )

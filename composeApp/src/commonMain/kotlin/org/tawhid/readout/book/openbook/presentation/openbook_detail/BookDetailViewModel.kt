@@ -11,12 +11,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
-import org.tawhid.readout.book.openbook.domain.repository.BookRepository
 import org.tawhid.readout.book.openbook.domain.usecase.DeleteBookFromSavedUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.GetBookDescriptionUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookByIdUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookSummaryAudioUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookSummaryUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.SaveBookUseCase
 import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
+import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess
@@ -27,6 +29,8 @@ class BookDetailViewModel(
     private val saveBookUseCase: SaveBookUseCase,
     private val deleteBookFromSavedUseCase: DeleteBookFromSavedUseCase,
     private val getBookDescriptionUseCase: GetBookDescriptionUseCase,
+    private val getOpenBookSummaryUseCase: GetOpenBookSummaryUseCase,
+    private val getOpenBookSummaryAudioUseCase: GetOpenBookSummaryAudioUseCase,
     private val playerViewModel: PlayerViewModel,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -55,11 +59,21 @@ class BookDetailViewModel(
             }
 
             is BookDetailAction.OnSummaryPlayClick -> {
-                //getBookSummaryAudio()
+                playBookSummaryAudio()
+                _state.update {
+                    it.copy(
+                        isSummaryRequest = true
+                    )
+                }
             }
 
             is BookDetailAction.OnSummaryClick -> {
-               // getBookSummary()
+                _state.update {
+                    it.copy(
+                        isSummaryRequest = true,
+                    )
+                }
+                getBookSummary()
             }
 
             is BookDetailAction.OnSaveClick -> {
@@ -91,27 +105,16 @@ class BookDetailViewModel(
         }
     }
 
-   /* private fun getBookSummary() = viewModelScope.launch {
+    private fun getBookSummary() = viewModelScope.launch {
+        saveBook()
         _state.update {
             it.copy(
                 isSummaryLoading = true
             )
         }
         _state.value.book?.let { book ->
-            bookRepository.getBookSummary(prompt = geminiBookSummaryPrompt(book))
+            getOpenBookSummaryUseCase(prompt = geminiBookSummaryPrompt(book), bookId = book.id)
                 .onSuccess { summary ->
-
-                    if (summary != null) {
-                        bookRepository.getSummaryAudio(summary = summary)
-                            .onSuccess { summaryAudioByteArray ->
-                                _state.update {
-                                    it.copy(
-                                        summaryAudioByteArray = summaryAudioByteArray
-                                    )
-                                }
-                            }
-                    }
-
                     _state.update {
                         it.copy(
                             summary = summary,
@@ -127,38 +130,43 @@ class BookDetailViewModel(
                     }
                 }
         }
-    }*/
+    }
 
-    /*
-        private fun getBookSummaryAudio() = viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isSummaryAudioByteArrayLoading = true
-                )
-            }
-            _state.value.book?.let { book ->
-                bookRepository.getSummaryAudio(summary = "summary")
-                    .onSuccess { summaryAudioByteArray ->
-                        summaryAudioByteArray?.let {
-                            playerViewModel.onAction(PlayerAction.OnPlayAudioBase64Click(it))
-                        }
-                        _state.update {
-                            it.copy(
-                                summaryAudioByteArray = summaryAudioByteArray,
-                                isSummaryAudioByteArrayLoading = false
-                            )
-                        }
-                    }.onError { error ->
-                        _state.update {
-                            it.copy(
-                                isSummaryAudioByteArrayLoading = false,
-                                summaryAudioByteArrayErrorMsg = error.toUiText()
-                            )
-                        }
-                    }
-            }
+    private fun playBookSummaryAudio() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                isSummaryAudioLoading = true
+            )
         }
-    */
+        getBookSummary()
+
+        if (bookId != null) {
+            getOpenBookSummaryAudioUseCase(summary = "it", bookId = bookId)
+                .onSuccess { summaryAudioByteArray ->
+                    summaryAudioByteArray?.let { audioBase64 ->
+                        playerViewModel.onAction(
+                            PlayerAction.OnPlayAudioBase64Click(
+                                audioBase64 = audioBase64,
+                                nowPlaying = _state.value.book?.title ?: "Unknown"
+                            )
+                        )
+                    }
+                    _state.update { state ->
+                        state.copy(
+                            summaryAudio = summaryAudioByteArray,
+                            isSummaryAudioLoading = false
+                        )
+                    }
+                }.onError { error ->
+                    _state.update { state ->
+                        state.copy(
+                            isSummaryAudioLoading = false,
+                            summaryAudioErrorMsg = error.toUiText()
+                        )
+                    }
+                }
+        }
+    }
 
     private fun observeSavedStatus() = viewModelScope.launch {
         bookId?.let { bookId ->
