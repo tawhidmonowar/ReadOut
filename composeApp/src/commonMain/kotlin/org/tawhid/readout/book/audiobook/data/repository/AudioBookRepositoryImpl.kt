@@ -15,6 +15,7 @@ import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.EmptyResult
 import org.tawhid.readout.core.utils.Result
 import org.tawhid.readout.core.utils.map
+import org.tawhid.readout.core.utils.onSuccess
 
 class AudioBookRepositoryImpl(
     private val remoteAudioBookDataSource: RemoteAudioBookDataSource,
@@ -68,11 +69,22 @@ class AudioBookRepositoryImpl(
         }
     }
 
-    override suspend fun getBookSummary(prompt: String): Result<String?, DataError> {
-        return remoteAudioBookDataSource
-            .fetchBookSummary(prompt)
+    override suspend fun getBookSummary(
+        prompt: String,
+        bookId: String
+    ): Result<String?, DataError> {
+
+        val localResult = audioBookDao.getSavedBook(bookId)
+        if (localResult?.summaryText != null) {
+            return Result.Success(localResult.summaryText)
+        }
+        return remoteAudioBookDataSource.fetchBookSummary(prompt)
             .map { it.candidates.first().content.parts.first().text }
+            .onSuccess { summary ->
+                audioBookDao.updateSummary(id = bookId, summary = summary)
+            }
     }
+
 
     override suspend fun insertBookIntoDB(book: AudioBook): EmptyResult<DataError.Local> {
         return try {

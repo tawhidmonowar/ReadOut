@@ -256,7 +256,7 @@ private fun BookDetailScreen(
                             state.summary?.let {
                                 Text(
                                     text = it,
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodyLarge,
                                 )
                             }
                         }
@@ -288,7 +288,7 @@ private fun BookDetailScreen(
                         })?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                             Spacer(modifier = Modifier.height(medium))
                         }
@@ -342,19 +342,22 @@ private fun BookDetailButton(
     Button(
         onClick = {
             onAction(BookDetailAction.OnSummaryPlayClick)
-            state.summaryAudio?.let {
-
-            }
         }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_headphones),
-                contentDescription = "Listen",
-                modifier = Modifier.size(24.dp)
-            )
+            if (state.isSummaryAudioLoading) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp),
+                color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_headphones),
+                    contentDescription = "Listen",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(4.dp))
             Text(text = "Listen")
         }

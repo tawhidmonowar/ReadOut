@@ -14,6 +14,7 @@ data class BookDetailState(
     val summaryErrorMsg: UiText? = null,
     val summary: String? = null,
 
+    val summaryShort: String? = null,
     val summaryAudio: String? = null,
     val isSummaryAudioLoading: Boolean = false,
     val summaryAudioErrorMsg: UiText? = null,

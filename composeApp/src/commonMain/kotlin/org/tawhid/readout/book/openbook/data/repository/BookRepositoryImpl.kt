@@ -32,14 +32,14 @@ class BookRepositoryImpl(
         val localResult = openBookDao.getSavedBook(bookId)
         return if (localResult != null) {
             if (localResult.description == null) {
-                remoteBookDataSource
-                    .fetchBookDescription(bookId)
+                remoteBookDataSource.fetchBookDescription(bookId)
                     .map { it.description }
             } else {
                 Result.Success(localResult.description)
             }
         } else {
-            Result.Error(DataError.Remote.UNKNOWN)
+            remoteBookDataSource.fetchBookDescription(bookId)
+                .map { it.description }
         }
     }
 
@@ -57,53 +57,41 @@ class BookRepositoryImpl(
         }
     }
 
+
     override suspend fun getBookSummary(
         prompt: String,
         bookId: String
     ): Result<String?, DataError> {
         val localResult = openBookDao.getSavedBook(bookId)
-        return if (localResult != null) {
-            if (localResult.summaryText == null) {
-                remoteBookDataSource.fetchBookSummary(prompt)
-                    .map { it.candidates.first().content.parts.first().text }
-                    .onSuccess { summary ->
-                        openBookDao.updateSummary(id = bookId, summary = summary)
-                    }
-            } else {
-                Result.Success(localResult.summaryText)
-            }
-        } else {
-            Result.Error(DataError.Remote.UNKNOWN)
+
+        if (localResult?.summaryText != null) {
+            return Result.Success(localResult.summaryText)
         }
+
+        return remoteBookDataSource.fetchBookSummary(prompt)
+            .map { it.candidates.first().content.parts.first().text }
+            .onSuccess { summary ->
+                openBookDao.updateSummary(id = bookId, summary = summary)
+            }
     }
 
-    override suspend fun getSummaryAudio(summary: String, bookId: String): Result<String?, DataError> {
+    override suspend fun getSummaryAudio(
+        summary: String,
+        bookId: String
+    ): Result<String, DataError> {
         val localResult = openBookDao.getSavedBook(bookId)
-        return if (localResult != null) {
-            if (localResult.summaryBase64 == null) {
-                remoteBookDataSource.fetchBookSummaryAudio(summary)
-                    .map { it.audioContent }
-                    .onSuccess { summaryBase64 ->
-                        openBookDao.updateSummaryBase64(id = bookId, summaryBase64 = summaryBase64)
-                    }
-            } else {
-                Result.Success(localResult.summaryBase64)
+
+        if (localResult?.summaryBase64 != null) {
+            return Result.Success(localResult.summaryBase64)
+        }
+
+        return remoteBookDataSource.fetchBookSummaryAudio(summary)
+            .map { it.audioContent }
+            .onSuccess { summaryBase64 ->
+                openBookDao.updateSummaryBase64(id = bookId, summaryBase64 = summaryBase64)
             }
-        } else {
-            Result.Error(DataError.Remote.UNKNOWN)
-        }
-
-
     }
 
-    override suspend fun insertBookIntoDB(book: Book): EmptyResult<DataError.Local> {
-        return try {
-            openBookDao.upsert(book.toBookBookEntity())
-            Result.Success(Unit)
-        } catch (e: SQLiteException) {
-            Result.Error(DataError.Local.DISK_FULL)
-        }
-    }
 
     override suspend fun updateIsSaved(
         book: Book,

@@ -65,6 +65,10 @@ class AudioBookDetailViewModel(
                 }
             }
 
+            is AudioBookDetailAction.OnLoadAudioTracks -> {
+                getAudioBookTracks()
+            }
+
             is AudioBookDetailAction.OnSummaryClick -> {
                 getAudioBookSummary()
             }
@@ -134,14 +138,12 @@ class AudioBookDetailViewModel(
     private fun getAudioBookSummary() = viewModelScope.launch {
         _state.update {
             it.copy(
-                selectedTabIndex = 1,
-                scrollToBottom = true,
                 isSummaryRequest = true,
                 isSummaryLoading = true
             )
         }
         _state.value.audioBook?.let { book ->
-            getAudioBookSummaryUseCase(prompt = geminiBookSummaryPrompt(book)).onSuccess { summary ->
+            getAudioBookSummaryUseCase(prompt = geminiBookSummaryPrompt(book),  bookId = book.id).onSuccess { summary ->
                 _state.update {
                     it.copy(
                         summary = summary,

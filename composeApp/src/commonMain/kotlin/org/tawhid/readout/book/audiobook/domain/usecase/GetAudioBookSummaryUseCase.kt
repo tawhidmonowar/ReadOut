@@ -7,7 +7,7 @@ import org.tawhid.readout.core.utils.Result
 class GetAudioBookSummaryUseCase(
     private val audioBookRepository: AudioBookRepository
 ) {
-    suspend operator fun invoke(prompt: String): Result<String?, DataError> {
-        return audioBookRepository.getBookSummary(prompt)
+    suspend operator fun invoke(prompt: String, bookId: String): Result<String?, DataError> {
+        return audioBookRepository.getBookSummary(prompt, bookId)
     }
 }

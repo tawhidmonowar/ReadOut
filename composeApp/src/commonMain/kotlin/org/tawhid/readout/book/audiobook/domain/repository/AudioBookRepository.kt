@@ -12,7 +12,7 @@ interface AudioBookRepository {
     suspend fun getBrowseAudioBooks(genre: String? = null, offset: Int? = 0, limit: Int): Result<List<AudioBook>, DataError.Remote>
     suspend fun getAudioBookTracks(audioBookId: String): Result<List<AudioBookTrack>, DataError.Remote>
     suspend fun saveBook(book: AudioBook): EmptyResult<DataError.Local>
-    suspend fun getBookSummary(prompt: String): Result<String?, DataError>
+    suspend fun getBookSummary(prompt: String, bookId: String): Result<String?, DataError>
     suspend fun insertBookIntoDB(book: AudioBook): EmptyResult<DataError.Local>
     suspend fun deleteFromSaved(id: String)
     fun getSavedBooks(): Flow<List<AudioBook>>

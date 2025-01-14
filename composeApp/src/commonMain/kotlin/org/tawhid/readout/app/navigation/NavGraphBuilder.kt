@@ -118,9 +118,6 @@ fun NavGraphBuilder.navGraphBuilder(
             onSettingClick = {
                 rootNavController.navigate(Route.Setting)
             },
-            onHistoryClick = {
-
-            },
             innerPadding = innerPadding,
             windowSize = windowSize
         )

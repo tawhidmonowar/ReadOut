@@ -18,6 +18,7 @@ import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookSummaryAudioUs
 import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookSummaryUseCase
 import org.tawhid.readout.book.openbook.domain.usecase.SaveBookUseCase
 import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
+import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryShortPrompt
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.utils.onError
@@ -60,11 +61,6 @@ class BookDetailViewModel(
 
             is BookDetailAction.OnSummaryPlayClick -> {
                 playBookSummaryAudio()
-                _state.update {
-                    it.copy(
-                        isSummaryRequest = true
-                    )
-                }
             }
 
             is BookDetailAction.OnSummaryClick -> {
@@ -106,7 +102,6 @@ class BookDetailViewModel(
     }
 
     private fun getBookSummary() = viewModelScope.launch {
-        saveBook()
         _state.update {
             it.copy(
                 isSummaryLoading = true
@@ -132,34 +127,51 @@ class BookDetailViewModel(
         }
     }
 
+
     private fun playBookSummaryAudio() = viewModelScope.launch {
         _state.update {
             it.copy(
                 isSummaryAudioLoading = true
             )
         }
-        getBookSummary()
 
-        if (bookId != null) {
-            getOpenBookSummaryAudioUseCase(summary = "it", bookId = bookId)
-                .onSuccess { summaryAudioByteArray ->
-                    summaryAudioByteArray?.let { audioBase64 ->
-                        playerViewModel.onAction(
-                            PlayerAction.OnPlayAudioBase64Click(
-                                audioBase64 = audioBase64,
-                                nowPlaying = _state.value.book?.title ?: "Unknown"
-                            )
+        _state.value.book?.let { book ->
+            getOpenBookSummaryUseCase(prompt = geminiBookSummaryShortPrompt(book), bookId = "")
+                .onSuccess { summary ->
+                    _state.update {
+                        it.copy(
+                            summaryShort = summary
                         )
                     }
-                    _state.update { state ->
-                        state.copy(
-                            summaryAudio = summaryAudioByteArray,
-                            isSummaryAudioLoading = false
-                        )
+                    summary?.let {
+                        getOpenBookSummaryAudioUseCase(
+                            summary = summary,
+                            bookId = book.id
+                        ).onSuccess { summaryAudioByteArray ->
+                            playerViewModel.onAction(
+                                PlayerAction.OnPlayAudioBase64Click(
+                                    audioBase64 = summaryAudioByteArray,
+                                    nowPlaying = _state.value.book?.title ?: "Unknown"
+                                )
+                            )
+                            _state.update { state ->
+                                state.copy(
+                                    summaryAudio = summaryAudioByteArray,
+                                    isSummaryAudioLoading = false
+                                )
+                            }
+                        }.onError { error ->
+                            _state.update { state ->
+                                state.copy(
+                                    isSummaryAudioLoading = false,
+                                    summaryAudioErrorMsg = error.toUiText()
+                                )
+                            }
+                        }
                     }
                 }.onError { error ->
-                    _state.update { state ->
-                        state.copy(
+                    _state.update {
+                        it.copy(
                             isSummaryAudioLoading = false,
                             summaryAudioErrorMsg = error.toUiText()
                         )

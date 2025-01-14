@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import org.tawhid.readout.book.openbook.data.database.OpenBookEntity
 
 @Dao
 interface AudioBookDao {
@@ -18,6 +19,12 @@ interface AudioBookDao {
 
     @Query("SELECT * FROM AudioBookEntity")
     fun getAllBooks(): Flow<List<AudioBookEntity>>
+
+    @Query("SELECT * FROM AudioBookEntity WHERE id = :id")
+    suspend fun getSavedBook(id: String): AudioBookEntity?
+
+    @Query("UPDATE AudioBookEntity SET summaryText = :summary WHERE id = :id")
+    suspend fun updateSummary(id: String, summary: String)
 
     @Query("SELECT * FROM AudioBookEntity WHERE bookType = :bookType")
     suspend fun getSavedBooksByType(bookType: String): List<AudioBookEntity>

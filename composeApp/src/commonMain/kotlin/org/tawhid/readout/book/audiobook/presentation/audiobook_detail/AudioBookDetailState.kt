@@ -17,7 +17,7 @@ data class AudioBookDetailState(
     val isSummaryRequest: Boolean = false,
     val isSummaryLoading: Boolean = false,
     val isSummaryAvailable: Boolean = true,
-    val scrollToBottom: Boolean = false,
     val summaryErrorMsg: UiText? = null,
-    val summary: String? = null
+    val summary: String? = null,
+    val shortSummary: String? = null
 )

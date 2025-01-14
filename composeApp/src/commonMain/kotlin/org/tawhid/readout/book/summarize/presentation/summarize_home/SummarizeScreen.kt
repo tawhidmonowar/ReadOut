@@ -49,7 +49,6 @@ fun SummarizeScreenRoot(
     viewModel: SummarizeViewModel = koinViewModel(),
     onSettingClick: () -> Unit,
     onBackClick: () -> Unit,
-    onHistoryClick: () -> Unit,
     innerPadding: PaddingValues,
     windowSize: WindowSizes,
 ) {
@@ -61,7 +60,6 @@ fun SummarizeScreenRoot(
         onAction = { action ->
             when (action) {
                 is SummarizeAction.OnBackClick -> onBackClick()
-                is SummarizeAction.OnHistoryClick -> onHistoryClick()
                 is SummarizeAction.OnSettingClick -> onSettingClick()
                 else -> Unit
             }
@@ -124,14 +122,6 @@ private fun SummarizeScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = {
-                            onAction(SummarizeAction.OnHistoryClick)
-                        }) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_history),
-                                contentDescription = stringResource(Res.string.history),
-                            )
-                        }
                         if (windowSize.isCompactScreen) {
                             IconButton(onClick = {
                                 onAction(SummarizeAction.OnSettingClick)

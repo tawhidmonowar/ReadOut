@@ -1,5 +1,6 @@
 package org.tawhid.readout.book.audiobook.presentation.audiobook_detail
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -55,6 +56,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_detail.components.audioTrackList
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeAction
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
 import org.tawhid.readout.core.theme.Shapes
@@ -66,6 +68,7 @@ import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
 import org.tawhid.readout.core.ui.components.BookCoverImage
+import org.tawhid.readout.core.ui.components.ErrorView
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.about_book
@@ -218,16 +221,7 @@ private fun AudioBookDetailScreen(
                 animationSpec = tween(durationMillis = 300)
             )
 
-            val lazyListState = rememberLazyListState()
-
-            LaunchedEffect(state.scrollToBottom) {
-                if (state.scrollToBottom) {
-                    lazyListState.animateScrollToItem(Int.MAX_VALUE)
-                }
-            }
-
             LazyColumn(
-                state = lazyListState,
                 modifier = Modifier.fillMaxSize()
                     .padding(
                         start = animatedStartPadding,
@@ -254,6 +248,52 @@ private fun AudioBookDetailScreen(
                         }
                     }
                 }
+
+                item {
+                    if (state.isSummaryRequest) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.book_summary),
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier
+                                    .align(Alignment.Start)
+                                    .fillMaxWidth()
+                                    .padding(top = small)
+                            )
+                            Text(
+                                text = stringResource(Res.string.summary_generated_with_ai),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .align(Alignment.Start)
+                                    .fillMaxWidth()
+                                    .padding(bottom = medium)
+                            )
+
+                            if (state.isSummaryLoading) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(medium),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.padding(medium)
+                                    )
+                                }
+                            } else {
+                                state.summary?.let { summary ->
+                                    Text(
+                                        text = summary,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
                 item {
                     TabRow(
                         modifier = Modifier
@@ -320,15 +360,36 @@ private fun AudioBookDetailScreen(
                         }
                     }
                 }
-
                 if (state.selectedTabIndex == 0) {
-                    state.audioBookTracks?.let {
-                        audioTrackList(
-                            audioTracks = it,
-                            onPlayClick = { allUrls ->
-                                onAction(AudioBookDetailAction.OnPlayAllClick(allUrls))
+                    if (state.audioBookTracksErrorMsg != null) {
+                        item {
+                            ErrorView(
+                                errorMsg = state.audioBookTracksErrorMsg,
+                                onRetryClick = {
+                                    onAction(AudioBookDetailAction.OnLoadAudioTracks)
+                                }
+                            )
+                        }
+                    } else if (state.isAudioBookTracksLoading) {
+                        item {
+                            Box(
+                                modifier = Modifier.fillMaxSize().animateContentSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.padding(medium)
+                                )
                             }
-                        )
+                        }
+                    } else {
+                        state.audioBookTracks?.let {
+                            audioTrackList(
+                                audioTracks = it,
+                                onPlayClick = { allUrls ->
+                                    onAction(AudioBookDetailAction.OnPlayAllClick(allUrls))
+                                }
+                            )
+                        }
                     }
                 } else {
                     item {
@@ -352,44 +413,6 @@ private fun AudioBookDetailScreen(
                                 textAlign = TextAlign.Justify,
                             )
                             Spacer(modifier = Modifier.height(medium))
-                        }
-
-                        if (state.isSummaryRequest) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.book_summary),
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier
-                                        .align(Alignment.Start)
-                                        .fillMaxWidth()
-                                        .padding(top = large)
-                                )
-                                Text(
-                                    text = stringResource(Res.string.summary_generated_with_ai),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-
-                                if (state.isSummaryLoading) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(medium),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        CircularProgressIndicator()
-                                    }
-                                } else {
-                                    state.summary?.let { summary ->
-                                        Text(
-                                            text = summary,
-                                            style = MaterialTheme.typography.bodyLarge,
-                                            textAlign = TextAlign.Justify,
-                                        )
-                                    }
-                                }
-                            }
                         }
                     }
                 }
