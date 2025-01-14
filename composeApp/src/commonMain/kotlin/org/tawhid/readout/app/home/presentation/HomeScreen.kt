@@ -3,8 +3,11 @@ package org.tawhid.readout.app.home.presentation
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,9 +17,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
@@ -43,10 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.app.home.presentation.components.RecentlyViewedBookHorizontalGridList
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeAction
-import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookGridItem
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
@@ -56,6 +58,7 @@ import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedFeedWidth
 import org.tawhid.readout.core.theme.expandedScreenPadding
 import org.tawhid.readout.core.theme.large
+import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumFeedWidth
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
@@ -70,13 +73,27 @@ import org.tawhid.readout.core.ui.feed.row
 import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
+import readout.composeapp.generated.resources.about_app
+import readout.composeapp.generated.resources.app_icon
+import readout.composeapp.generated.resources.app_name
+import readout.composeapp.generated.resources.contact_email
+import readout.composeapp.generated.resources.contact_label
+import readout.composeapp.generated.resources.developer
+import readout.composeapp.generated.resources.github_label
+import readout.composeapp.generated.resources.github_url
 import readout.composeapp.generated.resources.home
 import readout.composeapp.generated.resources.ic_auto_awesome_filled
 import readout.composeapp.generated.resources.info
+import readout.composeapp.generated.resources.last_updated_date
+import readout.composeapp.generated.resources.last_updated_label
+import readout.composeapp.generated.resources.license_label
+import readout.composeapp.generated.resources.license_type
 import readout.composeapp.generated.resources.recently_released
 import readout.composeapp.generated.resources.setting
 import readout.composeapp.generated.resources.summarize
 import readout.composeapp.generated.resources.trending_books
+import readout.composeapp.generated.resources.version_label
+import readout.composeapp.generated.resources.version_number
 
 @Composable
 fun HomeScreenRoot(
@@ -106,30 +123,12 @@ fun HomeScreenRoot(
     )
 
     if (state.showAboutDialog) {
-        FullScreenDialog(
-            onDismissRequest = { viewModel.onAction(HomeAction.OnHideAboutInfoDialog) },
-            title = "Full-Screen Dialog",
-            modifier = Modifier.padding(16.dp).clip(Shapes.medium),
-            actions = {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Button(onClick = { viewModel.onAction(HomeAction.OnHideAboutInfoDialog) }) {
-                        Text("Close")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { /* Handle confirm */ }) {
-                        Text("Confirm")
-                    }
-                }
-            },
-            content = {
-                Text(text = "This is a full-screen dialog in Jetpack Compose.")
+        ShowAboutDialog(
+            onDismiss = {
+                viewModel.onAction(HomeAction.OnHideAboutDialog)
             }
         )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,7 +174,7 @@ private fun HomeScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-                            onAction(HomeAction.OnShowAboutInfoDialog)
+                            onAction(HomeAction.OnShowAboutDialog)
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Info,
@@ -337,4 +336,103 @@ private fun HomeScreen(
             }
         }
     }
+}
+
+@Composable
+private fun ShowAboutDialog(
+    onDismiss: () -> Unit,
+) {
+    FullScreenDialog(
+        onDismissRequest = { onDismiss() },
+        title = "About",
+        modifier = Modifier.padding(16.dp).clip(Shapes.medium),
+        actions = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(onClick = { onDismiss() }) {
+                    Text("Close")
+                }
+            }
+        },
+        content = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Image(
+                    modifier = Modifier.size(100.dp).padding(bottom = medium),
+                    painter = painterResource(Res.drawable.app_icon),
+                    contentDescription = "App Icon"
+                )
+                Text(
+                    style = MaterialTheme.typography.titleLarge,
+                    text = stringResource(Res.string.app_name)
+                )
+                Text(
+                    modifier = Modifier.padding(bottom = small),
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.developer)
+                )
+                Spacer(
+                    modifier = Modifier.height(2.dp).fillMaxWidth(0.7f)
+                        .background(MaterialTheme.colorScheme.primary)
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = medium),
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.about_app)
+                )
+
+                Text(
+                    style = MaterialTheme.typography.labelLarge,
+                    text = stringResource(Res.string.last_updated_label)
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.last_updated_date)
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = medium),
+                    style = MaterialTheme.typography.labelLarge,
+                    text = stringResource(Res.string.contact_label)
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.contact_email)
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = medium),
+                    style = MaterialTheme.typography.labelLarge,
+                    text = stringResource(Res.string.github_label)
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.github_url)
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = medium),
+                    style = MaterialTheme.typography.labelLarge,
+                    text = stringResource(Res.string.license_label)
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.license_type)
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = medium),
+                    style = MaterialTheme.typography.labelLarge,
+                    text = stringResource(Res.string.version_label)
+                )
+                Text(
+                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(Res.string.version_number)
+                )
+            }
+        }
+    )
 }

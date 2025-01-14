@@ -48,14 +48,14 @@
     <string name="delete">Delete</string>
     <string name="clear_data_title">Confirm Deletion</string>
     <string name="clear_data_warning">Are you sure you want to delete all saved data? This action cannot be undone, and you will permanently lose all saved information.</string>
-
+    <string name="disclaimer_text">Disclaimer: This application utilizes the Open Library API for fetching book data, the Gemini API for generating summaries, and the Cloud Text-to-Speech API for converting text into speech. While we strive to provide accurate and up-to-date information, we do not guarantee the accuracy, reliability, or completeness of the content provided. All third-party APIs are subject to their own terms of service and privacy policies. By using this application, you agree that we are not liable for any errors, omissions, or inconsistencies in the content provided. For detailed information on the respective APIs, please refer to their official documentation.</string>
+    <string name="disclaimer_text_audio_book">Disclaimer: This application integrates third-party APIs to provide users with a rich and versatile experience. The LibriVox API is used to fetch audiobooks, offering access to a vast collection of public domain recordings. The Gemini API is employed to generate concise and insightful summaries of text content, enhancing accessibility and understanding. Additionally, the Google Cloud Text-to-Speech API is utilized to convert text into high-quality, natural-sounding speech for an enhanced auditory experience. While we strive to ensure that the content and services offered through these APIs are accurate, reliable, and up-to-date, we cannot guarantee the completeness or error-free nature of the information provided. All data and functionality depend on third-party services, which are subject to their own terms of service and privacy policies. By using this application, you agree that the developers and providers of this app are not responsible for any errors, omissions, or inconsistencies in the content or any issues arising from the use of third-party APIs. For detailed information about these services, please refer to the official documentation or websites of the respective API providers.</string>
     <string name="search">Search</string>
     <string name="search_result">Search Result</string>
     <string name="no_search_result">No Results Found</string>
     <string name="retry">Retry</string>
     <string name="go_back">Go Back</string>
     <string name="right_arrow">Right Arrow</string>
-
 
     <string name="audiobooks_not_found">Audiobooks could not be found</string>
     <string name="recently_released">New Releases</string>"
@@ -72,5 +72,18 @@
     <string name="error_too_many_requests">Your quota seems to be exceeded.</string>
     <string name="error_serialization">Couldn't parse data.</string>
     <string name="invalid_image">Invalid image</string>
+
+    <string name="about_app">ReadOut is a cross-platform app for Android and Desktop, built with Kotlin Multiplatform. It seamlessly combines book discovery, audiobook playback, and AI-powered summaries in text and audio formats.</string>
+    <string name="developer">Developed by Tawhid Monowar</string>
+    <string name="last_updated_label">Last Updated</string>
+    <string name="last_updated_date">January 2025</string>
+    <string name="contact_label">Contact</string>
+    <string name="contact_email">tawhidmonowar@gmail.com</string>
+    <string name="github_label">Github</string>
+    <string name="github_url">https://github.com/tawhidmonowar/ReadOut</string>
+    <string name="license_label">License</string>
+    <string name="license_type">MIT license</string>
+    <string name="version_label">Version</string>
+    <string name="version_number">1.0.0</string>
 
 </resources>

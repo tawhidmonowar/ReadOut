@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.tawhid.readout.app.home.presentation.HomeAction
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.domain.BookRepository
 
@@ -49,6 +50,22 @@ class BookHomeViewModel(
 
     fun onAction(action: BookHomeAction) {
         when (action) {
+            is BookHomeAction.OnShowInfoDialog -> {
+                _state.update {
+                    it.copy(
+                        showDialog = true
+                    )
+                }
+            }
+
+            is BookHomeAction.OnHideInfoDialog -> {
+                _state.update {
+                    it.copy(
+                        showDialog = false
+                    )
+                }
+            }
+
             is BookHomeAction.OnSearchQueryChange -> {
                 _state.update {
                     it.copy(searchQuery = action.query)

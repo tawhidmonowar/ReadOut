@@ -18,4 +18,5 @@ data class AudioBookHomeState(
     val offset: Int = 0,
 
     val savedBooks: List<AudioBook> = emptyList(),
+    val showDialog: Boolean = false
 )

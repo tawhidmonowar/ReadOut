@@ -5,17 +5,23 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,9 +37,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,6 +50,8 @@ import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookGridItem
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookSearchResult
+import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeAction
+import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedFeedWidth
@@ -52,6 +63,7 @@ import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
 import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
 import org.tawhid.readout.core.ui.components.ErrorView
+import org.tawhid.readout.core.ui.components.FullScreenDialog
 import org.tawhid.readout.core.ui.feed.Feed
 import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
 import org.tawhid.readout.core.ui.feed.FeedTitleWithDropdown
@@ -62,6 +74,8 @@ import org.tawhid.readout.core.utils.librivox_book_subject
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.audiobooks
 import readout.composeapp.generated.resources.browse
+import readout.composeapp.generated.resources.disclaimer_text
+import readout.composeapp.generated.resources.disclaimer_text_audio_book
 import readout.composeapp.generated.resources.info
 import readout.composeapp.generated.resources.saved_books
 import readout.composeapp.generated.resources.search
@@ -93,6 +107,14 @@ fun AudioBookHomeScreenRoot(
             viewModel.onAction(action)
         }
     )
+
+    if (state.showDialog) {
+        ShowDialog(
+            onDismiss = {
+                viewModel.onAction(AudioBookHomeAction.OnHideInfoDialog)
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,7 +165,7 @@ private fun AudioBookHomeScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-
+                            onAction(AudioBookHomeAction.OnShowInfoDialog)
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Info,
@@ -318,4 +340,38 @@ private fun AudioBookHomeScreen(
             }
         }
     }
+}
+
+
+@Composable
+private fun ShowDialog(
+    onDismiss: () -> Unit,
+) {
+    FullScreenDialog(
+        onDismissRequest = { onDismiss() },
+        title = "Disclaimer",
+        modifier = Modifier.padding(16.dp).clip(Shapes.medium),
+        actions = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(onClick = { onDismiss() }) {
+                    Text("Close")
+                }
+            }
+        },
+        content = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = small),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify,
+                    text = stringResource(Res.string.disclaimer_text_audio_book)
+                )
+            }
+        }
+    )
 }

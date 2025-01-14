@@ -1,5 +1,6 @@
 package org.tawhid.readout.book.openbook.presentation.openbook_home
 
+import org.tawhid.readout.app.home.presentation.HomeAction
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailAction
 
@@ -14,4 +15,7 @@ sealed interface BookHomeAction {
 
     data object OnLoadBrowseBooks : BookHomeAction
     data class OnSubjectChange(val subject: String) : BookHomeAction
+
+    data object OnShowInfoDialog : BookHomeAction
+    data object OnHideInfoDialog : BookHomeAction
 }

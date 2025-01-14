@@ -17,10 +17,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
-import org.tawhid.readout.core.utils.onError
-import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.SEARCH_TRIGGER_CHAR
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
 
 class AudioBookHomeViewModel(
@@ -49,6 +49,20 @@ class AudioBookHomeViewModel(
 
     fun onAction(action: AudioBookHomeAction) {
         when (action) {
+            is AudioBookHomeAction.OnShowInfoDialog -> {
+                _state.update {
+                    it.copy(
+                        showDialog = true
+                    )
+                }
+            }
+            is AudioBookHomeAction.OnHideInfoDialog -> {
+                _state.update {
+                    it.copy(
+                        showDialog = false
+                    )
+                }
+            }
             is AudioBookHomeAction.OnSearchQueryChange -> {
                 _state.update {
                     it.copy(searchQuery = action.query)

@@ -4,8 +4,8 @@ import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.openbook.domain.Book
 
 sealed interface HomeAction {
-    data object OnShowAboutInfoDialog : HomeAction
-    data object OnHideAboutInfoDialog : HomeAction
+    data object OnShowAboutDialog : HomeAction
+    data object OnHideAboutDialog : HomeAction
     data object OnSummarizeClick : HomeAction
     data object OnSettingClick : HomeAction
     data object OnLoadAudioBooks : HomeAction

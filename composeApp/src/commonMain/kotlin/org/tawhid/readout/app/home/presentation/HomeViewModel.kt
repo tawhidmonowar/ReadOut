@@ -40,7 +40,7 @@ class HomeViewModel(
 
     fun onAction(action: HomeAction) {
         when (action) {
-            is HomeAction.OnShowAboutInfoDialog -> {
+            is HomeAction.OnShowAboutDialog -> {
                 _state.update {
                     it.copy(
                         showAboutDialog = true
@@ -48,7 +48,7 @@ class HomeViewModel(
                 }
             }
 
-            is HomeAction.OnHideAboutInfoDialog -> {
+            is HomeAction.OnHideAboutDialog -> {
                 _state.update {
                     it.copy(
                         showAboutDialog = false

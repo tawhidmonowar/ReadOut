@@ -3,19 +3,30 @@ package org.tawhid.readout.book.openbook.presentation.openbook_home
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,20 +42,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.tawhid.readout.app.home.presentation.HomeAction
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookSearchResult
+import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedFeedWidth
 import org.tawhid.readout.core.theme.expandedScreenPadding
+import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumFeedWidth
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
@@ -52,6 +70,7 @@ import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.theme.zero
 import org.tawhid.readout.core.ui.components.EmbeddedSearchBar
 import org.tawhid.readout.core.ui.components.ErrorView
+import org.tawhid.readout.core.ui.components.FullScreenDialog
 import org.tawhid.readout.core.ui.feed.FeedTitleWithButton
 import org.tawhid.readout.core.ui.feed.FeedTitleWithDropdown
 import org.tawhid.readout.core.ui.feed.Feed
@@ -60,11 +79,26 @@ import org.tawhid.readout.core.ui.feed.title
 import org.tawhid.readout.core.utils.WindowSizes
 import org.tawhid.readout.core.utils.openLibrary_book_subject
 import readout.composeapp.generated.resources.Res
+import readout.composeapp.generated.resources.about_app
+import readout.composeapp.generated.resources.app_icon
+import readout.composeapp.generated.resources.app_name
+import readout.composeapp.generated.resources.contact_email
+import readout.composeapp.generated.resources.contact_label
+import readout.composeapp.generated.resources.developer
+import readout.composeapp.generated.resources.disclaimer_text
+import readout.composeapp.generated.resources.github_label
+import readout.composeapp.generated.resources.github_url
 import readout.composeapp.generated.resources.info
+import readout.composeapp.generated.resources.last_updated_date
+import readout.composeapp.generated.resources.last_updated_label
+import readout.composeapp.generated.resources.license_label
+import readout.composeapp.generated.resources.license_type
 import readout.composeapp.generated.resources.open_library
 import readout.composeapp.generated.resources.saved_books
 import readout.composeapp.generated.resources.search
 import readout.composeapp.generated.resources.setting
+import readout.composeapp.generated.resources.version_label
+import readout.composeapp.generated.resources.version_number
 import readout.composeapp.generated.resources.view_all
 
 @Composable
@@ -91,6 +125,14 @@ fun BookHomeScreenRoot(
             viewModel.onAction(action)
         }
     )
+
+    if (state.showDialog) {
+        ShowDialog(
+            onDismiss = {
+                viewModel.onAction(BookHomeAction.OnHideInfoDialog)
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -140,7 +182,7 @@ private fun BookHomeScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = {
-
+                            onAction(BookHomeAction.OnShowInfoDialog)
                         }) {
                             Icon(
                                 imageVector = Icons.Outlined.Info,
@@ -312,4 +354,38 @@ private fun BookHomeScreen(
             }
         }
     }
+}
+
+
+@Composable
+private fun ShowDialog(
+    onDismiss: () -> Unit,
+) {
+    FullScreenDialog(
+        onDismissRequest = { onDismiss() },
+        title = "Disclaimer",
+        modifier = Modifier.padding(16.dp).clip(Shapes.medium),
+        actions = {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(onClick = { onDismiss() }) {
+                    Text("Close")
+                }
+            }
+        },
+        content = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = small),
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify,
+                    text = stringResource(Res.string.disclaimer_text)
+                )
+            }
+        }
+    )
 }

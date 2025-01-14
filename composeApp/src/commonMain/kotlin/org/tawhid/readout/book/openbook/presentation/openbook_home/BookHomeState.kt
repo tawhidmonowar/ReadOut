@@ -21,5 +21,7 @@ data class BookHomeState(
 
     val savedBooks: List<Book> = emptyList(),
     val isLoading: Boolean = false,
-    val errorMsg: UiText? = null
+    val errorMsg: UiText? = null,
+
+    val showDialog: Boolean = false
 )
