@@ -32,8 +32,11 @@ const val DATA_STORE_FILE_NAME = "setting.preferences_pb"
 const val SEARCH_TRIGGER_CHAR = 3
 const val MAX_BOOKS_TO_FETCH = 100
 
+const val FORTY_EIGHT_HOURS_IN_MILLIS = 48 * 60 * 60 * 1000L
+
 object BookType {
     const val AUDIO_BOOK = "AudioBook"
+    const val RECENTLY_RELEASED = "RecentlyReleased"
     const val OPEN_BOOK = "OpenBook"
 }
 
