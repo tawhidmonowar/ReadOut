@@ -16,15 +16,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.book.openbook.domain.entity.Book
-import org.tawhid.readout.book.openbook.domain.repository.BookRepository
-
+import org.tawhid.readout.book.openbook.domain.usecase.GetBrowseBooksUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.GetSaveBooksUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.SearchBooksUseCase
+import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess
-import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.toUiText
 
 class BookHomeViewModel(
-    private val bookRepository: BookRepository
+    private val getBrowseBooksUseCase: GetBrowseBooksUseCase,
+    private val searchBooksUseCase: SearchBooksUseCase,
+    private val getSaveBooksUseCase: GetSaveBooksUseCase,
 ) : ViewModel() {
 
     private val cachedBooks = emptyList<Book>()
@@ -104,7 +107,7 @@ class BookHomeViewModel(
 
     private fun observeSavedBooks() {
         observeSaveJob?.cancel()
-        observeSaveJob = bookRepository.getSavedBooks()
+        observeSaveJob = getSaveBooksUseCase()
             .onEach { savedBooks ->
                 _state.update {
                     it.copy(
@@ -147,7 +150,7 @@ class BookHomeViewModel(
                 isLoading = true
             )
         }
-        bookRepository.searchBooksByQuery(query)
+        searchBooksUseCase(query)
             .onSuccess { searchResult ->
                 _state.update {
                     it.copy(
@@ -170,7 +173,6 @@ class BookHomeViewModel(
     }
 
     private fun getBrowseBooks() = viewModelScope.launch {
-
         _state.update {
             it.copy(
                 isBrowseLoading = true
@@ -181,7 +183,7 @@ class BookHomeViewModel(
         val limit = MAX_BOOKS_TO_FETCH
         val subject = _state.value.subject
 
-        bookRepository.getBrowseBooks(subject = subject, offset = offset, limit = limit)
+        getBrowseBooksUseCase(subject = subject, offset = offset, limit = limit)
             .onSuccess { browseBooks ->
                 _state.update { state ->
                     val allBooks = state.browseBooks + browseBooks
@@ -196,13 +198,13 @@ class BookHomeViewModel(
 
                 }
             }.onError { error ->
-            _state.update {
-                it.copy(
-                    isBrowseLoading = false,
-                    isBrowseShimmerEffectVisible = false,
-                    browseErrorMsg = error.toUiText()
-                )
+                _state.update {
+                    it.copy(
+                        isBrowseLoading = false,
+                        isBrowseShimmerEffectVisible = false,
+                        browseErrorMsg = error.toUiText()
+                    )
+                }
             }
-        }
     }
 }

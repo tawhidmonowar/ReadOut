@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.usecase.GetBrowseAudioBooksUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetSavedAudioBooksUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.SearchAudioBooksUseCase
 import org.tawhid.readout.core.utils.MAX_BOOKS_TO_FETCH
 import org.tawhid.readout.core.utils.SEARCH_TRIGGER_CHAR
 import org.tawhid.readout.core.utils.onError
@@ -24,7 +26,9 @@ import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
 
 class AudioBookHomeViewModel(
-    private val audioBookRepository: AudioBookRepository
+    private val getSavedAudioBooksUseCase: GetSavedAudioBooksUseCase,
+    private val searchAudioBooksUseCase: SearchAudioBooksUseCase,
+    private val getBrowseAudioBooksUseCase: GetBrowseAudioBooksUseCase
 ) : ViewModel() {
 
     private val cachedBooks = emptyList<AudioBook>()
@@ -56,6 +60,7 @@ class AudioBookHomeViewModel(
                     )
                 }
             }
+
             is AudioBookHomeAction.OnHideInfoDialog -> {
                 _state.update {
                     it.copy(
@@ -63,6 +68,7 @@ class AudioBookHomeViewModel(
                     )
                 }
             }
+
             is AudioBookHomeAction.OnSearchQueryChange -> {
                 _state.update {
                     it.copy(searchQuery = action.query)
@@ -127,7 +133,7 @@ class AudioBookHomeViewModel(
                 isSearchLoading = true
             )
         }
-        audioBookRepository.searchAudioBooks(query).onSuccess { searchResult ->
+        searchAudioBooksUseCase(query).onSuccess { searchResult ->
             _state.update {
                 it.copy(
                     isSearchLoading = false,
@@ -157,7 +163,7 @@ class AudioBookHomeViewModel(
         val limit = MAX_BOOKS_TO_FETCH
         val genre = _state.value.genre
 
-        audioBookRepository.getBrowseAudioBooks(genre = genre, offset = offset, limit = limit)
+        getBrowseAudioBooksUseCase(genre = genre, offset = offset, limit = limit)
             .onSuccess { audioBooks ->
                 _state.update { state ->
                     val allBooks = state.browseAudioBooks + audioBooks
@@ -182,17 +188,14 @@ class AudioBookHomeViewModel(
 
     private fun observeSavedBooks() {
         observeSaveJob?.cancel()
-        observeSaveJob = audioBookRepository.getSavedBooks()
-            .map { savedBooks ->
-                savedBooks.reversed()
+        observeSaveJob = getSavedAudioBooksUseCase().map { savedBooks ->
+            savedBooks.sortedByDescending { it.timeStamp }
+        }.onEach { savedBooks ->
+            _state.update {
+                it.copy(
+                    savedBooks = savedBooks
+                )
             }
-            .onEach { savedBooks ->
-                _state.update {
-                    it.copy(
-                        savedBooks = savedBooks
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
     }
 }

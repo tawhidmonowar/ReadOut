@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
+import org.tawhid.readout.book.audiobook.domain.usecase.GetSavedAudioBooksUseCase
 
 class AudioBookSavedViewModel(
-    private val audioBookRepository: AudioBookRepository
+    private val getSavedAudioBooksUseCase: GetSavedAudioBooksUseCase
 ) : ViewModel() {
 
     private var observeSaveJob: Job? = null
@@ -29,7 +30,7 @@ class AudioBookSavedViewModel(
 
     private fun observeSavedBooks() {
         observeSaveJob?.cancel()
-        observeSaveJob = audioBookRepository.getSavedBooks().onEach { savedBooks ->
+        observeSaveJob = getSavedAudioBooksUseCase().onEach { savedBooks ->
             _state.update {
                 it.copy(
                     savedBooks = savedBooks

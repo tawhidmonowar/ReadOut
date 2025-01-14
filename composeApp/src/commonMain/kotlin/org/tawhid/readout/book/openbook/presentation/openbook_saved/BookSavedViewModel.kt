@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.tawhid.readout.book.openbook.domain.repository.BookRepository
+import org.tawhid.readout.book.openbook.domain.usecase.GetSaveBooksUseCase
 
 class BookSavedViewModel(
-    private val bookRepository: BookRepository
+    private val getSaveBooksUseCase: GetSaveBooksUseCase
 ) : ViewModel() {
     private var observeSaveJob: Job? = null
     private val _state = MutableStateFlow(BookSavedState())
@@ -28,7 +29,7 @@ class BookSavedViewModel(
 
     private fun observeSavedBooks() {
         observeSaveJob?.cancel()
-        observeSaveJob = bookRepository.getSavedBooks().onEach { savedBooks ->
+        observeSaveJob = getSaveBooksUseCase().onEach { savedBooks ->
             _state.update {
                 it.copy(
                     savedBooks = savedBooks
