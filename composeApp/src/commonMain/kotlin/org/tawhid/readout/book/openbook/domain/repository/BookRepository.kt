@@ -1,6 +1,8 @@
-package org.tawhid.readout.book.openbook.domain
+package org.tawhid.readout.book.openbook.domain.repository
 
 import kotlinx.coroutines.flow.Flow
+import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.EmptyResult
 import org.tawhid.readout.core.utils.Result
@@ -13,5 +15,8 @@ interface BookRepository {
     suspend fun getSummaryAudio(summary: String): Result<String?, DataError>
     suspend fun insertBookIntoDB(book: Book): EmptyResult<DataError.Local>
     suspend fun updateIsSaved(book: Book, isSaved: Boolean, currentTime: Long): EmptyResult<DataError.Local>
+    suspend fun saveBook(book: Book): EmptyResult<DataError.Local>
+    suspend fun deleteFromSaved(id: String)
     fun getSavedBooks(): Flow<List<Book>>
+    fun getBookById(id: String): Flow<Pair<Book?, Boolean>>
 }

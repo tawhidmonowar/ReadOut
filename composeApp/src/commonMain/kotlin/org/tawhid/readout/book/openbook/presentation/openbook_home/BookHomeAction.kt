@@ -1,8 +1,6 @@
 package org.tawhid.readout.book.openbook.presentation.openbook_home
 
-import org.tawhid.readout.app.home.presentation.HomeAction
-import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.book.openbook.presentation.openbook_detail.BookDetailAction
+import org.tawhid.readout.book.openbook.domain.entity.Book
 
 sealed interface BookHomeAction {
     data class OnSearchQueryChange(val query: String) : BookHomeAction

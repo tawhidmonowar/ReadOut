@@ -1,7 +1,7 @@
 package org.tawhid.readout.core.gemini
 
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.book.summarize.domain.entity.Summarize
 
 object GeminiApiPrompts {

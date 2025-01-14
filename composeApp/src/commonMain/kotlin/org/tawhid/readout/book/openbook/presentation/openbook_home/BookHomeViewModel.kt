@@ -15,9 +15,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.tawhid.readout.app.home.presentation.HomeAction
-import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.book.openbook.domain.BookRepository
+import org.tawhid.readout.book.openbook.domain.entity.Book
+import org.tawhid.readout.book.openbook.domain.repository.BookRepository
 
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess

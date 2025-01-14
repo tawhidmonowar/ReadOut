@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import org.tawhid.readout.book.openbook.domain.BookRepository
+import org.tawhid.readout.book.openbook.domain.repository.BookRepository
 
 class BookSavedViewModel(
     private val bookRepository: BookRepository

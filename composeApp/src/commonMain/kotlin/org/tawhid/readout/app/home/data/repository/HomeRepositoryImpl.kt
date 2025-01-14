@@ -11,7 +11,7 @@ import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.openbook.data.database.OpenBookDao
 import org.tawhid.readout.book.openbook.data.mappers.toBook
 import org.tawhid.readout.book.openbook.data.mappers.toBookBookEntity
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.utils.BookType.RECENTLY_RELEASED
 import org.tawhid.readout.core.utils.BookType.TRENDING
 import org.tawhid.readout.core.utils.DataError

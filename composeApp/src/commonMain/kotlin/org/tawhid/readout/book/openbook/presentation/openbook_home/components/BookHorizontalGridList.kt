@@ -14,11 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.theme.horizontalGridMaxHeight
-import org.tawhid.readout.core.theme.horizontalGridMaxWidth
 import org.tawhid.readout.core.theme.horizontalScrollGridMaxWidth
 import org.tawhid.readout.core.theme.zero
 

@@ -3,7 +3,7 @@ package org.tawhid.readout.book.openbook.presentation
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 
 class SharedBookViewModel : ViewModel() {
 

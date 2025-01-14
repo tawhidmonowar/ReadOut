@@ -1,6 +1,6 @@
 package org.tawhid.readout.book.openbook.presentation.openbook_saved
 
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 
 sealed interface BookSavedAction {
     data class OnBookClick(val book: Book) : BookSavedAction

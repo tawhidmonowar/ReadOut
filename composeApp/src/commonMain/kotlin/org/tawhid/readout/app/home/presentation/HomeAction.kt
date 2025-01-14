@@ -1,7 +1,7 @@
 package org.tawhid.readout.app.home.presentation
 
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 
 sealed interface HomeAction {
     data object OnShowAboutDialog : HomeAction

@@ -1,4 +1,4 @@
-package org.tawhid.readout.book.openbook.domain
+package org.tawhid.readout.book.openbook.domain.entity
 
 data class Book(
     val id: String,
@@ -11,5 +11,12 @@ data class Book(
     val avgRating: Double?,
     val ratingCount: Int?,
     val numPages: Int?,
-    val numEditions: Int
+    val numEditions: Int,
+
+    val bookType: String?,
+    val isSaved: Boolean?,
+    val isViewed: Boolean?,
+    val summaryText: String?,
+    val summaryBase64: String?,
+    val timeStamp: Long?
 )

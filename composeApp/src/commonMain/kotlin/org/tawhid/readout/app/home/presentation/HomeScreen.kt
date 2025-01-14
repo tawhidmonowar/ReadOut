@@ -50,7 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactFeedWidth

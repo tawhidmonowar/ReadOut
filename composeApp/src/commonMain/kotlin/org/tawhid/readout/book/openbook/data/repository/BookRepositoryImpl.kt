@@ -7,8 +7,8 @@ import org.tawhid.readout.book.openbook.data.database.OpenBookDao
 import org.tawhid.readout.book.openbook.data.mappers.toBook
 import org.tawhid.readout.book.openbook.data.mappers.toBookBookEntity
 import org.tawhid.readout.book.openbook.data.network.RemoteBookDataSource
-import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.book.openbook.domain.BookRepository
+import org.tawhid.readout.book.openbook.domain.entity.Book
+import org.tawhid.readout.book.openbook.domain.repository.BookRepository
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.EmptyResult
 import org.tawhid.readout.core.utils.Result
@@ -87,10 +87,35 @@ class BookRepositoryImpl(
         }
     }
 
+    override suspend fun saveBook(book: Book): EmptyResult<DataError.Local> {
+        return try {
+            openBookDao.upsert(
+                book.toBookBookEntity(
+                    isSaved = true,
+                    bookType = book.bookType
+                )
+            )
+            Result.Success(Unit)
+        } catch (e: SQLiteException) {
+            Result.Error(DataError.Local.DISK_FULL)
+        }
+    }
+
     override fun getSavedBooks(): Flow<List<Book>> {
         return openBookDao.getSavedBooks()
             .map { bookEntities ->
                 bookEntities.sortedByDescending { it.timeStamp }.map { it.toBook() }
             }
+    }
+
+    override fun getBookById(id: String): Flow<Pair<Book?, Boolean>> {
+        return openBookDao.getSavedBookById(id).map { bookEntity ->
+            val book = bookEntity?.toBook()
+            book to (bookEntity?.isSaved == true)
+        }
+    }
+
+    override suspend fun deleteFromSaved(id: String) {
+        openBookDao.deleteSavedBook(id)
     }
 }

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding

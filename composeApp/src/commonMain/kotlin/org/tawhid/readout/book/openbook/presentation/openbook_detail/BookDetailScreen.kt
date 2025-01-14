@@ -1,9 +1,7 @@
 package org.tawhid.readout.book.openbook.presentation.openbook_detail
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,55 +38,41 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
-import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.core.player.presentation.PlayerAction
-import org.tawhid.readout.core.player.presentation.PlayerViewModel
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactScreenPadding
 import org.tawhid.readout.core.theme.expandedScreenPadding
-import org.tawhid.readout.core.theme.extraSmall
 import org.tawhid.readout.core.theme.large
 import org.tawhid.readout.core.theme.medium
 import org.tawhid.readout.core.theme.mediumScreenPadding
 import org.tawhid.readout.core.theme.small
-import org.tawhid.readout.core.ui.animation.PulseAnimation
 import org.tawhid.readout.core.ui.components.BookCoverImage
 import org.tawhid.readout.core.utils.OPEN_LIBRARY_BASE_URL
 import org.tawhid.readout.core.utils.WindowSizes
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.about_book
-import readout.composeapp.generated.resources.book_cover
-import readout.composeapp.generated.resources.book_cover_error_img
 import readout.composeapp.generated.resources.book_details
 import readout.composeapp.generated.resources.book_summary
 import readout.composeapp.generated.resources.bookmark
 import readout.composeapp.generated.resources.browse
 import readout.composeapp.generated.resources.description_unavailable
 import readout.composeapp.generated.resources.go_back
+import readout.composeapp.generated.resources.ic_bookmark_filled
 import readout.composeapp.generated.resources.ic_bookmark_outlined
 import readout.composeapp.generated.resources.ic_browse
 import readout.composeapp.generated.resources.ic_headphones
 import readout.composeapp.generated.resources.ic_notes
-import readout.composeapp.generated.resources.play
 import readout.composeapp.generated.resources.summary
 import readout.composeapp.generated.resources.summary_generated_with_ai
 
@@ -193,7 +174,11 @@ private fun BookDetailScreen(
                             onAction(BookDetailAction.OnSaveClick)
                         }) {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_bookmark_outlined),
+                                painter = if (state.isSaved) {
+                                    painterResource(Res.drawable.ic_bookmark_filled)
+                                } else {
+                                    painterResource(Res.drawable.ic_bookmark_outlined)
+                                },
                                 contentDescription = stringResource(Res.string.bookmark),
                             )
                         }

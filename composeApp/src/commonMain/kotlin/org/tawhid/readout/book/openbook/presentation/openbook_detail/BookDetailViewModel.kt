@@ -11,16 +11,21 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
-import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.book.openbook.domain.BookRepository
-import org.tawhid.readout.core.utils.onError
-import org.tawhid.readout.core.utils.onSuccess
+import org.tawhid.readout.book.openbook.domain.repository.BookRepository
+import org.tawhid.readout.book.openbook.domain.usecase.DeleteBookFromSavedUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.GetOpenBookByIdUseCase
+import org.tawhid.readout.book.openbook.domain.usecase.SaveBookUseCase
 import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
 import org.tawhid.readout.core.player.presentation.PlayerAction
 import org.tawhid.readout.core.player.presentation.PlayerViewModel
+import org.tawhid.readout.core.utils.onError
+import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
 
 class BookDetailViewModel(
+    private val getOpenBookByIdUseCase: GetOpenBookByIdUseCase,
+    private val saveBookUseCase: SaveBookUseCase,
+    private val deleteBookFromSavedUseCase: DeleteBookFromSavedUseCase,
     private val bookRepository: BookRepository,
     private val playerViewModel: PlayerViewModel,
     savedStateHandle: SavedStateHandle
@@ -30,8 +35,9 @@ class BookDetailViewModel(
     private val _state = MutableStateFlow(BookDetailState())
 
     val state = _state.onStart {
+        observeSavedStatus()
         fetchBookDescription()
-        _state.value.book?.let { insertBookIntoDB(it) }
+
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -57,11 +63,10 @@ class BookDetailViewModel(
             }
 
             is BookDetailAction.OnSaveClick -> {
-                viewModelScope.launch {
-                    state.value.book?.let { book ->
-                        val currentTime = System.currentTimeMillis()
-                        bookRepository.updateIsSaved(book = book, isSaved = true, currentTime = currentTime)
-                    }
+                if (state.value.isSaved) {
+                    deleteFromSaved()
+                } else {
+                    saveBook()
                 }
             }
 
@@ -154,9 +159,36 @@ class BookDetailViewModel(
     }
 
 
-    private fun insertBookIntoDB(book: Book) {
-        viewModelScope.launch {
-            bookRepository.insertBookIntoDB(book)
+    private fun observeSavedStatus() = viewModelScope.launch {
+        bookId?.let { bookId ->
+            getOpenBookByIdUseCase(bookId).collect { (book, isSaved) ->
+                if (book != null) {
+                    _state.update {
+                        it.copy(
+                            isSaved = isSaved,
+                            book = book
+                        )
+                    }
+                } else {
+                    _state.update {
+                        it.copy(
+                            isSaved = isSaved,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun saveBook() = viewModelScope.launch {
+        state.value.book?.let { book ->
+            saveBookUseCase(book)
+        }
+    }
+
+    private fun deleteFromSaved() = viewModelScope.launch {
+        bookId?.let { bookId ->
+            deleteBookFromSavedUseCase(bookId)
         }
     }
 }

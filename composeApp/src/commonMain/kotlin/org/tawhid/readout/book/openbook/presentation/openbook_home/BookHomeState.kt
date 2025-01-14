@@ -1,6 +1,6 @@
 package org.tawhid.readout.book.openbook.presentation.openbook_home
 
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.utils.UiText
 
 data class BookHomeState(

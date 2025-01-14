@@ -1,7 +1,7 @@
 package org.tawhid.readout.app.home.domain.usecase
 
 import org.tawhid.readout.app.home.domain.repository.HomeRepository
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.Result
 

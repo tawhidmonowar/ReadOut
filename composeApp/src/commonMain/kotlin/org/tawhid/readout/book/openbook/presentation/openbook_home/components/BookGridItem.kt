@@ -20,11 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import org.jetbrains.compose.resources.painterResource
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.bookCoverAspectRatio
 import org.tawhid.readout.core.theme.extraThin
@@ -33,7 +31,6 @@ import org.tawhid.readout.core.theme.thin
 import org.tawhid.readout.core.ui.components.CustomAsyncImage
 import readout.composeapp.generated.resources.Res
 import readout.composeapp.generated.resources.book_cover_error_img
-import readout.composeapp.generated.resources.ic_home_outlined
 
 @Composable
 fun BookGridItem(

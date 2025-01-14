@@ -15,11 +15,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import org.jetbrains.compose.resources.stringResource
-import org.tawhid.readout.book.openbook.domain.Book
+import org.tawhid.readout.book.openbook.domain.entity.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.BookHomeState
-import readout.composeapp.generated.resources.Res
-import readout.composeapp.generated.resources.no_search_result
 
 @Composable
 fun BookSearchResult(
