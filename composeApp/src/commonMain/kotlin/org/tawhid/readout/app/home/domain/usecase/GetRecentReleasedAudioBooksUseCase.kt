@@ -2,7 +2,6 @@ package org.tawhid.readout.app.home.domain.usecase
 
 import org.tawhid.readout.app.home.domain.repository.HomeRepository
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.core.utils.BookType.RECENTLY_RELEASED
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.Result
 import java.util.Calendar

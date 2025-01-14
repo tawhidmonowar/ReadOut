@@ -1,10 +1,8 @@
 package org.tawhid.readout.app.home.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import org.tawhid.readout.app.home.data.mappers.toRecentlyViewedBook
+import kotlinx.coroutines.flow.map
 import org.tawhid.readout.app.home.data.network.RemoteHomeDataSource
-import org.tawhid.readout.app.home.domain.entity.RecentlyViewedBooks
 import org.tawhid.readout.app.home.domain.repository.HomeRepository
 import org.tawhid.readout.book.audiobook.data.database.AudioBookDao
 import org.tawhid.readout.book.audiobook.data.mappers.toAudioBook
@@ -12,8 +10,10 @@ import org.tawhid.readout.book.audiobook.data.mappers.toRecentlyReleasedAudioBoo
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.openbook.data.database.OpenBookDao
 import org.tawhid.readout.book.openbook.data.mappers.toBook
+import org.tawhid.readout.book.openbook.data.mappers.toBookBookEntity
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.core.utils.BookType.RECENTLY_RELEASED
+import org.tawhid.readout.core.utils.BookType.TRENDING
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.FORTY_EIGHT_HOURS_IN_MILLIS
 import org.tawhid.readout.core.utils.Result
@@ -58,28 +58,38 @@ class HomeRepositoryImpl(
     }
 
     override suspend fun getTrendingBooks(): Result<List<Book>, DataError.Remote> {
-        return remoteHomeDataSource.fetchTrendingBooks().map { dto ->
-            dto.results.map { it.toBook() }
+        val currentTime = System.currentTimeMillis()
+        return try {
+            val existingBooks = openBookDao.getSavedBooksByType(TRENDING)
+            val isDataStale = existingBooks.firstOrNull()?.timeStamp?.let {
+                currentTime - it > FORTY_EIGHT_HOURS_IN_MILLIS
+            } ?: true
+
+            if (isDataStale) {
+                val fetchedBooksResult = remoteHomeDataSource.fetchTrendingBooks().map { dto ->
+                    dto.results.map { it.toBook() }
+                }
+                fetchedBooksResult.onSuccess { books ->
+                    openBookDao.run {
+                        deleteBooksByType(TRENDING)
+                        books.forEach { book ->
+                            upsert(book.toBookBookEntity(bookType = TRENDING))
+                        }
+                    }
+                }
+                fetchedBooksResult
+            } else {
+                val books = existingBooks.map { it.toBook() }
+                Result.Success(books)
+            }
+        } catch (e: Exception) {
+            Result.Error(DataError.Remote.UNKNOWN)
         }
     }
 
-    override fun getRecentlyViewedBooks(): Flow<List<RecentlyViewedBooks>> {
-        return combine(
-            openBookDao.getAllBooks(),
-            audioBookDao.getViewedBooks()
-        ) { openBooks, audioBooks ->
-
-            val latestOpenBooks = openBooks
-                .sortedByDescending { it.timeStamp }
-                .take(20)
-                .map { it.toRecentlyViewedBook() }
-
-            val latestAudioBooks = audioBooks
-                .sortedByDescending { it.timeStamp }
-                .take(20)
-                .map { it.toRecentlyViewedBook() }
-
-            (latestOpenBooks + latestAudioBooks).sortedByDescending { it.timeStamp }
+    override fun getSavedNewReleaseBooks(): Flow<List<AudioBook>> {
+        return audioBookDao.getSavedNewReleaseBooks(RECENTLY_RELEASED).map { audioBookEntities ->
+            audioBookEntities.map { it.toAudioBook() }
         }
     }
 }

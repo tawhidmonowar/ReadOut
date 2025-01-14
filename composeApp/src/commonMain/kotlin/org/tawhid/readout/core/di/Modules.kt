@@ -12,9 +12,10 @@ import org.tawhid.readout.app.home.data.network.RemoteHomeDataSourceImpl
 import org.tawhid.readout.app.home.data.repository.HomeRepositoryImpl
 import org.tawhid.readout.app.home.domain.repository.HomeRepository
 import org.tawhid.readout.app.home.domain.usecase.GetRecentReleasedAudioBooksUseCase
-import org.tawhid.readout.app.home.domain.usecase.GetRecentlyViewedBooksUseCase
+import org.tawhid.readout.app.home.domain.usecase.GetSavedRecentReleaseBooksUseCase
 import org.tawhid.readout.app.home.domain.usecase.GetTrendingBooksUseCase
 import org.tawhid.readout.app.home.presentation.HomeViewModel
+import org.tawhid.readout.app.home.presentation.recentrelease.RecentReleaseViewModel
 import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSourceImpl
@@ -93,9 +94,10 @@ val sharedModule = module {
 
     singleOf(::RemoteHomeDataSourceImpl).bind<RemoteHomeDataSource>()
     singleOf(::HomeRepositoryImpl).bind<HomeRepository>()
-    singleOf(::GetRecentlyViewedBooksUseCase)
     singleOf(::GetRecentReleasedAudioBooksUseCase)
+    singleOf(::GetSavedRecentReleaseBooksUseCase)
     singleOf(::GetTrendingBooksUseCase)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::RecentReleaseViewModel)
 
 }

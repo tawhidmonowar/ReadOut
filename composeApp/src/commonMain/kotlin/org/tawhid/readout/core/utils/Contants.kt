@@ -37,6 +37,7 @@ const val FORTY_EIGHT_HOURS_IN_MILLIS = 48 * 60 * 60 * 1000L
 object BookType {
     const val AUDIO_BOOK = "AudioBook"
     const val RECENTLY_RELEASED = "RecentlyReleased"
+    const val TRENDING = "Trending"
     const val OPEN_BOOK = "OpenBook"
 }
 

@@ -7,6 +7,8 @@ sealed interface Route {
     data object Setting : Route
     @Serializable
     data object Home : Route
+    @Serializable
+    data object RecentRelease : Route
 
     @Serializable
     data object AudioBookGraph : Route

@@ -42,7 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,7 +51,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
 import org.tawhid.readout.book.openbook.domain.Book
-import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
+import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookGridItem
 import org.tawhid.readout.core.theme.Shapes
 import org.tawhid.readout.core.theme.compactFeedWidth
 import org.tawhid.readout.core.theme.compactScreenPadding
@@ -95,6 +94,7 @@ import readout.composeapp.generated.resources.summarize
 import readout.composeapp.generated.resources.trending_books
 import readout.composeapp.generated.resources.version_label
 import readout.composeapp.generated.resources.version_number
+import readout.composeapp.generated.resources.view_all
 
 @Composable
 fun HomeScreenRoot(
@@ -103,6 +103,7 @@ fun HomeScreenRoot(
     onSummarizeClick: () -> Unit,
     onAudioBookClick: (AudioBook) -> Unit,
     onBookClick: (Book) -> Unit,
+    onViewAllClick: () -> Unit,
     innerPadding: PaddingValues,
     windowSize: WindowSizes
 ) {
@@ -115,6 +116,7 @@ fun HomeScreenRoot(
             when (action) {
                 is HomeAction.OnSettingClick -> onSettingClick()
                 is HomeAction.OnSummarizeClick -> onSummarizeClick()
+                is HomeAction.OnViewAllNewReleasesClick -> onViewAllClick()
                 is HomeAction.OnAudioBookClick -> onAudioBookClick(action.audioBook)
                 is HomeAction.OnBookClick -> onBookClick(action.book)
                 else -> Unit
@@ -255,9 +257,9 @@ private fun HomeScreen(
                 title(contentType = "audiobook-title") {
                     FeedTitleWithButton(
                         title = stringResource(Res.string.recently_released),
-                        btnText = "View All",
+                        btnText = stringResource(Res.string.view_all),
                         onClick = {
-
+                            onAction(HomeAction.OnViewAllNewReleasesClick)
                         },
                         modifier = Modifier.padding(vertical = small)
                     )
@@ -322,10 +324,14 @@ private fun HomeScreen(
                         }
                     }
                 } else {
-                    row(contentType = "trending-books") {
-                        BookHorizontalGridList(
-                            books = state.trendingBooks,
-                            onBookClick = { book ->
+                    items(
+                        count = state.trendingBooks.size,
+                        key = { index -> state.trendingBooks[index].id }
+                    ) { index ->
+                        val book = state.trendingBooks[index]
+                        BookGridItem(
+                            book = book,
+                            onClick = {
                                 onAction(HomeAction.OnBookClick(book))
                             }
                         )

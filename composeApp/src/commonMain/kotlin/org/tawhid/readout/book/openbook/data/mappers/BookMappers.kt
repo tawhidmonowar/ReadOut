@@ -25,7 +25,9 @@ fun SearchedBookDto.toBook(): Book {
     )
 }
 
-fun Book.toBookBookEntity(): OpenBookEntity {
+fun Book.toBookBookEntity(
+    bookType: String? = null
+): OpenBookEntity {
     return OpenBookEntity(
         id = id,
         title = title,
@@ -38,7 +40,7 @@ fun Book.toBookBookEntity(): OpenBookEntity {
         ratingCount = ratingCount,
         numPages = numPages,
         numEditions = numEditions,
-        bookType = null,
+        bookType = bookType,
         isSaved = null,
         isViewed = null,
         summaryText = null,

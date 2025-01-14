@@ -25,6 +25,9 @@ interface AudioBookDao {
     @Query("SELECT * FROM AudioBookEntity WHERE isViewed = 1")
     fun getViewedBooks(): Flow<List<AudioBookEntity>>
 
+    @Query("SELECT * FROM AudioBookEntity WHERE bookType = :bookType")
+    fun getSavedNewReleaseBooks(bookType: String): Flow<List<AudioBookEntity>>
+
     @Query("DELETE FROM AudioBookEntity WHERE bookType = :bookType AND (isSaved IS NULL OR isSaved = 0) AND (isViewed IS NULL OR isViewed = 0)")
     suspend fun deleteBooksByType(bookType: String)
 

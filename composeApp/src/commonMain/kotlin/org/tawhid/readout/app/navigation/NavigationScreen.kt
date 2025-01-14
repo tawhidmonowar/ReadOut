@@ -50,9 +50,7 @@ fun NavigationScreenRoot(
 
     val navigationItems = if (isExpandedScreen || isMediumScreen) {
         navigationItemsLists + summarizeNavigationItem + settingNavigationItem
-    } else {
-        navigationItemsLists
-    }
+    } else { navigationItemsLists }
 
     val rootNavController = rememberNavController()
     val rootNavBackStackEntry by rootNavController.currentBackStackEntryAsState()
@@ -77,6 +75,7 @@ fun NavigationScreenRoot(
                 add(Route.AudioBookDetail())
                 add(Route.BookSavedScreen)
                 add(Route.AudioBookSaved)
+                add(Route.RecentRelease)
             }
         }
     }
@@ -95,7 +94,8 @@ fun NavigationScreenRoot(
             Route.OpenLibraryDetail(),
             Route.AudioBookDetail(),
             Route.BookSavedScreen,
-            Route.AudioBookSaved
+            Route.AudioBookSaved,
+            Route.RecentRelease
         )
     }
 
@@ -230,6 +230,7 @@ private fun NavigationScreen(
 private fun getCurrentRoute(currentRouteString: String): Route? {
     return when (currentRouteString) {
         Route.Home::class.qualifiedName -> Route.Home
+        Route.RecentRelease::class.qualifiedName -> Route.RecentRelease
         Route.OpenLibrary::class.qualifiedName -> Route.OpenLibraryGraph
         Route.AudioBook::class.qualifiedName -> Route.AudioBookGraph
         Route.Setting::class.qualifiedName -> Route.Setting

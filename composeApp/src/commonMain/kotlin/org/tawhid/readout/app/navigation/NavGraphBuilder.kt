@@ -15,6 +15,8 @@ import androidx.navigation.compose.navigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.home.presentation.HomeScreenRoot
 import org.tawhid.readout.app.home.presentation.HomeViewModel
+import org.tawhid.readout.app.home.presentation.recentrelease.RecentReleaseAudioBooksScreenRoot
+import org.tawhid.readout.app.home.presentation.recentrelease.RecentReleaseViewModel
 import org.tawhid.readout.app.setting.SettingScreenRoot
 import org.tawhid.readout.app.setting.SettingViewModel
 import org.tawhid.readout.book.audiobook.presentation.SharedAudioBookViewModel
@@ -69,8 +71,32 @@ fun NavGraphBuilder.navGraphBuilder(
                     Route.OpenLibraryDetail(book.id)
                 )
             },
+            onViewAllClick = {
+                rootNavController.navigate(Route.RecentRelease)
+            },
             windowSize = windowSize,
             innerPadding = innerPadding
+        )
+    }
+
+    composable<Route.RecentRelease> {
+        val recentReleaseViewModel = koinViewModel<RecentReleaseViewModel>()
+        val sharedAudioBookViewModel =
+            it.sharedKoinViewModel<SharedAudioBookViewModel>(rootNavController)
+        LaunchedEffect(true) { sharedAudioBookViewModel.onSelectBook(null) }
+        RecentReleaseAudioBooksScreenRoot(
+            viewModel = recentReleaseViewModel,
+            windowSize = windowSize,
+            innerPadding = innerPadding,
+            onBookClick = { book ->
+                sharedAudioBookViewModel.onSelectBook(book)
+                rootNavController.navigate(
+                    Route.AudioBookDetail(book.id)
+                )
+            },
+            onBackClick = {
+                rootNavController.navigateUp()
+            }
         )
     }
 

@@ -10,6 +10,7 @@ sealed interface HomeAction {
     data object OnSettingClick : HomeAction
     data object OnLoadAudioBooks : HomeAction
     data object OnLoadTrendingBooks : HomeAction
+    data object OnViewAllNewReleasesClick : HomeAction
     data class OnAudioBookClick(val audioBook: AudioBook) : HomeAction
     data class OnBookClick(val book: Book) : HomeAction
 }
