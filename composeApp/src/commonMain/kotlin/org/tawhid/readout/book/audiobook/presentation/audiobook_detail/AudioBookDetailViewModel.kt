@@ -12,9 +12,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.audiobook.domain.usecase.DeleteFromSavedUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookSummaryUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookTracksUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.GetBookByIdUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.SaveAudioBookUseCase
+import org.tawhid.readout.core.gemini.GeminiApiPrompts.geminiBookSummaryPrompt
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess
 import org.tawhid.readout.core.utils.toUiText
@@ -24,6 +26,7 @@ class AudioBookDetailViewModel(
     private val getBookByIdUseCase: GetBookByIdUseCase,
     private val deleteFromSavedUseCase: DeleteFromSavedUseCase,
     private val saveAudioBookUseCase: SaveAudioBookUseCase,
+    private val getAudioBookSummaryUseCase: GetAudioBookSummaryUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -60,6 +63,10 @@ class AudioBookDetailViewModel(
                 } else {
                     saveAudioBook()
                 }
+            }
+
+            is AudioBookDetailAction.OnSummaryClick -> {
+                getAudioBookSummary()
             }
 
             else -> Unit
@@ -119,6 +126,34 @@ class AudioBookDetailViewModel(
                             isSaved = isSaved,
                         )
                     }
+                }
+            }
+        }
+    }
+
+    private fun getAudioBookSummary() = viewModelScope.launch {
+        _state.update {
+            it.copy(
+                selectedTabIndex = 1,
+                scrollToBottom = true,
+                isSummaryRequest = true,
+                isSummaryLoading = true
+            )
+        }
+        _state.value.audioBook?.let { book ->
+            getAudioBookSummaryUseCase(prompt = geminiBookSummaryPrompt(book)).onSuccess { summary ->
+                _state.update {
+                    it.copy(
+                        summary = summary,
+                        isSummaryLoading = false
+                    )
+                }
+            }.onError { error ->
+                _state.update {
+                    it.copy(
+                        isSummaryLoading = false,
+                        summaryErrorMsg = error.toUiText()
+                    )
                 }
             }
         }

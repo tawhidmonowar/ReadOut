@@ -14,8 +14,10 @@ data class AudioBookDetailState(
     val isAudioBookTracksLoading: Boolean = false,
     val audioBookTracks: List<AudioBookTrack>? = null,
 
+    val isSummaryRequest: Boolean = false,
     val isSummaryLoading: Boolean = false,
     val isSummaryAvailable: Boolean = true,
+    val scrollToBottom: Boolean = false,
     val summaryErrorMsg: UiText? = null,
     val summary: String? = null
 )

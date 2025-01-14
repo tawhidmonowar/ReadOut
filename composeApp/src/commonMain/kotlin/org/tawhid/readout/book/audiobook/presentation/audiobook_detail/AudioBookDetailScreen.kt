@@ -19,11 +19,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -215,7 +217,16 @@ private fun AudioBookDetailScreen(
                 animationSpec = tween(durationMillis = 300)
             )
 
+            val lazyListState = rememberLazyListState()
+
+            LaunchedEffect(state.scrollToBottom) {
+                if (state.scrollToBottom) {
+                    lazyListState.animateScrollToItem(Int.MAX_VALUE)
+                }
+            }
+
             LazyColumn(
+                state = lazyListState,
                 modifier = Modifier.fillMaxSize()
                     .padding(
                         start = animatedStartPadding,
@@ -342,17 +353,43 @@ private fun AudioBookDetailScreen(
                             Spacer(modifier = Modifier.height(medium))
                         }
 
-                        Text(
-                            text = stringResource(Res.string.book_summary),
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = large)
-                        )
-                        Text(
-                            text = stringResource(Res.string.summary_generated_with_ai),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        if (state.isSummaryRequest) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.book_summary),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    modifier = Modifier
+                                        .align(Alignment.Start)
+                                        .fillMaxWidth()
+                                        .padding(top = large)
+                                )
+                                Text(
+                                    text = stringResource(Res.string.summary_generated_with_ai),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+
+                                if (state.isSummaryLoading) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(medium),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator()
+                                    }
+                                } else {
+                                    state.summary?.let { summary ->
+                                        Text(
+                                            text = summary,
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            textAlign = TextAlign.Justify,
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -401,7 +438,8 @@ private fun BookDetailButton(
     Spacer(modifier = Modifier.width(small))
     Button(
         onClick = {
-            onAction(AudioBookDetailAction.OnPlayAllClick(state.audioBookTracks?.mapNotNull { it.listenUrl } ?: emptyList()))
+            onAction(AudioBookDetailAction.OnPlayAllClick(state.audioBookTracks?.mapNotNull { it.listenUrl }
+                ?: emptyList()))
         }) {
         Row(
             verticalAlignment = Alignment.CenterVertically

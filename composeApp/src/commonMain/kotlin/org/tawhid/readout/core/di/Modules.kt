@@ -21,6 +21,7 @@ import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSourceI
 import org.tawhid.readout.book.audiobook.data.repository.AudioBookRepositoryImpl
 import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
 import org.tawhid.readout.book.audiobook.domain.usecase.DeleteFromSavedUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookSummaryUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookTracksUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.GetBookByIdUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.SaveAudioBookUseCase
@@ -83,6 +84,7 @@ val sharedModule = module {
     singleOf(::SaveAudioBookUseCase)
     singleOf(::GetBookByIdUseCase)
     singleOf(::DeleteFromSavedUseCase)
+    singleOf(::GetAudioBookSummaryUseCase)
 
     singleOf(::RemoteSummarizeDataSourceImpl).bind<RemoteSummarizeDataSource>()
     singleOf(::SummarizeRepositoryImpl).bind<SummarizeRepository>()

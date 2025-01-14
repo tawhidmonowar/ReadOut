@@ -56,23 +56,33 @@ class AudioBookRepositoryImpl(
 
     override suspend fun saveBook(book: AudioBook): EmptyResult<DataError.Local> {
         return try {
-            audioBookDao.upsert(book.toAudioBookEntity(
-                isSaved = true,
-                bookType = book.bookType
-            ))
+            audioBookDao.upsert(
+                book.toAudioBookEntity(
+                    isSaved = true,
+                    bookType = book.bookType
+                )
+            )
             Result.Success(Unit)
         } catch (e: SQLiteException) {
             Result.Error(DataError.Local.DISK_FULL)
         }
     }
 
+    override suspend fun getBookSummary(prompt: String): Result<String?, DataError> {
+        return remoteAudioBookDataSource
+            .fetchBookSummary(prompt)
+            .map { it.candidates.first().content.parts.first().text }
+    }
+
     override suspend fun insertBookIntoDB(book: AudioBook): EmptyResult<DataError.Local> {
         return try {
-            audioBookDao.upsert(book.toAudioBookEntity(
-                isSaved = book.isSaved,
-                isViewed = true,
-                bookType = book.bookType
-            ))
+            audioBookDao.upsert(
+                book.toAudioBookEntity(
+                    isSaved = book.isSaved,
+                    isViewed = true,
+                    bookType = book.bookType
+                )
+            )
             Result.Success(Unit)
         } catch (e: SQLiteException) {
             Result.Error(DataError.Local.DISK_FULL)
