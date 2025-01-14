@@ -45,6 +45,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tawhid.readout.app.home.presentation.components.RecentlyViewedBookHorizontalGridList
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.AudioBookHomeAction
+import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookGridItem
 import org.tawhid.readout.book.audiobook.presentation.audiobook_home.components.AudioBookHorizontalGridList
 import org.tawhid.readout.book.openbook.domain.Book
 import org.tawhid.readout.book.openbook.presentation.openbook_home.components.BookHorizontalGridList
@@ -250,29 +252,13 @@ private fun HomeScreen(
                 horizontalArrangement = horizontalArrangement
             ) {
 
-                if (state.recentlyViewedBooks.isNotEmpty()) {
-                    title(contentType = "recently-played-title") {
-                        FeedTitleWithButton(
-                            title = "Recently Viewed",
-                            btnText = "View All",
-                            onClick = {
-
-                            }
-                        )
-                    }
-                    row(contentType = "verified-shimmer-effect") {
-                        RecentlyViewedBookHorizontalGridList(
-                            books = state.recentlyViewedBooks,
-                            onBookClick = {
-
-                            }
-                        )
-                    }
-                }
-
                 title(contentType = "audiobook-title") {
-                    FeedTitle(
+                    FeedTitleWithButton(
                         title = stringResource(Res.string.recently_released),
+                        btnText = "View All",
+                        onClick = {
+
+                        },
                         modifier = Modifier.padding(vertical = small)
                     )
                 }

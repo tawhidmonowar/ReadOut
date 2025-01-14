@@ -12,5 +12,13 @@ data class AudioBook(
     val libriVoxUrl: String?,
     val totalTime: String?,
     val imgUrl: String?,
-    val authors: List<String>
+    val authors: List<String>,
+
+    val bookType: String?,
+    val isSaved: Boolean?,
+    val isViewed: Boolean?,
+    val audioBookTracks: List<AudioBookTrack>?,
+    val summaryText: String?,
+    val summaryBase64: String?,
+    val timeStamp: Long?
 )

@@ -9,8 +9,8 @@ import org.tawhid.readout.book.audiobook.data.mappers.toAudioBookEntity
 import org.tawhid.readout.book.audiobook.data.mappers.toAudioBookTracks
 import org.tawhid.readout.book.audiobook.data.network.RemoteAudioBookDataSource
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBook
-import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
 import org.tawhid.readout.book.audiobook.domain.entity.AudioBookTrack
+import org.tawhid.readout.book.audiobook.domain.repository.AudioBookRepository
 import org.tawhid.readout.core.utils.DataError
 import org.tawhid.readout.core.utils.EmptyResult
 import org.tawhid.readout.core.utils.Result
@@ -56,7 +56,23 @@ class AudioBookRepositoryImpl(
 
     override suspend fun saveBook(book: AudioBook): EmptyResult<DataError.Local> {
         return try {
-            audioBookDao.upsert(book.toAudioBookEntity())
+            audioBookDao.upsert(book.toAudioBookEntity(
+                isSaved = true,
+                bookType = book.bookType
+            ))
+            Result.Success(Unit)
+        } catch (e: SQLiteException) {
+            Result.Error(DataError.Local.DISK_FULL)
+        }
+    }
+
+    override suspend fun insertBookIntoDB(book: AudioBook): EmptyResult<DataError.Local> {
+        return try {
+            audioBookDao.upsert(book.toAudioBookEntity(
+                isSaved = book.isSaved,
+                isViewed = true,
+                bookType = book.bookType
+            ))
             Result.Success(Unit)
         } catch (e: SQLiteException) {
             Result.Error(DataError.Local.DISK_FULL)
@@ -73,10 +89,10 @@ class AudioBookRepositoryImpl(
         }
     }
 
-    override fun getSavedBookById(id: String): Flow<AudioBook?> {
-        return audioBookDao.getSavedBookById(id).map { bookEntities ->
-            bookEntities?.toAudioBook()
+    override fun getBookById(id: String): Flow<Pair<AudioBook?, Boolean>> {
+        return audioBookDao.getSavedBookById(id).map { bookEntity ->
+            val audioBook = bookEntity?.toAudioBook()
+            audioBook to (bookEntity?.isSaved == true)
         }
     }
-
 }

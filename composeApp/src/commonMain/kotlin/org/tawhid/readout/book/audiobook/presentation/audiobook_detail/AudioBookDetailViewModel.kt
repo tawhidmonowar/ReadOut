@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import org.tawhid.readout.app.navigation.Route
 import org.tawhid.readout.book.audiobook.domain.usecase.DeleteFromSavedUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.GetAudioBookTracksUseCase
-import org.tawhid.readout.book.audiobook.domain.usecase.GetSavedBookByIdUseCase
+import org.tawhid.readout.book.audiobook.domain.usecase.GetBookByIdUseCase
 import org.tawhid.readout.book.audiobook.domain.usecase.SaveAudioBookUseCase
 import org.tawhid.readout.core.utils.onError
 import org.tawhid.readout.core.utils.onSuccess
@@ -21,7 +21,7 @@ import org.tawhid.readout.core.utils.toUiText
 
 class AudioBookDetailViewModel(
     private val getAudioBookTracksUseCase: GetAudioBookTracksUseCase,
-    private val getSavedBookByIdUseCase: GetSavedBookByIdUseCase,
+    private val getBookByIdUseCase: GetBookByIdUseCase,
     private val deleteFromSavedUseCase: DeleteFromSavedUseCase,
     private val saveAudioBookUseCase: SaveAudioBookUseCase,
     savedStateHandle: SavedStateHandle
@@ -105,18 +105,18 @@ class AudioBookDetailViewModel(
 
     private fun observeSavedStatus() = viewModelScope.launch {
         audioBookId?.let { audioBookId ->
-            getSavedBookByIdUseCase(audioBookId).collect { audioBook ->
+            getBookByIdUseCase(audioBookId).collect { (audioBook, isSaved) ->
                 if (audioBook != null) {
                     _state.update {
                         it.copy(
-                            isSaved = true,
+                            isSaved = isSaved,
                             audioBook = audioBook
                         )
                     }
                 } else {
                     _state.update {
                         it.copy(
-                            isSaved = false,
+                            isSaved = isSaved,
                         )
                     }
                 }

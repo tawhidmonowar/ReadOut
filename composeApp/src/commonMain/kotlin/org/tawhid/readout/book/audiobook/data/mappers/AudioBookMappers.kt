@@ -20,7 +20,15 @@ fun SearchedAudioBookDto.toAudioBook(): AudioBook {
         zipFileUrl = zipFileUrl,
         libriVoxUrl = libriVoxUrl,
         totalTime = totalTime,
-        imgUrl = coverImg
+        imgUrl = coverImg,
+
+        bookType = null,
+        isSaved = null,
+        isViewed = null,
+        audioBookTracks = null,
+        summaryText = null,
+        summaryBase64 = null,
+        timeStamp = null
     )
 }
 
@@ -49,10 +57,21 @@ fun AudioBookEntity.toAudioBook(): AudioBook {
         totalTime = totalTime,
         imgUrl = imgUrl,
         authors = authors,
+        bookType = bookType,
+        isSaved = isSaved,
+        isViewed = isViewed,
+        audioBookTracks = audioBookTracks,
+        summaryText = summaryText,
+        summaryBase64 = summaryBase64,
+        timeStamp = timeStamp
     )
 }
 
-fun AudioBook.toAudioBookEntity(): AudioBookEntity {
+fun AudioBook.toAudioBookEntity(
+    isSaved: Boolean? = null,
+    isViewed: Boolean? = null,
+    bookType: String? = null
+): AudioBookEntity {
     return AudioBookEntity(
         id = id,
         title = title,
@@ -67,15 +86,14 @@ fun AudioBook.toAudioBookEntity(): AudioBookEntity {
         imgUrl = imgUrl,
         authors = authors,
         audioBookTracks = null,
-        bookType = null,
-        isSaved = null,
+        bookType = bookType,
+        isSaved = isSaved,
         isViewed = null,
         summaryText = null,
         summaryBase64 = null,
         timeStamp = System.currentTimeMillis()
     )
 }
-
 
 fun AudioBook.toRecentlyReleasedAudioBookEntity(): AudioBookEntity {
     return AudioBookEntity(

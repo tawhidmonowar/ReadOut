@@ -66,7 +66,7 @@ class HomeRepositoryImpl(
     override fun getRecentlyViewedBooks(): Flow<List<RecentlyViewedBooks>> {
         return combine(
             openBookDao.getAllBooks(),
-            audioBookDao.getAllBooks()
+            audioBookDao.getViewedBooks()
         ) { openBooks, audioBooks ->
 
             val latestOpenBooks = openBooks
