@@ -37,9 +37,6 @@ The UI design is fully responsive, ensuring a user-friendly experience across al
 |![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d2.gif) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d5.png) |
 |:-------------------:|:------------------------:|
 
-|![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d0.png) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d4.png) |
-|:-------------------:|:------------------------:|
-
 ## Installation
 
 1. Clone the repository:
