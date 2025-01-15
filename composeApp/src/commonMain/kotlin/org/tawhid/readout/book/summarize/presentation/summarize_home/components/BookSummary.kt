@@ -37,6 +37,10 @@ fun BookSummary(
                     .padding(top = large)
             )
             Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .fillMaxWidth()
+                    .padding(bottom = medium),
                 text = stringResource(Res.string.summary_generated_with_ai),
                 style = MaterialTheme.typography.bodyMedium
             )

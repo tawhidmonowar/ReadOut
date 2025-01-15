@@ -8,7 +8,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.tawhid.readout.BuildKonfig
 import org.tawhid.readout.book.openbook.data.dto.BookWorkDto
 import org.tawhid.readout.book.openbook.data.dto.BrowseResponseDto
 import org.tawhid.readout.book.openbook.data.dto.SearchResponseDto
@@ -24,7 +23,9 @@ import org.tawhid.readout.core.gemini.dto.ContentItem
 import org.tawhid.readout.core.gemini.dto.GeminiResponseDto
 import org.tawhid.readout.core.gemini.dto.RequestBody
 import org.tawhid.readout.core.gemini.dto.RequestPart
+import org.tawhid.readout.core.utils.CLOUD_TEXT_TO_SPEECH_API_KEY
 import org.tawhid.readout.core.utils.CLOUD_TEXT_TO_SPEECH_BASE_URL
+import org.tawhid.readout.core.utils.GEMINI_API_KEY
 import org.tawhid.readout.core.utils.GEMINI_BASE_URL
 import org.tawhid.readout.core.utils.GEMINI_FLASH
 import org.tawhid.readout.core.utils.OPEN_LIBRARY_BASE_URL
@@ -66,7 +67,7 @@ class RemoteBookDataSourceImpl(
             httpClient.post(
                 urlString = "${GEMINI_BASE_URL}/v1beta/models/${GEMINI_FLASH}:generateContent"
             ) {
-                parameter("key", BuildKonfig.GEMINI_API_KEY)
+                parameter("key", GEMINI_API_KEY)
                 setBody(
                     Json.encodeToString(requestBody)
                 )
@@ -97,7 +98,7 @@ class RemoteBookDataSourceImpl(
             ) {
                 header("Accept", "application/json")
                 header("Content-Type", "application/json")
-                parameter("key", BuildKonfig.CLOUD_TEXT_TO_SPEECH_API_KEY)
+                parameter("key", CLOUD_TEXT_TO_SPEECH_API_KEY)
                 setBody(
                     Json.encodeToString(requestBody)
                 )

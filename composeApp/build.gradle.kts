@@ -1,7 +1,6 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,7 +8,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.buildkonfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
 }
@@ -122,29 +120,17 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.tawhid.readout"
+            modules("java.sql")
+            packageName = "ReadOut"
             packageVersion = "1.0.0"
-        }
-    }
-}
 
-buildkonfig {
-    packageName = "org.tawhid.readout"
-    val localProperties =
-        Properties().apply {
-            val propsFile = rootProject.file("local.properties")
-            if (propsFile.exists()) {
-                load(propsFile.inputStream())
+            windows {
+                iconFile.set(project.file("src/commonMain/composeResources/drawable/app_icon.ico"))
+                packageVersion = "1.0.0"
+                msiPackageVersion = "1.0.0"
+                exePackageVersion = "1.0.0"
             }
+
         }
-    defaultConfigs {
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "GEMINI_API_KEY", localProperties["GEMINI_API_KEY"]?.toString() ?: "",
-        )
-        buildConfigField(
-            FieldSpec.Type.STRING,
-            "CLOUD_TEXT_TO_SPEECH_API_KEY", localProperties["CLOUD_TEXT_TO_SPEECH_API_KEY"]?.toString() ?: "",
-        )
     }
 }

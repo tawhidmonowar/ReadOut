@@ -29,18 +29,7 @@ class BookRepositoryImpl(
     }
 
     override suspend fun getBookDescriptionById(bookId: String): Result<String?, DataError> {
-        val localResult = openBookDao.getSavedBook(bookId)
-        return if (localResult != null) {
-            if (localResult.description == null) {
-                remoteBookDataSource.fetchBookDescription(bookId)
-                    .map { it.description }
-            } else {
-                Result.Success(localResult.description)
-            }
-        } else {
-            remoteBookDataSource.fetchBookDescription(bookId)
-                .map { it.description }
-        }
+        return remoteBookDataSource.fetchBookDescription(bookId).map { it.description }
     }
 
     override suspend fun getBrowseBooks(

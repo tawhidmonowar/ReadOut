@@ -31,7 +31,7 @@ core-splashscreen = "1.0.1"
 media3Exoplayer = "1.5.1"
 vlcj = "4.8.3"
 
-ksp = "2.0.21-1.0.26"
+ksp = "2.1.0-1.0.29"
 sqlite = "2.5.0-alpha11"
 room = "2.7.0-alpha11"
 
@@ -98,7 +98,6 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-mu
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 

@@ -13,7 +13,7 @@ class AppPreferences(
 ) {
     private val themeKey = stringPreferencesKey("theme")
     suspend fun getTheme() = dataStore.data.map { preferences ->
-        preferences[themeKey] ?: Theme.SYSTEM_DEFAULT.name
+        preferences[themeKey] ?: Theme.LIGHT_MODE.name
     }.first()
 
     fun getThemeSync(): String {
