@@ -27,12 +27,12 @@ The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like A
 
 ## Screenshots (Android)
 
-The UI design is fully responsive, ensuring a user-friendly experience across all devices, regardless of screen size, also the UX is carefully designed to be intuitive and enjoyable, providing a smooth experience for every user.
-
 |![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/0.jpg) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/1.jpg) | ![Details Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/3.jpg) |![Save Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/2.jpg) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
 
 ### Screenshots (Desktop)
+
+The UI design is fully responsive, ensuring a user-friendly experience across all devices, regardless of screen size, also the UX is carefully designed to be intuitive and enjoyable, providing a smooth experience for every user.
 
 |![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d2.gif) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d5.png) |
 |:-------------------:|:------------------------:|
