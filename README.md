@@ -13,6 +13,19 @@
     <a href="https://github.com/tawhidmonowar/ReadOut/issues">Request Feature</a>
 </p>
 
+## App Features
+The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like AI-powered insights, personalized book searches, favorite book saving, dual themes, and seamless audio playback on both desktop and mobile.
+- Audiobook Playback (Desktop and Mobile)
+- Extensive Book Browsing
+- AI-Powered Book Insights
+- Book Insight by User Input
+- Save Favorite Books
+- Search Books by Title, Author, or Genre
+- Dual Themes (Dark and Light)
+- Audio Background Playback Support
+- User-Friendly Interface with Easy Navigation
+
+
 ## Architecture Overview
 This project follows the MVI (Model-View-Intent) design pattern combined with Clean Architecture principles to ensure a scalable, maintainable, and testable structure.
 
@@ -40,4 +53,4 @@ This project uses several APIs to enhance functionality and provide seamless use
 
 ## Author
 **Tawhid Monowar** - *Computer Science & Engineering Student* <br>
-[LinkedIn](https://www.linkedin.com/in/tawhidmonowar) | [Portfolio](https://tawhidmonowar.github.io/profile)
+[LinkedIn](https://www.linkedin.com/in/tawhidmonowar) | [Portfolio](https://tawhidmonowar.github.io/profile)  | [Email](mailto:tawhidmonowar@gmail.com)
