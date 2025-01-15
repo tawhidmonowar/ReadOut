@@ -25,6 +25,22 @@ The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like A
 - Audio Background Playback Support
 - User-Friendly Interface with Easy Navigation
 
+## Installation
+
+1. Clone the repository:
+```
+git clone https://github.com/tawhidmonowar/ReadOut.git
+```
+2. Open the project in Android Studio.
+3. Build and run the project using Gradle.
+
+### Requirements 
+- [Vlcj](https://github.com/caprica/vlcj) (For Desktop Audio Playback)
+- Goolge Gemini API
+- Goolge Cloud Text to Speech API
+- Android Compile SDK 35
+- Android Gradle Plugin "8.7.3"
+- Kotlin "2.1.0"
 
 ## Architecture Overview
 This project follows the MVI (Model-View-Intent) design pattern combined with Clean Architecture principles to ensure a scalable, maintainable, and testable structure.
