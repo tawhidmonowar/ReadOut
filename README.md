@@ -68,23 +68,6 @@ This project follows the MVI (Model-View-Intent) design pattern combined with Cl
 
 * The Data Layer abstracts data sources (API, Database) through a Repository pattern.
 
-## Libraries Used
-
-| Library                 | Link                                                                                   |
-|-------------------------|----------------------------------------------------------------------------------------|
-| Kotlin Multiplatform    | [https://kotlinlang.org/docs/multiplatform.html](https://kotlinlang.org/docs/multiplatform.html) |
-| Compose Multiplatform   | [https://www.jetbrains.com/compose-multiplatform](https://www.jetbrains.com/compose-multiplatform)               |
-| Kotlin Serialization    | [https://kotlinlang.org/docs/serialization.html](https://kotlinlang.org/docs/serialization.html) |
-| Material3               | [https://developer.android.com/jetpack/androidx/releases/compose-material3](https://developer.android.com/jetpack/androidx/releases/compose-material3) |
-| Datastore Preferences   | [https://developer.android.com/topic/libraries/architecture/datastore](https://developer.android.com/topic/libraries/architecture/datastore) |
-| Koin                    | [https://insert-koin.io/](https://insert-koin.io/)                                     |
-| Ktor Client             | [https://ktor.io/docs/getting-started-ktor-client.html](https://ktor.io/docs/getting-started-ktor-client.html) |
-| Coil                    | [https://coil-kt.github.io/coil](https://coil-kt.github.io/coil/)                     |
-| Media3 ExoPlayer        | [https://developer.android.com/media/media3/exoplayer](https://developer.android.com/media/media3/exoplayer) |
-| VLCJ                    | [https://github.com/caprica/vlcj](https://github.com/caprica/vlcj)                     |
-| SQLite                  | [https://developer.android.com/jetpack/androidx/releases/sqlite](https://developer.android.com/jetpack/androidx/releases/sqlite)                 |
-
-
 ## APIs Used
 This project uses several APIs to enhance functionality and provide seamless user experiences. Below is a list of the APIs used in this project.
 
