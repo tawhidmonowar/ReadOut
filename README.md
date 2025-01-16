@@ -70,9 +70,7 @@ This project follows the MVI (Model-View-Intent) design pattern combined with Cl
 
 ## Technologies and Libraries Used
 
-This project is powered by a combination of awesome technologies and libraries, Below is a list of what’s used in this project.
-
-## Technologies and Libraries
+This project is powered by a combination of awesome technologies and libraries, Below is a list of what’s used.
 
 | Name                                      | Description                                                  |
 |-------------------------------------------|--------------------------------------------------------------|
