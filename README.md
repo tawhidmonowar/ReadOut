@@ -44,12 +44,13 @@ The UI design is fully responsive, ensuring a user-friendly experience across al
 git clone https://github.com/tawhidmonowar/ReadOut.git
 ```
 2. Open the project in Android Studio.
-3. Build and run the project using Gradle.
+3. Place API keys in `commonMain -> core -> utils -> ApiKey.kt`
+4. Build and run the project using Gradle.
 
 ### Requirements 
 - [Vlcj](https://github.com/caprica/vlcj) (For Desktop Audio Playback)
-- Goolge Gemini API
-- Goolge Cloud Text to Speech API
+- Goolge Gemini API Key
+- Goolge Cloud Text to Speech API Key
 - Android Compile SDK 35
 - Android Gradle Plugin "8.7.3"
 - Kotlin "2.1.0"
@@ -64,6 +65,27 @@ This project follows the MVI (Model-View-Intent) design pattern combined with Cl
 * The Domain Layer encapsulates business logic in UseCases, This layer is completely independent of other layers, ensuring that it can be reused and tested in isolation.
 
 * The Data Layer abstracts data sources (API, Database) through a Repository pattern.
+
+
+
+## Technologies and Libraries Used
+
+This project is powered by a combination of awesome technologies and libraries, Below is a list of what’s used in this project.
+
+| Name                 | Description                                                                                 |
+|-------------------------|---------------------------------------------------------------------------------------------|
+| [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html)    |  The Kotlin Multiplatform technology is designed to simplify the development of cross-platform projects. |
+| [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform)   | A framework to build responsive, modern user interfaces that work on multiple platforms.    |
+| [Kotlin Serialization](https://kotlinlang.org/docs/serialization.html)    | Simplifies working with JSON and other formats by offering built-in serialization support.  |
+| [Material3](https://developer.android.com/jetpack/androidx/releases/compose-material3) | Provides the Material Design 3 components and guidelines for the UI design. |
+| [Datastore Preferences](https://developer.android.com/topic/libraries/architecture/datastore) | A fast and modern replacement for SharedPreferences to store key-value data locally.        |
+| [Koin](https://insert-koin.io/)                    | A lightweight framework for managing dependencies in Kotlin apps with minimal effort.  |
+| [Ktor Client](https://ktor.io/docs/getting-started-ktor-client.html)      | A powerful and easy-to-use library for handling HTTP requests and networking in Kotlin.     |
+| [Coil](https://coil-kt.github.io/coil)             | A fast and efficient image loading library designed specifically for Kotlin and Jetpack Compose. |
+| [Media3 ExoPlayer](https://developer.android.com/media/media3/exoplayer) | A library for seamless audio and video playback in Android apps.                    |
+| [VLCJ](https://github.com/caprica/vlcj)           | Provides VLC media playback capabilities for desktop Java applications.                     |
+| [SQLite](https://developer.android.com/jetpack/androidx/releases/sqlite)  | An embedded SQL database for handling structured data storage in app.                  |
+
 
 ## APIs Used
 This project uses several APIs to enhance functionality and provide seamless user experiences. Below is a list of the APIs used in this project.
