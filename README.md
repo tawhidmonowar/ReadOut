@@ -26,8 +26,16 @@ The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like A
 - User-Friendly Interface with Easy Navigation
 
 ## Screenshots (Android)
+
 |![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/0.jpg) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/1.jpg) | ![Details Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/3.jpg) |![Save Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/2.jpg) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
+
+### Screenshots (Desktop)
+
+The UI design is fully responsive, ensuring a user-friendly experience across all devices, regardless of screen size, also the UX is carefully designed to be intuitive and enjoyable, providing a smooth experience for every user.
+
+|![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d2.gif) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d5.png) |
+|:-------------------:|:------------------------:|
 
 ## Installation
 
@@ -36,12 +44,13 @@ The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like A
 git clone https://github.com/tawhidmonowar/ReadOut.git
 ```
 2. Open the project in Android Studio.
-3. Build and run the project using Gradle.
+3. Place API keys in `commonMain -> core -> utils -> ApiKey.kt`
+4. Build and run the project using Gradle.
 
 ### Requirements 
 - [Vlcj](https://github.com/caprica/vlcj) (For Desktop Audio Playback)
-- Goolge Gemini API
-- Goolge Cloud Text to Speech API
+- Goolge Gemini API Key
+- Goolge Cloud Text to Speech API Key
 - Android Compile SDK 35
 - Android Gradle Plugin "8.7.3"
 - Kotlin "2.1.0"
@@ -57,7 +66,27 @@ This project follows the MVI (Model-View-Intent) design pattern combined with Cl
 
 * The Data Layer abstracts data sources (API, Database) through a Repository pattern.
 
-## API Usage Overview
+
+
+## Technologies and Libraries Used
+
+This project is powered by a combination of awesome technologies and libraries, Below is a list of what’s used.
+
+| Name                                      | Description                                                  |
+|-------------------------------------------|--------------------------------------------------------------|
+| [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html) | Simplifies the development of cross-platform projects.       |
+| [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform) | Builds responsive, modern user interfaces across multiple platforms. |
+| [Kotlin Serialization](https://kotlinlang.org/docs/serialization.html) | Handles JSON and other formats with built-in serialization support. |
+| [Material3](https://developer.android.com/jetpack/androidx/releases/compose-material3) | Provides Material Design 3 components and guidelines for UI design. |
+| [Datastore Preferences](https://developer.android.com/topic/libraries/architecture/datastore) | A modern tool for storing key-value data locally.            |
+| [Koin](https://insert-koin.io/)           | Manages dependencies in Kotlin apps with minimal effort.     |
+| [Ktor Client](https://ktor.io/docs/getting-started-ktor-client.html) | Handles HTTP requests and networking in Kotlin.              |
+| [Coil](https://coil-kt.github.io/coil)    | Loads images efficiently, designed specifically for Kotlin and Jetpack Compose. |
+| [Media3 ExoPlayer](https://developer.android.com/media/media3/exoplayer) | Seamless audio and video playback for Android apps.          |
+| [VLCJ](https://github.com/caprica/vlcj)   | Adds VLC media playback capabilities for desktop Java applications. |
+| [SQLite](https://developer.android.com/jetpack/androidx/releases/sqlite) | An embedded SQL database for structured data storage.         |
+
+## APIs Used
 This project uses several APIs to enhance functionality and provide seamless user experiences. Below is a list of the APIs used in this project.
 
 <table>
