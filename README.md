@@ -11,6 +11,11 @@
     <a href="https://github.com/tawhidmonowar/ReadOut/issues">Report Bug</a>
     •
     <a href="https://github.com/tawhidmonowar/ReadOut/issues">Request Feature</a>
+
+|[![Video Demo](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/screeen.png)](https://www.youtube.com/watch?v=WCBYuU_xWA0 "Video Demo")|
+|:-------------------:|
+
+
 </p>
 
 ## App Features
