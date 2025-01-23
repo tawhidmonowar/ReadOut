@@ -42,7 +42,7 @@ The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like A
 - Audio Background Playback Support
 - User-Friendly Interface with Easy Navigation
 
-## Screenshots (Android)
+### Screenshots (Android)
 
 |![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/0.jpg) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/1.jpg) | ![Details Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/3.jpg) |![Save Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/2.jpg) |
 |:-------------------:|:------------------------:|:-----------------:|:-----------------:|
