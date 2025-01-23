@@ -12,11 +12,23 @@
     •
     <a href="https://github.com/tawhidmonowar/ReadOut/issues">Request Feature</a>
 
-|[![Video Demo](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/screeen.png)](https://www.youtube.com/watch?v=WCBYuU_xWA0 "Video Demo")|
-|:-------------------:|
-
-
 </p>
+
+<p align="left">
+<a href="https://github.com/tawhidmonowar/ReadOut/releases">
+    <img src="https://raw.githubusercontent.com/nucleus-ffm/foss_warn/main/docs/get-it-on-github.png"
+    alt="Get it on Github"
+    height="80">
+</a>
+</p>
+
+![GitHub License](https://img.shields.io/github/license/tawhidmonowar/ReadOut)
+![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20Desktop-brightgreen)
+![GitHub Release](https://img.shields.io/github/v/release/tawhidmonowar/ReadOut)
+![KMP Contest 2025](https://img.shields.io/badge/KMP%20Contest%202025-B125EA)
+
+https://github.com/user-attachments/assets/911b82af-8a17-409e-807c-0428687ac0c4
+
 
 ## App Features
 The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like AI-powered insights, personalized book searches, favorite book saving, dual themes, and seamless audio playback on both desktop and mobile.
@@ -41,6 +53,42 @@ The UI design is fully responsive, ensuring a user-friendly experience across al
 
 |![Home Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d2.gif) | ![Search Screen](https://github.com/tawhidmonowar/ReadOut/blob/main/readme/screenshots/d5.png) |
 |:-------------------:|:------------------------:|
+
+## User Guide
+
+Discover Books
+
+- Open the app and navigate to the OpenLibrary section.
+- Use the search bar to find books by title, author, or genre.
+- Browse curated recommendations and popular titles.
+
+Play Audiobooks
+
+- Go to the Audiobooks section and select a book.
+- Tap the Play button to start listening.
+- Use the playback controls to pause, rewind, or fast-forward.
+
+Generate Summaries
+
+- Open the details page of any book.
+- Tap the Summarize button to generate an AI-powered text or audio summary.
+- Alternatively, navigate to the Summarize section.
+- Enter the required details and tap the Summarize button.
+
+Save Books
+
+- Tap the Save icon on any book to add it to your saved list.
+- Access your saved books in the Saved section.
+
+Switch Themes
+
+- Open the app’s settings.
+- Toggle between Light and Dark themes to customize the app’s appearance.
+
+Clear Data
+
+- Open the app’s settings.
+- Tap Clear all data to remove any saved books or cache from the app.
 
 ## Installation
 
