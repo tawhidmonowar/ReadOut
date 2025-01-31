@@ -27,8 +27,6 @@
 ![GitHub Release](https://img.shields.io/github/v/release/tawhidmonowar/ReadOut)
 ![KMP Contest 2025](https://img.shields.io/badge/KMP%20Contest%202025-B125EA)
 
-https://github.com/user-attachments/assets/911b82af-8a17-409e-807c-0428687ac0c4
-
 
 ## App Features
 The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like AI-powered insights, personalized book searches, favorite book saving, dual themes, and seamless audio playback on both desktop and mobile.
