@@ -29,7 +29,7 @@
 
 
 ## App Features
-The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like AI-powered insights, personalized book searches, favorite book saving, dual themes, and seamless audio playback on both desktop and mobile.
+The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like AI-powered insights, personalized book searches, favorite book saving, dual themes, and seamless audio playback on both desktop and mobile. It's currently in the early stages of development, so feel free to report any issues or suggestions.
 - Audiobook Playback (Desktop and Mobile)
 - Extensive Book Browsing
 - AI-Powered Book Insights
