@@ -14,10 +14,15 @@
 
 </p>
 
-<p align="left">
+<p align="center">
 <a href="https://github.com/tawhidmonowar/ReadOut/releases">
     <img src="https://raw.githubusercontent.com/nucleus-ffm/foss_warn/main/docs/get-it-on-github.png"
     alt="Get it on Github"
+    height="80">
+</a>
+<a href="https://www.openapk.net/readout/org.tawhid.readout/">
+    <img src="https://camo.githubusercontent.com/12606f923ced353fe86d4fd7c524a392e2641cd93ef5c5e6431fe5b3d9763bac/68747470733a2f2f7777772e6f70656e61706b2e6e65742f696d616765732f6f70656e61706b2d62616467652e706e67"
+    alt="Get it on OpenApk"
     height="80">
 </a>
 </p>
