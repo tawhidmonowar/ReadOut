@@ -1,37 +1,30 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/bf233e9a-0f3a-4218-9791-18574a45565e" alt="ReadOut Logo" width="120">
-</p>
+<div align="center">
+<p><img src="https://github.com/user-attachments/assets/bf233e9a-0f3a-4218-9791-18574a45565e" width="128" alt="ReadOut"></p>
 <h3 align="center">ReadOut</h3>
-<p align="center">
+  <p align="center">
 "ReadOut" is a cross-platform app for Android and Desktop, built with Kotlin Multiplatform. It seamlessly integrates book discovery, audiobook playback, and AI-powered summaries in both text and audio formats. Discover new books, enjoy a diverse library of audiobooks, and access concise, insightful summaries — all designed to save your time and keep you informed.
     <br/>
     <br/>
     <a href="https://github.com/tawhidmonowar/ReadOut/releases">Download</a>
-    •
+    .
     <a href="https://github.com/tawhidmonowar/ReadOut/issues">Report Bug</a>
-    •
+    .
     <a href="https://github.com/tawhidmonowar/ReadOut/issues">Request Feature</a>
+  </p>
 
-</p>
 
-<p align="center">
-<a href="https://github.com/tawhidmonowar/ReadOut/releases">
-    <img src="https://raw.githubusercontent.com/nucleus-ffm/foss_warn/main/docs/get-it-on-github.png"
-    alt="Get it on Github"
-    height="80">
-</a>
-<a href="https://www.openapk.net/readout/org.tawhid.readout/">
-    <img src="https://camo.githubusercontent.com/12606f923ced353fe86d4fd7c524a392e2641cd93ef5c5e6431fe5b3d9763bac/68747470733a2f2f7777772e6f70656e61706b2e6e65742f696d616765732f6f70656e61706b2d62616467652e706e67"
-    alt="Get it on OpenApk"
-    height="80">
-</a>
-</p>
+[<img alt="Get it on OpenAPK" height="80" src="https://www.openapk.net/images/openapk-badge.png">](https://www.openapk.net/readout/org.tawhid.readout/)
+[<img alt="Get it on GitHub" height="80" src="https://raw.githubusercontent.com/nucleus-ffm/foss_warn/main/docs/get-it-on-github.png">](https://github.com/tawhidmonowar/ReadOut/releases)
+[<img alt="Direct APK Download" height="80" src="https://tachibanagenerallaboratories.github.io/images/badges/Direct%20Download/direct-apk-download.png">](https://github.com/tawhidmonowar/ReadOut/releases/download/v1.0.0/ReadOut.Android.v1.0.0.apk)
 
 ![GitHub License](https://img.shields.io/github/license/tawhidmonowar/ReadOut)
 ![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20Desktop-brightgreen)
 ![GitHub Release](https://img.shields.io/github/v/release/tawhidmonowar/ReadOut)
 ![KMP Contest 2025](https://img.shields.io/badge/KMP%20Contest%202025-B125EA)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/tawhidmonowar/ReadOut/total)
+![FreePalestine](https://raw.githubusercontent.com/tawhidmonowar/polyglot_ai/187d25e5f3acaa5af6b361d19053938cf6d3bf81/client/public/FreePalestine.svg)
+
+</div>
 
 ## App Features
 The ReadOut app offers 28 million books, 20,000+ audiobooks, and features like AI-powered insights, personalized book searches, favorite book saving, dual themes, and seamless audio playback on both desktop and mobile. It's currently in the early stages of development, so feel free to report any issues or suggestions.
