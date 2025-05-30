@@ -20,7 +20,6 @@
 ![GitHub License](https://img.shields.io/github/license/tawhidmonowar/ReadOut)
 ![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20Desktop-brightgreen)
 ![GitHub Release](https://img.shields.io/github/v/release/tawhidmonowar/ReadOut?logo=github)
-![KMP Contest 2025](https://img.shields.io/badge/KMP%20Contest%202025-B125EA)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/tawhidmonowar/ReadOut/total?logo=github)
 ![FreePalestine](https://raw.githubusercontent.com/tawhidmonowar/polyglot_ai/187d25e5f3acaa5af6b361d19053938cf6d3bf81/client/public/FreePalestine.svg)
 
