@@ -2,7 +2,7 @@
 <p><img src="https://github.com/user-attachments/assets/bf233e9a-0f3a-4218-9791-18574a45565e" width="128" alt="ReadOut"></p>
 <h3 align="center">ReadOut</h3>
   <p align="center">
-"ReadOut" is a cross-platform app for Android and Desktop, built with Kotlin Multiplatform. It seamlessly integrates book discovery, audiobook playback, and AI-powered summaries in both text and audio formats. Discover new books, enjoy a diverse library of audiobooks, and access concise, insightful summaries — all designed to save your time and keep you informed.
+ReadOut is a cross-platform reading companion for Android and Desktop, built with Kotlin Multiplatform and Compose Multiplatform. It empowers users to explore millions of books, stream thousands of free audiobooks, and access AI-generated summaries in both text and audio formats — all designed to save your time and keep you informed.
     <br/>
     <br/>
     <a href="https://github.com/tawhidmonowar/ReadOut/releases">Download</a>
