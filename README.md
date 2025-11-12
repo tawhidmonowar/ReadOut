@@ -150,4 +150,4 @@ This project uses several APIs to enhance functionality and provide seamless use
 
 ## Author
 **Tawhid Monowar** - *Computer Science & Engineering Student* <br>
-[LinkedIn](https://www.linkedin.com/in/tawhidmonowar) | [Portfolio](https://tawhidmonowar.github.io/profile)  | [Email](mailto:tawhidmonowar@gmail.com)
+[LinkedIn](https://www.linkedin.com/in/tawhidmonowar) | [Portfolio](https://tawhidmonowar.github.io/profile)  | [Email](mailto:tawhidmonowar@duck.com)
